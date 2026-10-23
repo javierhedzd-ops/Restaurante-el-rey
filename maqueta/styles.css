@@ -22,6 +22,7 @@
   :root {
     --rojo: #b3261e;
     --rojo-oscuro: #7d1a15;
+    --rojo-claro: #e0574a;
     --carbon: #140b07;
     --carbon-suave: #241610;
     --crema: #fdf6ec;
@@ -218,10 +219,65 @@
     background: var(--carbon);
   }
 
-  .hero__foto {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
+  /* En pantallas anchas la foto sangra por la derecha y el titular se parte
+     en dos líneas sobre el papel: la primera en tinta, la segunda en rojo. */
+  @media (min-width: 900px) {
+    .hero {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      grid-template-rows: 1fr auto;
+      align-items: end;
+      column-gap: clamp(2rem, 5vw, 4.5rem);
+      min-height: min(86svh, 760px);
+      padding-top: clamp(4rem, 9vw, 7rem);
+      background:
+        linear-gradient(90deg, var(--carbon) 0%, var(--carbon) 46%, rgb(20 11 7 / 0%) 62%),
+        var(--carbon);
+    }
+
+    .hero__foto {
+      position: relative;
+      inset: auto;
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      align-self: stretch;
+      margin-right: calc(-1 * (clamp(1rem, 4vw, 2.5rem) + var(--seguro-lado)));
+      z-index: 0;
+    }
+
+    /* El velo va a la izquierda, para fundir la foto con el papel. */
+    .hero__foto::after {
+      background:
+        linear-gradient(90deg, var(--carbon) 0%, rgb(20 11 7 / 55%) 22%, rgb(20 11 7 / 0%) 55%),
+        linear-gradient(180deg, rgb(20 11 7 / 0%) 60%, rgb(20 11 7 / 70%) 100%);
+    }
+
+    .hero__contenido {
+      grid-column: 1;
+      grid-row: 1;
+      align-self: end;
+      margin-inline: 0;
+      padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+    }
+
+    .hero__datos {
+      grid-column: 1;
+      grid-row: 2;
+      margin-inline: 0;
+    }
+
+    .hero__credito {
+      top: auto;
+      bottom: 0.75rem;
+      right: calc(0.75rem + var(--seguro-lado));
+    }
+
+    .hero__titulo {
+      max-width: 13ch;
+      font-size: clamp(3rem, 5.4vw, 5.2rem);
+      line-height: 1.02;
+    }
+
+    .hero__titulo em { color: var(--rojo-claro); }
   }
 
   .hero__foto img {
@@ -905,47 +961,51 @@
   /* ---------- Galería: mosaico con una pieza ancha ---------- */
   .galeria {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-auto-rows: clamp(140px, 22vw, 220px);
-    gap: 0.75rem;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-auto-rows: clamp(120px, 17vw, 190px);
+    gap: clamp(0.6rem, 1.4vw, 1.1rem);
   }
 
+  /* Sin tarjeta: la foto es la pieza. El pie va debajo, en versalitas. */
   .galeria__pieza {
     position: relative;
-    overflow: hidden;
-    border-radius: var(--radio);
-    background: var(--crema-oscura);
-    box-shadow: var(--sombra);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0;
   }
 
   .galeria__pieza--ancha {
-    grid-column: span 2;
+    grid-column: span 4;
     grid-row: span 2;
   }
 
   .galeria__pieza figure {
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
     height: 100%;
+    min-height: 0;
   }
 
   .galeria__pieza img {
     width: 100%;
-    height: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
     object-fit: cover;
-    transition: transform var(--lento) var(--salida);
+    border-radius: var(--radio-carta);
+    background: var(--crema-oscura);
+    transition: transform var(--lento) var(--salida), filter var(--medio) var(--salida);
   }
 
-  .galeria__pieza:hover img { transform: scale(1.05); }
+  .galeria__pieza:hover img { transform: scale(1.02); filter: saturate(1.08); }
 
   .galeria__pieza figcaption {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 1.5rem 0.75rem 0.55rem;
-    font-size: 0.72rem;
-    color: rgb(253 246 236 / 90%);
-    background: linear-gradient(180deg, transparent, rgb(20 11 7 / 72%));
+    flex: none;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tinta-suave);
   }
 }
 
@@ -1288,8 +1348,8 @@
     .cazo__foto { aspect-ratio: 16 / 10; order: -1; }
     .nosotros { grid-template-columns: 1fr; }
     .reservas { grid-template-columns: 1fr; }
-    .galeria { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .galeria__pieza--ancha { grid-column: span 2; grid-row: span 1; }
+    .galeria { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: clamp(130px, 34vw, 200px); }
+    .galeria__pieza--ancha { grid-column: span 2; grid-row: span 2; }
     .boton-carrito__texto { display: none; }
     .seccion__cabecera { align-items: stretch; }
     .buscador { min-width: 100%; }
