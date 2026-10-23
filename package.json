@@ -1,0 +1,9 @@
+{
+  "name": "restaurante-el-rey",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test pruebas/*.test.js",
+    "serve": "python3 -m http.server 8091 --bind 127.0.0.1"
+  }
+}

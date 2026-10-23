@@ -4,147 +4,116 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Carnitas Michoacán El Rey — Chuminópolis, Mérida</title>
-<meta name="description" content="Carnitas estilo Michoacán desde 1974. Tacos, tortas, kilos y michelitos en Chuminópolis, Mérida. Pedidos a domicilio.">
-<meta name="theme-color" content="#1a0f0a">
+<meta name="description" content="Carnitas estilo Michoacán desde 1974. Tacos, tortas, kilos y michelitos en Chuminópolis, Mérida. Pide por WhatsApp.">
+<meta name="theme-color" content="#140b07">
+<meta property="og:title" content="Carnitas Michoacán El Rey — Chuminópolis, Mérida">
+<meta property="og:description" content="Cincuenta años de carnitas estilo Michoacán. Pide por WhatsApp.">
+<meta property="og:type" content="restaurant">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="styles.css">
+<script type="module" src="main.js"></script>
 </head>
 <body>
+
+<a class="saltar" href="#menu">Saltar al menú</a>
 
 <header class="cabecera">
   <a class="marca" href="#inicio">
     <span class="marca__corona" aria-hidden="true">♛</span>
     <span class="marca__texto">El Rey<small>Carnitas Michoacán</small></span>
   </a>
+
   <nav class="nav" aria-label="Principal">
     <a href="#menu">Menú</a>
     <a href="#nosotros">Nosotros</a>
     <a href="#visitanos">Visítanos</a>
-    <a class="nav__cta" href="tel:+529991190662">Pedir</a>
   </nav>
+
+  <div class="cabecera__acciones">
+    <span id="estado-horario" class="horario-vivo" aria-live="polite">Comprobando horario…</span>
+    <button id="abrir-carrito" class="boton-carrito" type="button" aria-expanded="false" aria-controls="carrito">
+      <span aria-hidden="true">🛒</span>
+      <span class="boton-carrito__texto">Mi pedido</span>
+      <span id="globo-carrito" class="globo" hidden>0</span>
+    </button>
+  </div>
 </header>
 
 <main>
 
+  <!-- HERO -->
   <section class="hero" id="inicio">
+    <div class="hero__fondo" aria-hidden="true">
+      <span class="hero__grano"></span>
+    </div>
+
     <div class="hero__contenido">
       <p class="hero__etiqueta">Chuminópolis · Mérida · Desde 1974</p>
-      <h1>Carnitas estilo Michoacán,<br><em>recién salidas del cazo</em></h1>
+      <h1 class="hero__titulo">
+        Carnitas estilo Michoacán,
+        <em>recién salidas del cazo</em>
+      </h1>
       <p class="hero__texto">
         Maciza, costilla, buche, oreja, nana, cuerito, trompa, hígado y corazón.
         Tacos, tortas, kilos para llevar y michelitros bien fríos.
       </p>
       <div class="hero__acciones">
-        <a class="boton boton--primario" href="tel:+529991190662">Pedir por teléfono</a>
-        <a class="boton boton--secundario" href="#menu">Ver el menú</a>
+        <a class="boton boton--primario" href="#menu">Armar mi pedido</a>
+        <a class="boton boton--secundario" href="tel:+529991190662">Llamar al 999 119 0662</a>
       </div>
-      <ul class="hero__datos">
-        <li><strong>4.3 ★</strong> en Google</li>
-        <li><strong>13:00–22:00</strong> lun, mié a dom</li>
-        <li><strong>Domicilio</strong> y para llevar</li>
-      </ul>
     </div>
+
     <div class="hero__sello" aria-hidden="true">
       <span>50</span>
       <small>años de tradición</small>
     </div>
+
+    <ul class="hero__datos">
+      <li><strong>4.3 ★</strong><span>571 reseñas en Google</span></li>
+      <li><strong>13:00–22:00</strong><span>Lunes, miércoles a domingo</span></li>
+      <li><strong>Domicilio</strong><span>Y para llevar</span></li>
+    </ul>
   </section>
 
-  <section class="seccion" id="menu">
-    <h2 class="seccion__titulo">El menú</h2>
-    <p class="seccion__nota">
-      Precios en pesos mexicanos. Pueden cambiar sin aviso; confirma al pedir.
-    </p>
-
-    <div class="menu">
-
-      <article class="menu__bloque">
-        <h3>Tacos</h3>
-        <ul class="lista">
-          <li><span class="lista__nombre">Taco de maciza</span><span class="lista__precio">$49</span></li>
-          <li><span class="lista__nombre">Taco de surtida</span><span class="lista__precio">$49</span></li>
-          <li><span class="lista__nombre">Taco al gusto</span><span class="lista__precio">$49</span></li>
-        </ul>
-        <p class="menu__pie">Doble tortilla de maíz nixtamalizado, cilantro y cebolla.</p>
-      </article>
-
-      <article class="menu__bloque">
-        <h3>Tortas</h3>
-        <ul class="lista">
-          <li><span class="lista__nombre">Torta de maciza</span><span class="lista__precio">$105</span></li>
-          <li><span class="lista__nombre">Torta de surtida</span><span class="lista__precio">$105</span></li>
-          <li><span class="lista__nombre">Torta al gusto</span><span class="lista__precio">$105</span></li>
-        </ul>
-        <p class="menu__pie">En pan francés, con cilantro y cebolla.</p>
-      </article>
-
-      <article class="menu__bloque">
-        <h3>Kilos para llevar</h3>
-        <ul class="lista">
-          <li><span class="lista__nombre">1 kg al gusto</span><span class="lista__precio">$273</span></li>
-          <li><span class="lista__nombre">1 kg surtida</span><span class="lista__precio">$238</span></li>
-          <li><span class="lista__nombre">½ kg maciza</span><span class="lista__precio">$280</span></li>
-          <li><span class="lista__nombre">½ kg surtido</span><span class="lista__precio">$260</span></li>
-          <li><span class="lista__nombre">½ kg maciza, costilla, buche, oreja y cuero</span><span class="lista__precio">$280</span></li>
-        </ul>
-        <p class="menu__pie">Con tortillas de maíz, cebolla, cilantro, limones, aguacate y salsas de la casa.</p>
-      </article>
-
-      <article class="menu__bloque">
-        <h3>Entradas</h3>
-        <ul class="lista">
-          <li><span class="lista__nombre">Quesadillas (2 pz)</span><span class="lista__precio">$133</span></li>
-          <li><span class="lista__nombre">Guacamole tradicional</span><span class="lista__precio">$119</span></li>
-          <li><span class="lista__nombre">Guacamole con chicharrón</span><span class="lista__precio">$133</span></li>
-          <li><span class="lista__nombre">Guacamole El Rey</span><span class="lista__precio">$210</span></li>
-          <li><span class="lista__nombre">Chicharreada</span><span class="lista__precio">$224</span></li>
-          <li><span class="lista__nombre">2 molletes</span><span class="lista__precio">$70</span></li>
-          <li><span class="lista__nombre">2 molletes El Rey</span><span class="lista__precio">$105</span></li>
-        </ul>
-      </article>
-
-      <article class="menu__bloque">
-        <h3>Especialidades</h3>
-        <ul class="lista">
-          <li><span class="lista__nombre">Sopes de carnitas (2 pz)</span><span class="lista__precio">$133</span></li>
-          <li><span class="lista__nombre">Quesadilla de carnitas (2 pz)</span><span class="lista__precio">$133</span></li>
-          <li><span class="lista__nombre">Chilaquiles de carnitas</span><span class="lista__precio">$168</span></li>
-          <li><span class="lista__nombre">2 molletes con carnitas</span><span class="lista__precio">$91</span></li>
-          <li><span class="lista__nombre">Tostada de pierna</span><span class="lista__precio">$77</span></li>
-        </ul>
-      </article>
-
-      <article class="menu__bloque menu__bloque--bebidas">
-        <h3>Bebidas</h3>
-        <ul class="lista">
-          <li><span class="lista__nombre">Michelitro</span><span class="lista__precio">$89</span></li>
-          <li><span class="lista__nombre">Cervezas y coctelería</span><span class="lista__precio">Consultar</span></li>
-        </ul>
-        <p class="menu__pie">Michelitro a $89 en promoción de miércoles.</p>
-      </article>
-
+  <!-- MENÚ INTERACTIVO -->
+  <section class="seccion" id="menu" aria-labelledby="titulo-menu">
+    <div class="seccion__cabecera">
+      <div>
+        <h2 class="seccion__titulo" id="titulo-menu">El menú</h2>
+        <p class="seccion__nota">Precios en pesos mexicanos, sujetos a cambio. Arma tu pedido y lo mandas por WhatsApp.</p>
+      </div>
+      <label class="buscador">
+        <span class="buscador__icono" aria-hidden="true">⌕</span>
+        <input id="buscador" type="search" placeholder="Buscar: taco, kilo, guacamole…" aria-label="Buscar en el menú">
+      </label>
     </div>
+
+    <div class="menu__barra">
+      <div id="filtros" class="filtros" role="tablist" aria-label="Categorías del menú"></div>
+      <span id="contador-platos" class="contador" aria-live="polite"></span>
+    </div>
+
+    <div id="lista-platos" class="platos"></div>
   </section>
 
-  <section class="seccion seccion--oscura" id="nosotros">
-    <h2 class="seccion__titulo">Cincuenta años en el cazo</h2>
+  <!-- NOSOTROS -->
+  <section class="seccion seccion--oscura" id="nosotros" aria-labelledby="titulo-nosotros">
+    <h2 class="seccion__titulo" id="titulo-nosotros">Cincuenta años en el cazo</h2>
     <div class="nosotros">
-      <p>
+      <p class="nosotros__grande">
         Desde 1974 hacemos carnitas al estilo Michoacán en Mérida: la carne se cuece
         despacio en su manteca y se sirve caliente, recién salida del cazo.
       </p>
-      <p>
-        Aquí se come surtido, maciza, costilla, buche, oreja, nana, cuerito, trompa,
-        hígado y corazón. Con tortillas de maíz, salsas de la casa y un michelitro bien frío.
-      </p>
-      <p>
-        Ambiente familiar, música algunos días, asientos al aire libre y servicio a domicilio.
-      </p>
+      <div class="nosotros__columnas">
+        <p>Aquí se come surtido, maciza, costilla, buche, oreja, nana, cuerito, trompa, hígado y corazón. Con tortillas de maíz, salsas de la casa y un michelitro bien frío.</p>
+        <p>Ambiente familiar, música algunos días, asientos al aire libre y servicio a domicilio. Si vienes en grupo, pide un kilo y se arma la fiesta.</p>
+      </div>
     </div>
   </section>
 
-  <section class="seccion" id="visitanos">
-    <h2 class="seccion__titulo">Visítanos</h2>
+  <!-- VISÍTANOS -->
+  <section class="seccion" id="visitanos" aria-labelledby="titulo-visitanos">
+    <h2 class="seccion__titulo" id="titulo-visitanos">Visítanos</h2>
     <div class="visitanos">
       <div class="visitanos__bloque">
         <h3>Dirección</h3>
@@ -155,13 +124,13 @@
         <h3>Horario</h3>
         <table class="horario">
           <tbody>
-            <tr><th scope="row">Lunes</th><td>13:00 – 22:00</td></tr>
-            <tr><th scope="row">Martes</th><td class="cerrado">Cerrado</td></tr>
-            <tr><th scope="row">Miércoles</th><td>13:00 – 22:00</td></tr>
-            <tr><th scope="row">Jueves</th><td>13:00 – 22:00</td></tr>
-            <tr><th scope="row">Viernes</th><td>13:00 – 22:00</td></tr>
-            <tr><th scope="row">Sábado</th><td>13:00 – 22:00</td></tr>
-            <tr><th scope="row">Domingo</th><td>13:00 – 22:00</td></tr>
+            <tr data-dia="1"><th scope="row">Lunes</th><td>13:00 – 22:00</td></tr>
+            <tr data-dia="2"><th scope="row">Martes</th><td class="cerrado">Cerrado</td></tr>
+            <tr data-dia="3"><th scope="row">Miércoles</th><td>13:00 – 22:00</td></tr>
+            <tr data-dia="4"><th scope="row">Jueves</th><td>13:00 – 22:00</td></tr>
+            <tr data-dia="5"><th scope="row">Viernes</th><td>13:00 – 22:00</td></tr>
+            <tr data-dia="6"><th scope="row">Sábado</th><td>13:00 – 22:00</td></tr>
+            <tr data-dia="0"><th scope="row">Domingo</th><td>13:00 – 22:00</td></tr>
           </tbody>
         </table>
         <p class="aviso">Confirma el horario por teléfono antes de venir.</p>
@@ -187,6 +156,31 @@
   <p class="pie__nota">Precios en pesos mexicanos, sujetos a cambio.</p>
 </footer>
 
-<script src="main.js" defer></script>
+<!-- Carrito -->
+<aside id="carrito" class="carrito" hidden aria-labelledby="titulo-carrito" role="dialog" aria-modal="false">
+  <div class="carrito__cabecera">
+    <h2 id="titulo-carrito">Mi pedido</h2>
+    <button id="cerrar-carrito" class="carrito__cerrar" type="button" aria-label="Cerrar el pedido">✕</button>
+  </div>
+
+  <p id="carrito-vacio" class="carrito__vacio">
+    Todavía no has añadido nada. Toca <strong>Añadir</strong> en cualquier plato.
+  </p>
+
+  <ul id="carrito-lineas" class="carrito__lineas"></ul>
+
+  <div id="carrito-pie" class="carrito__pie" hidden>
+    <div class="carrito__total">
+      <span>Total</span>
+      <strong id="carrito-total">$0</strong>
+    </div>
+    <button id="enviar-pedido" class="boton boton--whatsapp" type="button">Enviar pedido por WhatsApp</button>
+    <button id="vaciar-carrito" class="carrito__vaciar" type="button">Vaciar</button>
+    <p class="carrito__nota">El pedido se confirma por WhatsApp con el restaurante.</p>
+  </div>
+</aside>
+
+<div id="aviso" class="aviso-flotante" role="status" aria-live="polite"></div>
+
 </body>
 </html>
