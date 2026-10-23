@@ -95,12 +95,12 @@
     font-size: 1.1rem;
   }
 
-  .marca__corona { color: var(--dorado); font-size: 1.4rem; line-height: 1; }
+  .marca__corona { width: 1.4rem; height: 1.4rem; color: var(--dorado); flex: none; }
 
   .marca__texto { display: flex; flex-direction: column; line-height: 1.1; }
 
   .marca__texto small {
-    font-size: 0.62rem;
+    font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -137,10 +137,12 @@
     color: #fff;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.15s ease, transform 0.15s ease;
+    transition: background 0.15s ease;
   }
 
-  .boton-carrito:hover { background: var(--rojo-oscuro); transform: translateY(-1px); }
+  .boton-carrito:hover { background: var(--rojo-oscuro); }
+
+  .boton-carrito__icono { width: 1.15rem; height: 1.15rem; flex: none; }
 
   .globo {
     position: absolute;
@@ -154,7 +156,7 @@
     border-radius: 999px;
     background: var(--dorado);
     color: var(--carbon);
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     font-weight: 800;
   }
 
@@ -177,9 +179,7 @@
     position: absolute;
     inset: -20% -10% auto -10%;
     height: 130%;
-    background:
-      radial-gradient(circle at 78% 22%, rgb(179 38 30 / 16%), transparent 55%),
-      radial-gradient(circle at 12% 78%, rgb(217 164 65 / 14%), transparent 50%);
+    background: linear-gradient(180deg, rgb(179 38 30 / 7%), transparent 70%);
     pointer-events: none;
     z-index: -1;
   }
@@ -264,7 +264,7 @@
   }
 
   .hero__sello span { font-family: var(--fuente-titulo); font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; line-height: 1; }
-  .hero__sello small { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; }
+  .hero__sello small { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; }
 
   .hero__cazo {
     max-width: 26ch;
@@ -278,7 +278,7 @@
 
   .hero__cazo-etiqueta {
     display: block;
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -298,8 +298,10 @@
   }
 
   .hero__datos li { display: flex; flex-direction: column; }
-  .hero__datos strong { font-size: 1.15rem; }
+  .hero__datos strong { font-size: 1.15rem; display: inline-flex; align-items: center; gap: 0.25rem; }
   .hero__datos span { font-size: 0.85rem; color: var(--tinta-suave); }
+
+  .estrella { width: 0.95rem; height: 0.95rem; color: var(--dorado); flex: none; }
 
   /* ---------- Secciones ---------- */
   .seccion {
@@ -351,7 +353,7 @@
     box-shadow: var(--sombra);
   }
 
-  .buscador__icono { color: var(--tinta-suave); font-size: 1.1rem; }
+  .buscador__icono { width: 1.1rem; height: 1.1rem; color: var(--tinta-suave); flex: none; }
 
   .buscador input {
     border: 0;
@@ -403,7 +405,7 @@
   .nosotros__ficha div:last-child { border-bottom: 0; padding-bottom: 0; }
 
   .nosotros__ficha dt {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -437,7 +439,7 @@
   }
 
   .visitanos__bloque h3 {
-    font-size: 0.78rem;
+    font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.12em;
     color: var(--rojo);
@@ -464,7 +466,8 @@
     font-size: 0.9rem;
   }
 
-  .pie__marca { font-weight: 700; font-size: 1.1rem; color: var(--crema); margin-bottom: 0.5rem; }
+  .pie__marca { display: flex; align-items: center; justify-content: center; gap: 0.4rem; font-weight: 700; font-size: 1.1rem; color: var(--crema); margin-bottom: 0.5rem; }
+  .pie__corona { width: 1.1rem; height: 1.1rem; color: var(--dorado); flex: none; }
   .pie__nota { margin-top: 0.75rem; opacity: 0.7; font-size: 0.8rem; }
 }
 
@@ -569,7 +572,7 @@
   .plato__etiquetas { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 
   .etiqueta {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -591,7 +594,7 @@
     border-top: 1px dashed var(--crema-oscura);
   }
 
-  .opciones { display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.75rem; }
+  .opciones { display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.8rem; }
 
   .opciones__texto { color: var(--tinta-suave); text-transform: uppercase; letter-spacing: 0.08em; }
 
@@ -677,13 +680,17 @@
   .carrito__cabecera h2 { font-size: 1.4rem; }
 
   .carrito__cerrar {
+    display: grid;
+    place-items: center;
     border: 0;
     background: transparent;
-    font-size: 1.2rem;
+    color: inherit;
     cursor: pointer;
     padding: 0.4rem;
     border-radius: 8px;
   }
+
+  .carrito__cerrar svg { width: 1.2rem; height: 1.2rem; }
 
   .carrito__cerrar:hover { background: var(--crema-oscura); }
 
