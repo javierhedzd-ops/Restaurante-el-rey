@@ -1,0 +1,301 @@
+/* Carnitas Michoacán El Rey — hoja de estilos
+   Paleta: rojo chile, crema de tortilla y carbón. Sin CDN ni fuentes externas. */
+
+@layer reset, base, componentes, utilidades;
+
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  body, h1, h2, h3, p, ul, figure { margin: 0; }
+  ul { padding: 0; list-style: none; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  table { border-collapse: collapse; }
+}
+
+@layer base {
+  :root {
+    --rojo: #b3261e;
+    --rojo-oscuro: #7d1a15;
+    --carbon: #1a0f0a;
+    --carbon-suave: #2b1a12;
+    --crema: #fdf6ec;
+    --crema-oscura: #f0e2cd;
+    --tinta: #2a1d16;
+    --tinta-suave: #6b5748;
+    --dorado: #d9a441;
+    --radio: 14px;
+    --sombra: 0 10px 30px rgb(26 15 10 / 12%);
+    --ancho: 1120px;
+    --fuente: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--fuente);
+    color: var(--tinta);
+    background: var(--crema);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 { line-height: 1.15; letter-spacing: -0.02em; }
+  h1 { font-size: clamp(2rem, 6vw, 3.6rem); }
+  h2 { font-size: clamp(1.6rem, 4vw, 2.4rem); }
+  h3 { font-size: 1.15rem; }
+
+  :focus-visible {
+    outline: 3px solid var(--dorado);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@layer componentes {
+  /* Cabecera */
+  .cabecera {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem clamp(1rem, 4vw, 2.5rem);
+    background: rgb(26 15 10 / 92%);
+    color: var(--crema);
+    backdrop-filter: blur(8px);
+  }
+
+  .marca {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.15rem;
+  }
+
+  .marca__corona { color: var(--dorado); font-size: 1.4rem; line-height: 1; }
+
+  .marca__texto { display: flex; flex-direction: column; line-height: 1.1; }
+
+  .marca__texto small {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--crema-oscura);
+    opacity: 0.8;
+  }
+
+  .nav { display: flex; align-items: center; gap: clamp(0.75rem, 2vw, 1.5rem); font-size: 0.95rem; }
+
+  .nav a { text-decoration: none; opacity: 0.85; }
+  .nav a:hover { opacity: 1; }
+
+  .nav__cta {
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    background: var(--rojo);
+    opacity: 1 !important;
+    font-weight: 600;
+  }
+
+  .nav__cta:hover { background: var(--rojo-oscuro); }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 2rem;
+    padding: clamp(3rem, 8vw, 6rem) clamp(1rem, 4vw, 2.5rem);
+    max-width: var(--ancho);
+    margin-inline: auto;
+  }
+
+  .hero__etiqueta {
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--rojo);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .hero h1 em { font-style: normal; color: var(--rojo); }
+
+  .hero__texto {
+    max-width: 46ch;
+    margin-top: 1.25rem;
+    font-size: 1.05rem;
+    color: var(--tinta-suave);
+  }
+
+  .hero__acciones { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+
+  .boton {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+
+  .boton:hover { transform: translateY(-2px); }
+
+  .boton--primario { background: var(--rojo); color: #fff; }
+  .boton--primario:hover { background: var(--rojo-oscuro); }
+
+  .boton--secundario { border: 2px solid var(--carbon); color: var(--carbon); }
+  .boton--secundario:hover { background: var(--carbon); color: var(--crema); }
+
+  .hero__datos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    font-size: 0.9rem;
+    color: var(--tinta-suave);
+  }
+
+  .hero__datos strong { display: block; color: var(--tinta); font-size: 1rem; }
+
+  .hero__sello {
+    display: grid;
+    place-items: center;
+    width: clamp(120px, 18vw, 180px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 3px dashed var(--dorado);
+    color: var(--rojo);
+    text-align: center;
+    transform: rotate(-8deg);
+  }
+
+  .hero__sello span { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1; }
+  .hero__sello small { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* Secciones */
+  .seccion {
+    padding: clamp(3rem, 7vw, 5rem) clamp(1rem, 4vw, 2.5rem);
+    max-width: var(--ancho);
+    margin-inline: auto;
+  }
+
+  .seccion__titulo { margin-bottom: 0.5rem; }
+
+  .seccion__nota { color: var(--tinta-suave); font-size: 0.9rem; margin-bottom: 2.5rem; }
+
+  .seccion--oscura {
+    max-width: none;
+    background: var(--carbon);
+    color: var(--crema);
+  }
+
+  .seccion--oscura > * { max-width: var(--ancho); margin-inline: auto; }
+
+  /* Menú */
+  .menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .menu__bloque {
+    background: #fff;
+    border: 1px solid var(--crema-oscura);
+    border-radius: var(--radio);
+    padding: 1.5rem;
+    box-shadow: var(--sombra);
+  }
+
+  .menu__bloque h3 {
+    color: var(--rojo);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid var(--crema-oscura);
+  }
+
+  .lista li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.4rem 0;
+  }
+
+  .lista__nombre { flex: 1; }
+
+  .lista__precio { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .menu__pie { margin-top: 1rem; font-size: 0.85rem; color: var(--tinta-suave); }
+
+  /* Nosotros */
+  .nosotros {
+    display: grid;
+    gap: 1rem;
+    max-width: 65ch;
+    margin-top: 1.5rem;
+    font-size: 1.05rem;
+  }
+
+  /* Visítanos */
+  .visitanos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .visitanos__bloque h3 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--rojo);
+    margin-bottom: 0.75rem;
+  }
+
+  .enlace { color: var(--rojo); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+
+  .horario { width: 100%; font-size: 0.95rem; }
+  .horario th { text-align: left; font-weight: 500; padding: 0.25rem 0; color: var(--tinta-suave); }
+  .horario td { text-align: right; padding: 0.25rem 0; font-variant-numeric: tabular-nums; }
+  .horario .cerrado { color: var(--rojo); font-weight: 600; }
+
+  .horario__hoy th, .horario__hoy td { color: var(--rojo); font-weight: 700; }
+
+  .aviso { margin-top: 0.75rem; font-size: 0.8rem; color: var(--tinta-suave); }
+
+  .redes { display: flex; gap: 1rem; margin-top: 0.75rem; }
+
+  /* Pie */
+  .pie {
+    background: var(--carbon-suave);
+    color: var(--crema-oscura);
+    text-align: center;
+    padding: 2.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .pie__marca { font-weight: 700; font-size: 1.1rem; color: var(--crema); margin-bottom: 0.5rem; }
+  .pie__nota { margin-top: 0.75rem; opacity: 0.7; font-size: 0.8rem; }
+}
+
+@layer utilidades {
+  @media (max-width: 720px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero__sello { display: none; }
+    .nav a:not(.nav__cta) { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+}
