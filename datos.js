@@ -68,8 +68,8 @@ export const PLATOS = [
   // Kilos
   { id: "kg-gusto", nombre: "1 kg al gusto", precio: 273, categoria: "kilos", desc: "Con tortillas de maíz, cebolla, cilantro, limones, aguacate y salsas de la casa.", etiquetas: ["para-compartir"], opciones: "proteina", foto: { src: "fotos/kilo.jpg", alt: "Kilo de carnitas con tortillas y acompañamientos", credito: "ProtoplasmaKid · CC BY 4.0" } },
   { id: "kg-surtida", nombre: "1 kg surtida", precio: 238, categoria: "kilos", desc: "Maciza y surtido, con todo lo de acompañamiento.", etiquetas: ["para-compartir"], foto: { src: "fotos/carnitas-michoacan.jpg", alt: "Carnitas servidas en Michoacán", credito: "AlejandroLinaresGarcia · CC BY-SA 4.0" } },
-  { id: "medio-maciza", nombre: "½ kg maciza", precio: 240, categoria: "kilos", desc: "Con tortillas, cebolla, cilantro, limones y salsas.", etiquetas: [], foto: { src: "fotos/mercado.jpg", alt: "Carnitas en el mercado", credito: "DaliaMonge · CC BY-SA 4.0" } },
-  { id: "medio-surtido", nombre: "½ kg surtido", precio: 210, categoria: "kilos", desc: "Con tortillas, cebolla, cilantro, limones y salsas.", etiquetas: [], foto: { src: "fotos/puesto.jpg", alt: "Puesto de carnitas", credito: "Koffermejia · CC0" } },
+  { id: "medio-maciza", nombre: "½ kg maciza", precio: 260, categoria: "kilos", desc: "Con tortillas, cebolla, cilantro, limones y salsas.", etiquetas: [], foto: { src: "fotos/mercado.jpg", alt: "Carnitas en el mercado", credito: "DaliaMonge · CC BY-SA 4.0" } },
+  { id: "medio-surtido", nombre: "½ kg surtido", precio: 240, categoria: "kilos", desc: "Con tortillas, cebolla, cilantro, limones y salsas.", etiquetas: [], foto: { src: "fotos/puesto.jpg", alt: "Puesto de carnitas", credito: "Koffermejia · CC0" } },
   { id: "medio-parrilla", nombre: "½ kg maciza, costilla, buche, oreja y cuero", precio: 280, categoria: "kilos", desc: "Surtido de la casa para armar tacos.", etiquetas: ["para-compartir"], foto: { src: "fotos/cazo.jpg", alt: "Cazo de carnitas", credito: "Ferfive · CC BY 4.0" } },
 
   // Entradas
