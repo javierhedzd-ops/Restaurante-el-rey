@@ -38,6 +38,7 @@
     --fuente: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
     --fuente-titulo: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
     --fuente-cifras: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --filete: 1px solid rgb(20 11 7 / 12%);
     --grano: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
 
     /* Movimiento: curvas de Emil Kowalski. Salida rápida, llegada suave. */
@@ -84,10 +85,10 @@
 
   p { text-wrap: pretty; }
 
-  h1, h2, h3 { line-height: 1.1; letter-spacing: -0.02em; }
+  h1, h2, h3 { line-height: 1.08; letter-spacing: -0.022em; }
   h1, h2 { font-family: var(--fuente-titulo); font-weight: 600; }
-  h1 { font-size: clamp(2.4rem, 7vw, 4.6rem); text-wrap: balance; }
-  h2 { font-size: clamp(1.8rem, 4.2vw, 2.8rem); text-wrap: balance; }
+  h1 { font-size: clamp(2.5rem, 7.2vw, 4.8rem); text-wrap: balance; }
+  h2 { font-size: clamp(1.9rem, 4.4vw, 3rem); text-wrap: balance; }
   h3 { font-size: 1.05rem; }
 
   :focus-visible {
@@ -157,7 +158,7 @@
   .horario-vivo {
     font-size: 0.78rem;
     padding: 0.3rem 0.7rem;
-    border-radius: 999px;
+    border-radius: var(--radio-carta);
     border: 1px solid currentColor;
     white-space: nowrap;
   }
@@ -173,7 +174,7 @@
     min-height: 44px;
     padding: 0.5rem 1rem;
     border: 0;
-    border-radius: 999px;
+    border-radius: var(--radio-carta);
     background: var(--rojo);
     color: #fff;
     font-weight: 600;
@@ -267,7 +268,7 @@
     margin-bottom: 1rem;
   }
 
-  .hero__titulo { max-width: 18ch; text-shadow: 0 2px 24px rgb(20 11 7 / 45%); }
+  .hero__titulo { max-width: 16ch; text-shadow: 0 2px 28px rgb(20 11 7 / 50%); }
 
   .hero__titulo em {
     display: block;
@@ -291,9 +292,10 @@
     min-height: 48px;
     padding: 0.85rem 1.6rem;
     border: 0;
-    border-radius: 999px;
+    border-radius: var(--radio-carta);
     text-decoration: none;
     font-weight: 600;
+    letter-spacing: 0.01em;
     cursor: pointer;
     transition: transform var(--rapido) var(--salida), background var(--rapido) var(--salida), box-shadow var(--rapido) var(--salida), color var(--rapido) var(--salida);
   }
@@ -324,15 +326,33 @@
     border-top: 1px solid rgb(239 224 201 / 22%);
   }
 
-  .hero__datos li { display: flex; flex-direction: column; }
-  .hero__datos strong { font-size: 1.15rem; display: inline-flex; align-items: center; gap: 0.25rem; }
-  .hero__datos span { font-size: 0.85rem; color: rgb(253 246 236 / 78%); }
+  .hero__datos li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding-left: 1rem;
+    border-left: 1px solid rgb(239 224 201 / 25%);
+  }
+  .hero__datos strong {
+    font-family: var(--fuente-titulo);
+    font-size: 1.3rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .hero__datos span {
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgb(253 246 236 / 72%);
+  }
 
   .estrella { width: 0.95rem; height: 0.95rem; color: var(--dorado); flex: none; }
 
   /* ---------- Secciones ---------- */
   .seccion {
-    padding: clamp(3rem, 7vw, 5rem) calc(clamp(1rem, 4vw, 2.5rem) + var(--seguro-lado));
+    padding: clamp(3.5rem, 8vw, 6.5rem) calc(clamp(1rem, 4vw, 2.5rem) + var(--seguro-lado));
     max-width: var(--ancho);
     margin-inline: auto;
   }
@@ -346,7 +366,18 @@
     margin-bottom: 2rem;
   }
 
-  .seccion__titulo { margin-bottom: 0.5rem; }
+  .seccion__titulo { margin-bottom: 0.6rem; }
+
+  /* Filete corto encima del titular: marca el arranque de cada sección. */
+  .seccion__cabecera > div > .seccion__titulo::before,
+  .seccion > .seccion__titulo::before {
+    content: "";
+    display: block;
+    width: 2.5rem;
+    height: 2px;
+    margin-bottom: 1rem;
+    background: var(--rojo);
+  }
   .seccion__nota { color: var(--tinta-suave); font-size: 0.95rem; max-width: 52ch; }
 
   .seccion--oscura {
@@ -373,11 +404,16 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.55rem 1rem;
-    border: 1px solid var(--crema-oscura);
-    border-radius: 999px;
+    border: var(--filete);
+    border-radius: var(--radio-carta);
     background: #fff;
     min-width: min(320px, 100%);
-    box-shadow: var(--sombra);
+    transition: border-color var(--rapido) var(--salida), box-shadow var(--rapido) var(--salida);
+  }
+
+  .buscador:focus-within {
+    border-color: var(--rojo);
+    box-shadow: 0 0 0 3px rgb(179 38 30 / 12%);
   }
 
   .buscador__icono { width: 1.1rem; height: 1.1rem; color: var(--tinta-suave); flex: none; }
@@ -409,7 +445,7 @@
 
   .nosotros__grande {
     font-family: var(--fuente-titulo);
-    font-size: clamp(1.35rem, 3vw, 2rem);
+    font-size: clamp(1.45rem, 3.2vw, 2.15rem);
     line-height: 1.35;
     max-width: 34ch;
     color: var(--crema);
@@ -467,11 +503,13 @@
   }
 
   .visitanos__bloque h3 {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.16em;
     color: var(--rojo);
-    margin-bottom: 0.75rem;
+    padding-bottom: 0.6rem;
+    margin-bottom: 0.85rem;
+    border-bottom: var(--filete);
   }
 
   .enlace { color: var(--rojo); text-decoration-thickness: 2px; text-underline-offset: 3px; }
@@ -487,7 +525,7 @@
 
   /* ---------- Pie ---------- */
   .pie {
-    background: var(--carbon-suave);
+    background: var(--carbon);
     color: var(--crema-oscura);
     text-align: center;
     padding: 2.5rem calc(1rem + var(--seguro-lado)) calc(2.5rem + var(--seguro-abajo));
@@ -528,9 +566,9 @@
 
   .cazo__foto {
     position: relative;
-    border-radius: var(--radio);
+    border-radius: var(--radio-carta);
     overflow: hidden;
-    box-shadow: var(--sombra);
+    box-shadow: var(--sombra-carta);
     aspect-ratio: 4 / 5;
   }
 
@@ -547,15 +585,13 @@
     background: linear-gradient(180deg, transparent, rgb(20 11 7 / 70%));
   }
 
+  /* El armador va sobre papel, sin tarjeta: filete arriba y abajo. */
   .armador {
     display: grid;
     gap: 1.25rem;
     margin-top: 1.75rem;
-    padding: clamp(1rem, 3vw, 1.75rem);
-    background: var(--crema);
-    border: 1px solid rgb(20 11 7 / 8%);
-    border-radius: var(--radio);
-    box-shadow: var(--sombra);
+    padding: clamp(1.25rem, 3vw, 1.75rem) 0;
+    border-block: var(--filete);
   }
 
   .armador__grupo { display: grid; gap: 0.5rem; }
@@ -588,8 +624,8 @@
     justify-content: center;
     min-height: 44px;
     padding: 0.5rem 1.1rem;
-    border: 1px solid var(--crema-oscura);
-    border-radius: 999px;
+    border: var(--filete);
+    border-radius: var(--radio-carta);
     background: #fff;
     font-weight: 600;
     font-size: 0.95rem;
@@ -639,7 +675,7 @@
 
   .armador__linea strong {
     font-family: var(--fuente-titulo);
-    font-size: 1.6rem;
+    font-size: 1.9rem;
     color: var(--rojo);
     font-variant-numeric: tabular-nums;
   }
@@ -678,8 +714,8 @@
     flex: 0 0 auto;
     min-height: 44px;
     padding: 0.5rem 1.1rem;
-    border: 1px solid var(--crema-oscura);
-    border-radius: 999px;
+    border: var(--filete);
+    border-radius: var(--radio-carta);
     background: #fff;
     font-size: 0.9rem;
     font-weight: 500;
@@ -811,7 +847,7 @@
     letter-spacing: 0.06em;
     text-transform: uppercase;
     padding: 0.15rem 0.5rem;
-    border-radius: 999px;
+    border-radius: 3px;
   }
 
   .etiqueta--popular { background: rgb(217 164 65 / 22%); color: #8a6415; }
@@ -844,7 +880,7 @@
     min-height: 44px;
     padding: 0.5rem 1.1rem;
     border: 0;
-    border-radius: 999px;
+    border-radius: var(--radio-carta);
     background: var(--carbon);
     color: var(--crema);
     font-weight: 600;
@@ -1194,7 +1230,7 @@
     z-index: 30;
     transform: translate(-50%, 150%);
     padding: 0.7rem 1.3rem;
-    border-radius: 999px;
+    border-radius: var(--radio-carta);
     background: var(--carbon);
     color: var(--crema);
     font-size: 0.9rem;
