@@ -233,8 +233,9 @@
   .boton--secundario { border: 2px solid var(--carbon); color: var(--carbon); background: transparent; }
   .boton--secundario:hover { background: var(--carbon); color: var(--crema); }
 
-  .boton--whatsapp { background: #1f8a4c; color: #fff; width: 100%; text-align: center; }
-  .boton--whatsapp:hover { background: #176b3b; }
+  /* Verde un punto más oscuro: blanco sobre #1a7a43 da 5.0 de contraste (AA). */
+  .boton--whatsapp { background: #1a7a43; color: #fff; width: 100%; text-align: center; }
+  .boton--whatsapp:hover { background: #146034; }
 
   .hero__sello {
     display: grid;
@@ -443,13 +444,14 @@
     border: 1px solid var(--crema-oscura);
     border-radius: var(--radio);
     box-shadow: var(--sombra);
-    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    transition: box-shadow 0.18s ease, border-color 0.18s ease;
   }
 
+  /* Sin transform: la animación de scroll (animation-timeline) ya mueve la
+     tarjeta y el hover no se vería. El realce va por borde y sombra. */
   .plato:hover {
-    transform: translateY(-3px);
-    border-color: rgb(179 38 30 / 35%);
-    box-shadow: 0 16px 36px rgb(20 11 7 / 14%);
+    border-color: rgb(179 38 30 / 45%);
+    box-shadow: 0 16px 36px rgb(20 11 7 / 16%);
   }
 
   .plato__cabecera {
@@ -532,6 +534,23 @@
 }
 
 @layer carrito {
+  /* Velo oscuro detrás del carrito: se toca para cerrar. */
+  .velo {
+    position: fixed;
+    inset: 0;
+    z-index: 35;
+    background: rgb(20 11 7 / 45%);
+    animation: velo-entrar 0.2s ease-out;
+  }
+
+  @keyframes velo-entrar {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Con el carrito abierto, la página de detrás no se desplaza. */
+  body.sin-scroll { overflow: hidden; }
+
   .carrito {
     position: fixed;
     top: 0;
@@ -653,11 +672,12 @@
 
   .carrito__nota { margin-top: 0.6rem; font-size: 0.75rem; color: var(--tinta-suave); text-align: center; }
 
+  /* Por debajo del carrito (40): el aviso nunca tapa el botón de enviar. */
   .aviso-flotante {
     position: fixed;
     left: 50%;
     bottom: 1.5rem;
-    z-index: 50;
+    z-index: 30;
     transform: translate(-50%, 150%);
     padding: 0.7rem 1.3rem;
     border-radius: 999px;

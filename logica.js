@@ -66,6 +66,19 @@ export function estadoHorario(ahora, negocio = NEGOCIO) {
   return { abierto: false, texto: "Cerrado" };
 }
 
+/**
+ * Día de la semana en el restaurante (0 = domingo … 6 = sábado).
+ * Se calcula con la zona horaria del negocio, no con la del visitante.
+ */
+export function diaSemana(ahora, negocio = NEGOCIO) {
+  const partes = new Intl.DateTimeFormat("en-US", {
+    timeZone: negocio.zonaHoraria,
+    weekday: "short",
+  }).formatToParts(ahora);
+  const valor = partes.find((p) => p.type === "weekday")?.value;
+  return { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 }[valor];
+}
+
 /** Añade un plato al carrito. Si ya existe con las mismas opciones, suma cantidad. */
 export function agregarAlCarrito(carrito, plato, opciones = "") {
   const clave = plato.id + (opciones ? "|" + opciones : "");

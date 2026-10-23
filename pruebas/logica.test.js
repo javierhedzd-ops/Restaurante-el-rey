@@ -7,6 +7,7 @@ import {
   formatearPrecio,
   filtrarPlatos,
   estadoHorario,
+  diaSemana,
   agregarAlCarrito,
   cambiarCantidad,
   totalCarrito,
@@ -127,6 +128,15 @@ test("mensajePedido: incluye líneas, opciones y total", () => {
 
 test("mensajePedido: carrito vacío devuelve cadena vacía", () => {
   assert.equal(mensajePedido([]), "");
+});
+
+test("diaSemana: usa la zona horaria del restaurante, no la del visitante", () => {
+  // Viernes 23 de octubre de 2026, 23:30 en Mérida (ya es sábado en UTC).
+  assert.equal(diaSemana(enMerida(23, 23, 30)), 5);
+  // Domingo 25 a las 00:30 en Mérida (en UTC sigue siendo domingo, pero es el caso límite).
+  assert.equal(diaSemana(enMerida(25, 0, 30)), 0);
+  // Martes 27: día de descanso.
+  assert.equal(diaSemana(enMerida(27, 14)), 2);
 });
 
 test("urlWhatsApp: apunta al número del negocio y codifica el texto", () => {

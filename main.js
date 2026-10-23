@@ -6,6 +6,7 @@ import {
   formatearPrecio,
   filtrarPlatos,
   estadoHorario,
+  diaSemana,
   agregarAlCarrito,
   cambiarCantidad,
   totalCarrito,
@@ -63,6 +64,17 @@ function pintarHorario() {
   contenedor.textContent = texto;
   contenedor.classList.toggle("esta-abierto", abierto);
   contenedor.classList.toggle("esta-cerrado", !abierto);
+}
+
+// Marca en la tabla de horario la fila del día de hoy (data-dia="0"…"6").
+function marcarDiaDeHoy() {
+  const hoy = diaSemana(new Date());
+  $$(".horario tr[data-dia]").forEach((fila) => {
+    const esHoy = Number(fila.dataset.dia) === hoy;
+    fila.classList.toggle("horario__hoy", esHoy);
+    if (esHoy) fila.setAttribute("aria-current", "date");
+    else fila.removeAttribute("aria-current");
+  });
 }
 
 // ---------- Menú ----------
@@ -191,13 +203,40 @@ function pintarCarrito() {
 function abrirCarrito(abrir) {
   const panel = $("#carrito");
   const boton = $("#abrir-carrito");
+  const velo = $("#velo-carrito");
   if (!panel) return;
   const visible = abrir ?? panel.hidden;
   panel.hidden = !visible;
+  if (velo) velo.hidden = !visible;
+  // Con el carrito abierto, la página de detrás no se desplaza.
+  document.body.classList.toggle("sin-scroll", visible);
   if (boton) boton.setAttribute("aria-expanded", String(visible));
   if (visible) {
     const primero = $("#cerrar-carrito");
     if (primero) primero.focus();
+  } else if (boton) {
+    // Al cerrar, el foco vuelve al botón que abrió el carrito.
+    boton.focus();
+  }
+}
+
+// Mantiene el tabulador dentro del carrito mientras está abierto.
+function atraparFoco(evento) {
+  const panel = $("#carrito");
+  if (!panel || panel.hidden || evento.key !== "Tab") return;
+  const enfocables = $$(
+    'button:not([disabled]), a[href], input, select, [tabindex]:not([tabindex="-1"])',
+    panel
+  ).filter((el) => el.offsetParent !== null);
+  if (!enfocables.length) return;
+  const primero = enfocables[0];
+  const ultimo = enfocables[enfocables.length - 1];
+  if (evento.shiftKey && document.activeElement === primero) {
+    evento.preventDefault();
+    ultimo.focus();
+  } else if (!evento.shiftKey && document.activeElement === ultimo) {
+    evento.preventDefault();
+    primero.focus();
   }
 }
 
@@ -257,14 +296,18 @@ function conectarEventos() {
   // Abrir / cerrar carrito
   $("#abrir-carrito")?.addEventListener("click", () => abrirCarrito());
   $("#cerrar-carrito")?.addEventListener("click", () => abrirCarrito(false));
+  // Tocar el velo (fuera del panel) también cierra.
+  $("#velo-carrito")?.addEventListener("click", () => abrirCarrito(false));
   document.addEventListener("keydown", (evento) => {
     if (evento.key === "Escape") abrirCarrito(false);
+    atraparFoco(evento);
   });
 
-  // Enviar pedido
+  // Enviar pedido: abre WhatsApp y cierra el panel para dejar ver la página.
   $("#enviar-pedido")?.addEventListener("click", () => {
     if (!estado.carrito.length) return;
     window.open(urlWhatsApp(estado.carrito), "_blank", "noopener");
+    abrirCarrito(false);
   });
 
   // Vaciar
@@ -279,11 +322,15 @@ function conectarEventos() {
 
 function iniciar() {
   pintarHorario();
+  marcarDiaDeHoy();
   pintarFiltros();
   pintarMenu();
   pintarCarrito();
   conectarEventos();
-  setInterval(pintarHorario, 60_000);
+  setInterval(() => {
+    pintarHorario();
+    marcarDiaDeHoy();
+  }, 60_000);
 }
 
 if (document.readyState === "loading") {
