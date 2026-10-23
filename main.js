@@ -113,18 +113,20 @@ function tarjetaPlato(plato, indice) {
   return `
     <article class="plato${foto ? " plato--con-foto" : ""}" data-id="${plato.id}">
       ${foto}
-      <div class="plato__cabecera">
-        <span class="plato__numero" aria-hidden="true">${numero}</span>
-        <h3 class="plato__nombre">${escapar(plato.nombre)}</h3>
-        <span class="plato__precio">${formatearPrecio(plato.precio)}</span>
-      </div>
-      <p class="plato__desc">${escapar(plato.desc)}</p>
-      ${etiquetas ? `<div class="plato__etiquetas">${etiquetas}</div>` : ""}
-      <div class="plato__pie">
-        ${opciones}
-        <button class="boton-anadir" type="button" data-anadir="${plato.id}" ${sinPrecio ? "disabled" : ""}>
-          ${sinPrecio ? "Preguntar" : "Añadir"}
-        </button>
+      <div class="plato__cuerpo">
+        <div class="plato__cabecera">
+          <span class="plato__numero" aria-hidden="true">${numero}</span>
+          <h3 class="plato__nombre">${escapar(plato.nombre)}</h3>
+          <span class="plato__precio">${formatearPrecio(plato.precio)}</span>
+        </div>
+        <p class="plato__desc">${escapar(plato.desc)}</p>
+        ${etiquetas ? `<div class="plato__etiquetas">${etiquetas}</div>` : ""}
+        <div class="plato__pie">
+          ${opciones}
+          <button class="boton-anadir" type="button" data-anadir="${plato.id}" ${sinPrecio ? "disabled" : ""}>
+            ${sinPrecio ? "Preguntar" : "Añadir"}
+          </button>
+        </div>
       </div>
     </article>`;
 }

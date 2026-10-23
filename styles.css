@@ -31,10 +31,13 @@
     --dorado: #d9a441;
     --verde: #2f7d4f;
     --radio: 16px;
+    --radio-carta: 6px;
     --sombra: 0 12px 32px rgb(20 11 7 / 10%);
+    --sombra-carta: 0 1px 2px rgb(20 11 7 / 6%), 0 10px 24px -12px rgb(20 11 7 / 18%);
     --ancho: 1140px;
     --fuente: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-    --fuente-titulo: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --fuente-titulo: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --fuente-cifras: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
     --grano: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
 
     /* Movimiento: curvas de Emil Kowalski. Salida rápida, llegada suave. */
@@ -58,9 +61,28 @@
     color: var(--tinta);
     background: var(--crema);
     line-height: 1.6;
+    font-optical-sizing: auto;
+    font-synthesis: none;
     -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: rgb(179 38 30 / 12%);
   }
+
+  /* Grano de papel sobre toda la página: quita el aire de "plantilla" a los
+     fondos planos. Va por encima del fondo y por debajo del contenido. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: var(--grano);
+    opacity: 0.035;
+    mix-blend-mode: multiply;
+  }
+
+  body > * { position: relative; z-index: 1; }
+
+  p { text-wrap: pretty; }
 
   h1, h2, h3 { line-height: 1.1; letter-spacing: -0.02em; }
   h1, h2 { font-family: var(--fuente-titulo); font-weight: 600; }
@@ -637,11 +659,16 @@
     margin-bottom: 1.75rem;
   }
 
+  /* Los filtros se quedan pegados bajo la cabecera al bajar por la carta. */
   .filtros {
+    position: sticky;
+    top: 3.6rem;
+    z-index: 15;
     display: flex;
     gap: 0.5rem;
     overflow-x: auto;
-    padding-bottom: 0.25rem;
+    padding: 0.5rem 0;
+    background: var(--crema);
     scrollbar-width: none;
   }
 
@@ -671,42 +698,41 @@
 
   .contador { font-size: 0.82rem; color: var(--tinta-suave); }
 
+  /* La carta: una sola columna de filetes, como una carta impresa. Nada de
+     rejilla de tarjetas con sombra, que parece app de delivery. */
   .platos {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.1rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    max-width: 46rem;
+    margin-inline: auto;
+    border-top: 1px solid var(--crema-oscura);
   }
 
   .plato {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    padding: 1.35rem;
-    background: #fff;
-    border: 1px solid var(--crema-oscura);
-    border-radius: var(--radio);
-    box-shadow: var(--sombra);
-    transition: box-shadow var(--medio) var(--salida), border-color var(--medio) var(--salida);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--crema-oscura);
+    transition: background var(--medio) var(--salida);
   }
 
-  /* Sin transform: la animación de scroll (animation-timeline) ya mueve la
-     tarjeta y el hover no se vería. El realce va por borde y sombra. */
-  .plato:hover {
-    border-color: rgb(179 38 30 / 45%);
-    box-shadow: 0 16px 36px rgb(20 11 7 / 16%);
+  /* Con foto: la imagen a la izquierda en pantallas anchas, el texto al lado. */
+  .plato--con-foto {
+    grid-template-columns: clamp(120px, 18vw, 168px) minmax(0, 1fr);
+    gap: clamp(1rem, 2.5vw, 1.75rem);
+    align-items: start;
   }
 
-  /* Cabecera de carta: número de orden, nombre y precio en una columna
-     fija a la derecha, para que todos los precios queden alineados. */
-  /* Foto de la tarjeta: sangra hasta el borde y deja el texto debajo. */
-  .plato--con-foto { padding-top: 0; }
+  .plato__cuerpo { display: grid; gap: 0.45rem; min-width: 0; }
 
   .plato__foto {
     position: relative;
-    margin: 0 -1.35rem 0.35rem;
+    margin: 0;
     aspect-ratio: 4 / 3;
     overflow: hidden;
-    border-radius: calc(var(--radio) - 1px) calc(var(--radio) - 1px) 0 0;
+    border-radius: var(--radio-carta);
     background: var(--crema-oscura);
   }
 
@@ -719,16 +745,15 @@
 
   .plato:hover .plato__foto img { transform: scale(1.04); }
 
+  /* El crédito de la foto no se pinta en la tarjeta: está en el pie y en
+     fotos/CREDITOS.md. Aquí solo se lee para lectores de pantalla. */
   .plato__foto figcaption {
     position: absolute;
-    right: 0.5rem;
-    bottom: 0.4rem;
-    padding: 0.1rem 0.45rem;
-    border-radius: 999px;
-    font-size: 0.7rem;
-    color: rgb(253 246 236 / 90%);
-    background: rgb(20 11 7 / 55%);
-    backdrop-filter: blur(4px);
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .plato__cabecera {
@@ -736,6 +761,16 @@
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: baseline;
     gap: 0.6rem;
+  }
+
+  /* Puntos de carta entre el nombre y el precio. */
+  .plato__nombre::after {
+    content: "";
+    display: inline-block;
+    width: 100%;
+    margin-left: 0.5rem;
+    border-bottom: 1px dotted rgb(107 87 72 / 45%);
+    transform: translateY(-0.25em);
   }
 
   .plato__numero {
@@ -747,18 +782,26 @@
     letter-spacing: 0.02em;
   }
 
-  .plato__nombre { font-size: 1.02rem; }
+  .plato__nombre {
+    font-family: var(--fuente-titulo);
+    font-size: clamp(1.1rem, 2vw, 1.28rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
 
   .plato__precio {
     min-width: 5.5ch;
     text-align: right;
-    font-weight: 800;
+    font-family: var(--fuente-cifras);
+    font-size: 0.98rem;
+    font-weight: 700;
     font-variant-numeric: tabular-nums;
     color: var(--rojo);
     white-space: nowrap;
   }
 
-  .plato__desc { font-size: 0.9rem; color: var(--tinta-suave); flex: 1; }
+  .plato__desc { font-size: 0.95rem; color: var(--tinta-suave); max-width: 58ch; }
 
   .plato__etiquetas { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 
@@ -780,9 +823,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-    margin-top: 0.4rem;
-    padding-top: 0.8rem;
-    border-top: 1px dashed var(--crema-oscura);
+    margin-top: 0.35rem;
   }
 
   .opciones { display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.8rem; }
@@ -1219,10 +1260,16 @@
     .hero__acciones .boton { flex: 1 1 auto; }
   }
 
+  /* En el teléfono la carta va a una columna: foto arriba, texto debajo. */
+  @media (max-width: 560px) {
+    .plato--con-foto { grid-template-columns: minmax(0, 1fr); gap: 0.85rem; }
+    .plato__foto { aspect-ratio: 16 / 9; }
+    .plato { padding: 1.25rem 0; }
+  }
+
   /* En pantallas táctiles no hay hover: el realce se queda pegado al tocar.
      Se limita a punteros finos (ratón) y en táctil solo queda el :active. */
   @media (hover: none) {
-    .plato:hover { border-color: var(--crema-oscura); box-shadow: var(--sombra); }
     .plato:hover .plato__foto img { transform: none; }
     .galeria__pieza:hover img { transform: none; }
     .filtro:hover { border-color: var(--crema-oscura); color: inherit; }
