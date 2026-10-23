@@ -148,3 +148,123 @@ export function urlWhatsApp(carrito, negocio = NEGOCIO) {
   const texto = mensajePedido(carrito, negocio);
   return `https://wa.me/${negocio.telefonoPedidos}?text=${encodeURIComponent(texto)}`;
 }
+
+// ---------- Reservas ----------
+
+/** Cuántas personas caben en una sola reserva. */
+export const RESERVA_MAX_PERSONAS = 20;
+
+/** Hora a la que se puede reservar como muy tarde (el cierre es a las 22:00). */
+export const RESERVA_ULTIMA_HORA = 21;
+
+/** Fecha de hoy en el restaurante, como "AAAA-MM-DD". */
+export function fechaHoy(ahora, negocio = NEGOCIO) {
+  const partes = new Intl.DateTimeFormat("en-CA", {
+    timeZone: negocio.zonaHoraria,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(ahora);
+  const valor = (tipo) => partes.find((p) => p.type === tipo)?.value;
+  return `${valor("year")}-${valor("month")}-${valor("day")}`;
+}
+
+/**
+ * Valida una reserva y devuelve los errores por campo.
+ * Un objeto vacío significa que la reserva se puede mandar.
+ *
+ * reserva: { nombre, telefono, personas, fecha ("AAAA-MM-DD"), hora ("HH:MM"), notas }
+ * La fecha y la hora se comparan con el reloj del restaurante, no con el del visitante.
+ */
+export function validarReserva(reserva, ahora = new Date(), negocio = NEGOCIO) {
+  const errores = {};
+  const nombre = (reserva.nombre || "").trim();
+  const telefono = (reserva.telefono || "").replace(/[\s\-().]/g, "");
+  const personas = Number(reserva.personas);
+  const fecha = reserva.fecha || "";
+  const hora = reserva.hora || "";
+
+  if (nombre.length < 2) {
+    errores.nombre = "Escribe tu nombre.";
+  } else if (nombre.length > 60) {
+    errores.nombre = "El nombre es demasiado largo.";
+  }
+
+  // México: 10 dígitos. Se aceptan con lada de país (52) delante.
+  const soloDigitos = telefono.replace(/^\+?52/, "");
+  if (!/^\d{10}$/.test(soloDigitos)) {
+    errores.telefono = "Escribe un teléfono de 10 dígitos.";
+  }
+
+  if (!Number.isInteger(personas) || personas < 1) {
+    errores.personas = "¿Cuántas personas son?";
+  } else if (personas > RESERVA_MAX_PERSONAS) {
+    errores.personas = `Para más de ${RESERVA_MAX_PERSONAS} personas, llámanos.`;
+  }
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+    errores.fecha = "Elige el día.";
+  } else if (fecha < fechaHoy(ahora, negocio)) {
+    errores.fecha = "Ese día ya pasó.";
+  } else {
+    // El día tiene que tener servicio (el martes cierra).
+    const [anio, mes, dia] = fecha.split("-").map(Number);
+    const diaSemanaFecha = new Date(Date.UTC(anio, mes - 1, dia)).getUTCDay();
+    const tramo = negocio.horario[diaSemanaFecha];
+    if (!tramo) {
+      errores.fecha = "Ese día cerramos. Elige otro.";
+    } else if (!/^\d{2}:\d{2}$/.test(hora)) {
+      errores.hora = "Elige la hora.";
+    } else {
+      const [h, m] = hora.split(":").map(Number);
+      const minutos = h * 60 + m;
+      if (minutos < tramo[0] * 60 || minutos > RESERVA_ULTIMA_HORA * 60) {
+        errores.hora = `Reservamos de ${tramo[0]}:00 a ${RESERVA_ULTIMA_HORA}:00.`;
+      } else if (fecha === fechaHoy(ahora, negocio)) {
+        // Hoy no se puede reservar para una hora que ya pasó.
+        const partes = new Intl.DateTimeFormat("en-GB", {
+          timeZone: negocio.zonaHoraria,
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        }).formatToParts(ahora);
+        const valor = (tipo) => partes.find((p) => p.type === tipo)?.value;
+        const minutosAhora = (Number(valor("hour")) % 24) * 60 + Number(valor("minute"));
+        if (minutos <= minutosAhora) {
+          errores.hora = "Esa hora ya pasó. Elige una más tarde.";
+        }
+      }
+    }
+  }
+
+  return errores;
+}
+
+/** Texto de la reserva para WhatsApp. */
+export function mensajeReserva(reserva, negocio = NEGOCIO) {
+  const nombre = (reserva.nombre || "").trim();
+  const telefono = (reserva.telefono || "").replace(/[\s\-().]/g, "").replace(/^\+?52/, "");
+  const personas = Number(reserva.personas);
+  const notas = (reserva.notas || "").trim();
+  const [anio, mes, dia] = (reserva.fecha || "").split("-");
+  const fecha = `${dia}/${mes}/${anio}`;
+
+  return [
+    `Hola, quiero reservar en ${negocio.nombre} (${negocio.sucursal}):`,
+    "",
+    `• Nombre: ${nombre}`,
+    `• Personas: ${personas}`,
+    `• Día: ${fecha}`,
+    `• Hora: ${reserva.hora}`,
+    `• Teléfono: ${telefono}`,
+    ...(notas ? ["", `Notas: ${notas}`] : []),
+    "",
+    "¿Me confirman la mesa?",
+  ].join("\n");
+}
+
+/** URL de WhatsApp con la reserva ya escrita. */
+export function urlWhatsAppReserva(reserva, negocio = NEGOCIO) {
+  const texto = mensajeReserva(reserva, negocio);
+  return `https://wa.me/${negocio.telefonoPedidos}?text=${encodeURIComponent(texto)}`;
+}

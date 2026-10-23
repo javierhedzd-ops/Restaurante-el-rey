@@ -10,6 +10,7 @@
 <meta property="og:description" content="Cincuenta años de carnitas estilo Michoacán. Pide por WhatsApp.">
 <meta property="og:type" content="restaurant">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" as="image" href="fotos/cazo.jpg" fetchpriority="high">
 <link rel="stylesheet" href="styles.css">
 <script type="module" src="main.js"></script>
 </head>
@@ -25,7 +26,9 @@
 
   <nav class="nav" aria-label="Principal">
     <a href="#menu">Menú</a>
-    <a href="#nosotros">Nosotros</a>
+    <a href="#cazo">El cazo</a>
+    <a href="#galeria">Galería</a>
+    <a href="#reservas">Reservas</a>
     <a href="#visitanos">Visítanos</a>
   </nav>
 
@@ -41,11 +44,12 @@
 
 <main>
 
-  <!-- HERO -->
+  <!-- HERO: la foto del cazo manda; el titular va encima, abajo a la izquierda. -->
   <section class="hero" id="inicio">
-    <div class="hero__fondo" aria-hidden="true">
-      <span class="hero__grano"></span>
-    </div>
+    <figure class="hero__foto">
+      <img src="fotos/cazo.jpg" width="1280" height="1700" alt="Cazo de cobre lleno de carnitas dorándose en su manteca" fetchpriority="high" decoding="async">
+      <figcaption class="hero__credito">Foto: Ferfive · CC BY 4.0 · Wikimedia Commons</figcaption>
+    </figure>
 
     <div class="hero__contenido">
       <p class="hero__etiqueta">Chuminópolis · Mérida · Desde 1974</p>
@@ -63,22 +67,81 @@
       </div>
     </div>
 
-    <div class="hero__lateral">
-      <div class="hero__sello" aria-hidden="true">
-        <span>50</span>
-        <small>años de tradición</small>
-      </div>
-      <p class="hero__cazo">
-        <span class="hero__cazo-etiqueta">Hoy en el cazo</span>
-        Maciza · Costilla · Buche · Oreja · Nana · Cuerito
-      </p>
-    </div>
-
     <ul class="hero__datos">
       <li><strong>4.3 <svg class="estrella" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.8L12 16.9l-5.3 2.7 1.1-5.8L3.5 9.7l5.9-.8L12 3.5z" fill="currentColor"/></svg></strong><span>571 reseñas en Google</span></li>
       <li><strong>13:00–22:00</strong><span>Lunes, miércoles a domingo</span></li>
       <li><strong>Domicilio</strong><span>Y para llevar</span></li>
     </ul>
+  </section>
+
+  <!-- EL CAZO: la cosa viva. El selector de kilo arma el pedido de verdad. -->
+  <section class="seccion seccion--cazo" id="cazo" aria-labelledby="titulo-cazo">
+    <div class="cazo">
+      <div class="cazo__texto">
+        <p class="cazo__etiqueta">La cosa viva</p>
+        <h2 class="seccion__titulo" id="titulo-cazo">Arma tu kilo</h2>
+        <p class="seccion__nota">
+          Elige cuánto y de qué. Te lo pesamos al momento, con tortillas de maíz,
+          cebolla, cilantro, limones, aguacate y salsas de la casa.
+        </p>
+
+        <form class="armador" id="armador" novalidate>
+          <fieldset class="armador__grupo">
+            <legend class="armador__leyenda">¿Cuánto?</legend>
+            <div class="armador__opciones" role="radiogroup" aria-label="Cantidad">
+              <label class="pastilla">
+                <input type="radio" name="peso" value="medio" checked>
+                <span>½ kg</span>
+              </label>
+              <label class="pastilla">
+                <input type="radio" name="peso" value="kilo">
+                <span>1 kg</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset class="armador__grupo">
+            <legend class="armador__leyenda">¿De qué?</legend>
+            <div class="armador__opciones" role="radiogroup" aria-label="Proteína">
+              <label class="pastilla">
+                <input type="radio" name="proteina" value="surtida" checked>
+                <span>Surtida</span>
+              </label>
+              <label class="pastilla">
+                <input type="radio" name="proteina" value="maciza">
+                <span>Maciza</span>
+              </label>
+              <label class="pastilla">
+                <input type="radio" name="proteina" value="al-gusto">
+                <span>Al gusto</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <label class="armador__select" id="armador-proteina-campo" hidden>
+            <span class="armador__leyenda">Elige la proteína</span>
+            <select id="armador-proteina"></select>
+          </label>
+
+          <div class="armador__resultado" aria-live="polite">
+            <p class="armador__linea">
+              <span id="armador-nombre">½ kg surtido</span>
+              <strong id="armador-precio">$260</strong>
+            </p>
+            <p class="armador__nota" id="armador-nota">Con todo lo de acompañamiento.</p>
+          </div>
+
+          <button class="boton boton--primario armador__boton" type="submit" id="armador-anadir">
+            Añadir a mi pedido
+          </button>
+        </form>
+      </div>
+
+      <figure class="cazo__foto">
+        <img src="fotos/kilo.jpg" width="1280" height="1707" alt="Kilo de carnitas servido con tortillas y salsa" loading="lazy" decoding="async">
+        <figcaption>Foto: ProtoplasmaKid · CC BY 4.0 · Wikimedia Commons</figcaption>
+      </figure>
+    </div>
   </section>
 
   <!-- MENÚ INTERACTIVO -->
@@ -137,6 +200,118 @@
     </div>
   </section>
 
+  <!-- GALERÍA: fotos del cazo, del puesto y de la mesa. -->
+  <section class="seccion" id="galeria" aria-labelledby="titulo-galeria">
+    <div class="seccion__cabecera">
+      <div>
+        <h2 class="seccion__titulo" id="titulo-galeria">Así se ve el cazo</h2>
+        <p class="seccion__nota">Carnitas de Michoacán, tortillas hechas a mano y salsas de la casa.</p>
+      </div>
+    </div>
+    <ul class="galeria">
+      <li class="galeria__pieza galeria__pieza--ancha">
+        <figure>
+          <img src="fotos/cazo.jpg" alt="Cazo de cobre lleno de carnitas dorándose en su manteca" loading="lazy" decoding="async" width="1280" height="1700">
+          <figcaption>Cazo de cobre · Ferfive · CC BY 4.0</figcaption>
+        </figure>
+      </li>
+      <li class="galeria__pieza">
+        <figure>
+          <img src="fotos/taco-carnitas.jpg" alt="Taco de carnitas en tortilla hecha a mano" loading="lazy" decoding="async" width="640" height="480">
+          <figcaption>Taco de carnitas · Missvain · CC0</figcaption>
+        </figure>
+      </li>
+      <li class="galeria__pieza">
+        <figure>
+          <img src="fotos/mercado.jpg" alt="Carnitas en el mercado" loading="lazy" decoding="async" width="640" height="480">
+          <figcaption>En el mercado · DaliaMonge · CC BY-SA 4.0</figcaption>
+        </figure>
+      </li>
+      <li class="galeria__pieza">
+        <figure>
+          <img src="fotos/tortillas.jpg" alt="Tortillas de maíz en comal de barro" loading="lazy" decoding="async" width="640" height="480">
+          <figcaption>Tortillas de nixtamal · German matus · CC BY-SA 4.0</figcaption>
+        </figure>
+      </li>
+      <li class="galeria__pieza">
+        <figure>
+          <img src="fotos/salsas.jpg" alt="Salsas y complementos del taco" loading="lazy" decoding="async" width="640" height="480">
+          <figcaption>Salsas de la casa · Salazar Lira H. E. · CC BY-SA 4.0</figcaption>
+        </figure>
+      </li>
+      <li class="galeria__pieza">
+        <figure>
+          <img src="fotos/michelada.jpg" alt="Michelada servida en vaso escarchado" loading="lazy" decoding="async" width="640" height="480">
+          <figcaption>Michelada · Popo le Chien · CC BY-SA 3.0</figcaption>
+        </figure>
+      </li>
+    </ul>
+  </section>
+
+  <!-- RESERVAS: el formulario valida en el navegador y manda la reserva por WhatsApp. -->
+  <section class="seccion seccion--reservas" id="reservas" aria-labelledby="titulo-reservas">
+    <div class="reservas">
+      <div class="reservas__intro">
+        <p class="reservas__etiqueta">Reserva tu mesa</p>
+        <h2 class="seccion__titulo" id="titulo-reservas">Ven con hambre,<br>nosotros ponemos el cazo</h2>
+        <p class="seccion__nota">
+          Mesas para grupos, cumpleaños y comidas de familia. Reservamos de 13:00 a 21:00,
+          de lunes a domingo (martes cerrado). Te confirmamos por WhatsApp.
+        </p>
+        <ul class="reservas__puntos">
+          <li>Hasta 20 personas por reserva.</li>
+          <li>Te guardamos la mesa 15 minutos.</li>
+          <li>Para grupos grandes, llámanos al <a class="enlace" href="tel:+529991190662">999 119 0662</a>.</li>
+        </ul>
+      </div>
+
+      <form class="reserva" id="form-reserva" novalidate>
+        <div class="reserva__fila">
+          <label class="campo">
+            <span class="campo__texto">Nombre</span>
+            <input id="reserva-nombre" name="nombre" type="text" autocomplete="name" maxlength="60" required aria-describedby="error-nombre">
+            <span class="campo__error" id="error-nombre" aria-live="polite"></span>
+          </label>
+          <label class="campo">
+            <span class="campo__texto">Teléfono</span>
+            <input id="reserva-telefono" name="telefono" type="tel" inputmode="tel" autocomplete="tel" placeholder="999 000 0000" required aria-describedby="error-telefono">
+            <span class="campo__error" id="error-telefono" aria-live="polite"></span>
+          </label>
+        </div>
+
+        <div class="reserva__fila">
+          <label class="campo">
+            <span class="campo__texto">Personas</span>
+            <input id="reserva-personas" name="personas" type="number" inputmode="numeric" min="1" max="20" value="2" required aria-describedby="error-personas">
+            <span class="campo__error" id="error-personas" aria-live="polite"></span>
+          </label>
+          <label class="campo">
+            <span class="campo__texto">Día</span>
+            <input id="reserva-fecha" name="fecha" type="date" required aria-describedby="error-fecha">
+            <span class="campo__error" id="error-fecha" aria-live="polite"></span>
+          </label>
+          <label class="campo">
+            <span class="campo__texto">Hora</span>
+            <select id="reserva-hora" name="hora" required aria-describedby="error-hora">
+              <option value="">Elige</option>
+            </select>
+            <span class="campo__error" id="error-hora" aria-live="polite"></span>
+          </label>
+        </div>
+
+        <label class="campo">
+          <span class="campo__texto">Notas <small>(opcional)</small></span>
+          <textarea id="reserva-notas" name="notas" rows="2" maxlength="200" placeholder="Cumpleaños, silla para bebé, mesa al aire libre…"></textarea>
+        </label>
+
+        <button class="boton boton--primario reserva__boton" type="submit" id="enviar-reserva">
+          Reservar por WhatsApp
+        </button>
+        <p class="reserva__nota">No se cobra nada. La mesa queda cuando te contestamos.</p>
+      </form>
+    </div>
+  </section>
+
   <!-- VISÍTANOS -->
   <section class="seccion" id="visitanos" aria-labelledby="titulo-visitanos">
     <h2 class="seccion__titulo" id="titulo-visitanos">Visítanos</h2>
@@ -180,6 +355,12 @@
   <p class="pie__marca"><svg class="pie__corona" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 8l4.5 3.5L12 5l4.5 6.5L21 8l-1.6 10H4.6L3 8z" fill="currentColor"/></svg> Carnitas Michoacán El Rey</p>
   <p>Chuminópolis, Mérida, Yucatán · Desde 1974</p>
   <p class="pie__nota">Precios en pesos mexicanos, sujetos a cambio.</p>
+  <p class="pie__creditos">
+    Fotos de Wikimedia Commons: Ferfive y ProtoplasmaKid (CC BY 4.0),
+    Jj saezdeo, DaliaMonge, AlejandroLinaresGarcia, German matus y
+    Salazar Lira Hanna Elizabeth (CC BY-SA 4.0), Popo le Chien (CC BY-SA 3.0),
+    Koffermejia y Missvain (CC0). Créditos completos en <code>fotos/CREDITOS.md</code>.
+  </p>
 </footer>
 
 <!-- Carrito -->
@@ -189,21 +370,18 @@
     <h2 id="titulo-carrito">Mi pedido</h2>
     <button id="cerrar-carrito" class="carrito__cerrar" type="button" aria-label="Cerrar el pedido"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
   </div>
-
   <p id="carrito-vacio" class="carrito__vacio">
-    Todavía no has añadido nada. Toca <strong>Añadir</strong> en cualquier plato.
+    Todavía no hay nada. Añade tacos, tortas o un kilo desde el menú.
   </p>
-
   <ul id="carrito-lineas" class="carrito__lineas"></ul>
-
   <div id="carrito-pie" class="carrito__pie" hidden>
-    <div class="carrito__total">
+    <p class="carrito__total">
       <span>Total</span>
       <strong id="carrito-total">$0</strong>
-    </div>
+    </p>
     <button id="enviar-pedido" class="boton boton--whatsapp" type="button">Enviar pedido por WhatsApp</button>
     <button id="vaciar-carrito" class="carrito__vaciar" type="button">Vaciar</button>
-    <p class="carrito__nota">El pedido se confirma por WhatsApp con el restaurante.</p>
+    <p class="carrito__nota">Te confirmamos disponibilidad y tiempo de entrega por WhatsApp.</p>
   </div>
 </aside>
 

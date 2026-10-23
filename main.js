@@ -12,6 +12,10 @@ import {
   totalCarrito,
   piezasCarrito,
   urlWhatsApp,
+  fechaHoy,
+  validarReserva,
+  urlWhatsAppReserva,
+  RESERVA_ULTIMA_HORA,
 } from "./logica.js";
 
 const CLAVE_CARRITO = "elrey-carrito-v1";
@@ -98,8 +102,17 @@ function tarjetaPlato(plato, indice) {
 
   const sinPrecio = plato.precio === null;
 
+  // Foto opcional: si el plato no tiene, la tarjeta va solo con texto.
+  const foto = plato.foto
+    ? `<figure class="plato__foto">
+         <img src="${escapar(plato.foto.src)}" alt="${escapar(plato.foto.alt)}" loading="lazy" decoding="async" width="640" height="480">
+         <figcaption>${escapar(plato.foto.credito)}</figcaption>
+       </figure>`
+    : "";
+
   return `
-    <article class="plato" data-id="${plato.id}">
+    <article class="plato${foto ? " plato--con-foto" : ""}" data-id="${plato.id}">
+      ${foto}
       <div class="plato__cabecera">
         <span class="plato__numero" aria-hidden="true">${numero}</span>
         <h3 class="plato__nombre">${escapar(plato.nombre)}</h3>
@@ -154,6 +167,90 @@ function pintarFiltros() {
         data-categoria="${c.id}">${escapar(c.nombre)}</button>`
     )
     .join("");
+}
+
+// ---------- Arma tu kilo ----------
+// El selector de la sección "El cazo" arma un pedido real: elige el plato de
+// kilos de datos.js y lo añade al carrito con la proteína elegida.
+
+// Qué plato de kilos corresponde a cada combinación peso + proteína.
+const KILOS = {
+  "medio|surtida": "medio-surtido",
+  "medio|maciza": "medio-maciza",
+  "medio|al-gusto": "medio-parrilla",
+  "kilo|surtida": "kg-surtida",
+  "kilo|maciza": "kg-gusto",
+  "kilo|al-gusto": "kg-gusto",
+};
+
+// Cómo se llama cada combinación en el carrito y qué se lleva de acompañamiento.
+const KILOS_TEXTO = {
+  "medio|surtida": { nombre: "½ kg surtido", nota: "Con tortillas, cebolla, cilantro, limones y salsas." },
+  "medio|maciza": { nombre: "½ kg maciza", nota: "Con tortillas, cebolla, cilantro, limones y salsas." },
+  "medio|al-gusto": { nombre: "½ kg surtido de la casa", nota: "Maciza, costilla, buche, oreja y cuero, para armar tacos." },
+  "kilo|surtida": { nombre: "1 kg surtida", nota: "Maciza y surtido, con todo lo de acompañamiento." },
+  "kilo|maciza": { nombre: "1 kg de maciza", nota: "Con tortillas, cebolla, cilantro, limones, aguacate y salsas." },
+  "kilo|al-gusto": { nombre: "1 kg al gusto", nota: "Elige la proteína; con todo lo de acompañamiento." },
+};
+
+function leerArmador() {
+  const formulario = $("#armador");
+  if (!formulario) return null;
+  const peso = formulario.querySelector('input[name="peso"]:checked')?.value || "medio";
+  const proteina = formulario.querySelector('input[name="proteina"]:checked')?.value || "surtida";
+  const select = $("#armador-proteina");
+  const gusto = select ? select.value : "";
+  return { peso, proteina, gusto, clave: `${peso}|${proteina}` };
+}
+
+function pintarArmador() {
+  const eleccion = leerArmador();
+  if (!eleccion) return;
+
+  const campo = $("#armador-proteina-campo");
+  if (campo) campo.hidden = eleccion.proteina !== "al-gusto";
+
+  const plato = PLATOS.find((p) => p.id === KILOS[eleccion.clave]);
+  const texto = KILOS_TEXTO[eleccion.clave];
+  if (!plato || !texto) return;
+
+  const nombre = $("#armador-nombre");
+  const precio = $("#armador-precio");
+  const nota = $("#armador-nota");
+  if (nombre) nombre.textContent = texto.nombre;
+  if (precio) precio.textContent = formatearPrecio(plato.precio);
+  if (nota) nota.textContent = texto.nota;
+}
+
+function conectarArmador() {
+  const formulario = $("#armador");
+  if (!formulario) return;
+
+  const select = $("#armador-proteina");
+  if (select) {
+    select.innerHTML = PROTEINAS.map(
+      (p) => `<option value="${escapar(p)}">${escapar(p)}</option>`
+    ).join("");
+  }
+
+  formulario.addEventListener("change", pintarArmador);
+
+  formulario.addEventListener("submit", (evento) => {
+    evento.preventDefault();
+    const eleccion = leerArmador();
+    if (!eleccion) return;
+    const plato = PLATOS.find((p) => p.id === KILOS[eleccion.clave]);
+    if (!plato) return;
+
+    // "Al gusto" lleva la proteína elegida; el resto, sin opciones.
+    const opciones = eleccion.proteina === "al-gusto" ? eleccion.gusto : "";
+    estado.carrito = agregarAlCarrito(estado.carrito, plato, opciones);
+    guardarCarrito();
+    pintarCarrito();
+    avisar(`${KILOS_TEXTO[eleccion.clave].nombre} añadido`);
+  });
+
+  pintarArmador();
 }
 
 // ---------- Carrito ----------
@@ -253,6 +350,83 @@ function avisar(texto) {
   avisar.temporizador = setTimeout(() => aviso.classList.remove("aviso--visible"), 2200);
 }
 
+// ---------- Reservas ----------
+
+// Horas que se pueden reservar: de la apertura a RESERVA_ULTIMA_HORA, cada media hora.
+function horasReserva() {
+  const horas = [];
+  for (let minutos = 13 * 60; minutos <= RESERVA_ULTIMA_HORA * 60; minutos += 30) {
+    const h = String(Math.floor(minutos / 60)).padStart(2, "0");
+    const m = String(minutos % 60).padStart(2, "0");
+    horas.push(`${h}:${m}`);
+  }
+  return horas;
+}
+
+function pintarReserva() {
+  const fecha = $("#reserva-fecha");
+  const hora = $("#reserva-hora");
+  if (!fecha || !hora) return;
+
+  const hoy = fechaHoy(new Date());
+  fecha.min = hoy;
+  if (!fecha.value) fecha.value = hoy;
+
+  const elegida = hora.value;
+  hora.innerHTML = `<option value="">Elige</option>` +
+    horasReserva().map((h) => `<option value="${h}">${h}</option>`).join("");
+  if (elegida) hora.value = elegida;
+}
+
+function leerReserva() {
+  return {
+    nombre: $("#reserva-nombre")?.value || "",
+    telefono: $("#reserva-telefono")?.value || "",
+    personas: $("#reserva-personas")?.value || "",
+    fecha: $("#reserva-fecha")?.value || "",
+    hora: $("#reserva-hora")?.value || "",
+    notas: $("#reserva-notas")?.value || "",
+  };
+}
+
+// Pinta los errores por campo y devuelve true si no hay ninguno.
+function pintarErroresReserva(errores) {
+  const campos = ["nombre", "telefono", "personas", "fecha", "hora"];
+  for (const campo of campos) {
+    const entrada = $(`#reserva-${campo}`);
+    const salida = $(`#error-${campo}`);
+    const mensaje = errores[campo] || "";
+    if (salida) salida.textContent = mensaje;
+    if (entrada) {
+      entrada.classList.toggle("campo--error", Boolean(mensaje));
+      if (mensaje) entrada.setAttribute("aria-invalid", "true");
+      else entrada.removeAttribute("aria-invalid");
+    }
+  }
+  return Object.keys(errores).length === 0;
+}
+
+function conectarReserva() {
+  const formulario = $("#form-reserva");
+  if (!formulario) return;
+
+  pintarReserva();
+  $("#reserva-fecha")?.addEventListener("change", pintarReserva);
+
+  formulario.addEventListener("submit", (evento) => {
+    evento.preventDefault();
+    const reserva = leerReserva();
+    const errores = validarReserva(reserva);
+    if (!pintarErroresReserva(errores)) {
+      const primero = formulario.querySelector(".campo--error");
+      primero?.focus();
+      return;
+    }
+    window.open(urlWhatsAppReserva(reserva), "_blank", "noopener");
+    avisar("Reserva lista para enviar por WhatsApp");
+  });
+}
+
 // ---------- Eventos ----------
 
 function conectarEventos() {
@@ -330,6 +504,8 @@ function iniciar() {
   pintarFiltros();
   pintarMenu();
   pintarCarrito();
+  conectarArmador();
+  conectarReserva();
   conectarEventos();
   setInterval(() => {
     pintarHorario();

@@ -14,6 +14,11 @@ import {
   piezasCarrito,
   mensajePedido,
   urlWhatsApp,
+  fechaHoy,
+  validarReserva,
+  mensajeReserva,
+  urlWhatsAppReserva,
+  RESERVA_MAX_PERSONAS,
 } from "../logica.js";
 
 // Mérida es UTC-6 todo el año (no tiene horario de verano).
@@ -145,4 +150,77 @@ test("urlWhatsApp: apunta al número del negocio y codifica el texto", () => {
   assert.ok(url.startsWith(`https://wa.me/${NEGOCIO.telefonoPedidos}?text=`));
   assert.ok(!url.includes(" "));
   assert.ok(url.includes("Taco%20de%20maciza"));
+});
+
+// ---------- Reservas ----------
+// Viernes 23 de octubre de 2026, 12:00 en Mérida (UTC-6).
+const viernesMediodia = enMerida(23, 12);
+
+const reservaBuena = {
+  nombre: "Javi",
+  telefono: "999 119 0662",
+  personas: 4,
+  fecha: "2026-10-23",
+  hora: "14:00",
+  notas: "",
+};
+
+test("fechaHoy: usa la zona del restaurante, no la del visitante", () => {
+  // 23:30 en Mérida ya es el día 24 en UTC.
+  assert.equal(fechaHoy(enMerida(23, 23, 30)), "2026-10-23");
+  assert.equal(fechaHoy(enMerida(24, 0, 30)), "2026-10-24");
+});
+
+test("validarReserva: una reserva correcta no da errores", () => {
+  assert.deepEqual(validarReserva(reservaBuena, viernesMediodia), {});
+});
+
+test("validarReserva: nombre y teléfono", () => {
+  assert.ok(validarReserva({ ...reservaBuena, nombre: " " }, viernesMediodia).nombre);
+  assert.ok(validarReserva({ ...reservaBuena, nombre: "x".repeat(61) }, viernesMediodia).nombre);
+  assert.ok(validarReserva({ ...reservaBuena, telefono: "12345" }, viernesMediodia).telefono);
+  assert.ok(validarReserva({ ...reservaBuena, telefono: "abc" }, viernesMediodia).telefono);
+  // Con lada de país y separadores sí vale.
+  assert.equal(validarReserva({ ...reservaBuena, telefono: "+52 999-119-0662" }, viernesMediodia).telefono, undefined);
+});
+
+test("validarReserva: personas entre 1 y el máximo", () => {
+  assert.ok(validarReserva({ ...reservaBuena, personas: 0 }, viernesMediodia).personas);
+  assert.ok(validarReserva({ ...reservaBuena, personas: 2.5 }, viernesMediodia).personas);
+  assert.ok(validarReserva({ ...reservaBuena, personas: RESERVA_MAX_PERSONAS + 1 }, viernesMediodia).personas);
+  assert.equal(validarReserva({ ...reservaBuena, personas: RESERVA_MAX_PERSONAS }, viernesMediodia).personas, undefined);
+});
+
+test("validarReserva: fecha pasada, martes cerrado y fecha mal escrita", () => {
+  assert.ok(validarReserva({ ...reservaBuena, fecha: "2026-10-22" }, viernesMediodia).fecha);
+  assert.ok(validarReserva({ ...reservaBuena, fecha: "2026-10-27" }, viernesMediodia).fecha); // martes
+  assert.ok(validarReserva({ ...reservaBuena, fecha: "23/10/2026" }, viernesMediodia).fecha);
+});
+
+test("validarReserva: hora dentro del servicio y no en el pasado", () => {
+  assert.ok(validarReserva({ ...reservaBuena, hora: "12:00" }, viernesMediodia).hora);
+  assert.ok(validarReserva({ ...reservaBuena, hora: "21:30" }, viernesMediodia).hora);
+  assert.ok(validarReserva({ ...reservaBuena, hora: "" }, viernesMediodia).hora);
+  // Hoy a las 12:00 no se puede reservar para las 12:00 ni antes.
+  assert.ok(validarReserva({ ...reservaBuena, hora: "12:00" }, viernesMediodia).hora);
+  assert.equal(validarReserva({ ...reservaBuena, hora: "13:00" }, viernesMediodia).hora, undefined);
+  // Mañana a la misma hora sí.
+  assert.equal(validarReserva({ ...reservaBuena, fecha: "2026-10-24", hora: "13:00" }, viernesMediodia).hora, undefined);
+});
+
+test("mensajeReserva: lleva los datos y la fecha en formato mexicano", () => {
+  const texto = mensajeReserva({ ...reservaBuena, notas: "Cumpleaños" });
+  assert.ok(texto.includes("Javi"));
+  assert.ok(texto.includes("4"));
+  assert.ok(texto.includes("23/10/2026"));
+  assert.ok(texto.includes("14:00"));
+  assert.ok(texto.includes("9991190662"));
+  assert.ok(texto.includes("Cumpleaños"));
+  assert.ok(!mensajeReserva(reservaBuena).includes("Notas:"));
+});
+
+test("urlWhatsAppReserva: apunta al número del negocio y codifica el texto", () => {
+  const url = urlWhatsAppReserva(reservaBuena);
+  assert.ok(url.startsWith(`https://wa.me/${NEGOCIO.telefonoPedidos}?text=`));
+  assert.ok(decodeURIComponent(url).includes("Javi"));
 });
