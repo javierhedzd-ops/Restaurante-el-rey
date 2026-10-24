@@ -85,3 +85,6 @@
     .admin__guardar { position: static; }
   }
 }
+
+/* "Ver la web" con área táctil de 44 px como el resto de controles. */
+.admin__cabecera .enlace { display: inline-flex; align-items: center; min-height: 44px; }

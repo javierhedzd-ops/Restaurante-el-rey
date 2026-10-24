@@ -92,7 +92,15 @@ partes, y el rojo chile usado como acento quirúrgico — no como fondo de todo.
 - **Secundario** (borde 2px `--carbon`, fondo transparente): la alternativa. En hover se invierte.
 - **WhatsApp** (`--whatsapp`, ancho completo): solo dentro del carrito.
 - **Añadir** (`--carbon`, píldora pequeña): en cada tarjeta de plato. En hover pasa a `--rojo`.
-- Todos: `transition` de 0.15 s en color y `translateY(-1px)` en hover. Nunca escalar.
+  Al tocarlo dice **"✓ Añadido"** en `--verde` (blanco sobre verde = 5.04) durante 1.4 s, sin cambiar
+  de ancho (las dos etiquetas comparten celda). El botón del armador hace lo mismo.
+- **Preguntar** (platos sin precio): enlace a WhatsApp con la pregunta escrita, con forma de botón
+  secundario (borde `--carbon`). Nunca un botón deshabilitado que no hace nada.
+- Todos: `transition` de 0.16 s. Al **pulsar**, `scale(0.97)` (la página "oye" el dedo; pedido de
+  Javi, 24/10/2026: acabados premium). En **hover**, `translateY(-1px)`, solo con ratón
+  (`@media (hover: hover) and (pointer: fine)`): en táctil el realce se quedaba pegado.
+- Ningún control por debajo de 44×44 px: también enlaces sueltos (Google Maps, redes, "Armar mi kilo").
+- Acciones que borran (Vaciar) no preguntan: dejan **Deshacer** a la vista y con el foco.
 
 ### Tarjeta de plato
 - Fondo blanco, borde `--crema-oscura`, radio 16, sombra suave.
@@ -101,14 +109,18 @@ partes, y el rojo chile usado como acento quirúrgico — no como fondo de todo.
 - En hover: borde rojizo al 45 % y sombra más alta. **Sin `transform`** (choca con la animación de scroll).
 
 ### Etiquetas
-- Píldoras de 0.68rem, mayúsculas, peso 700. Fondo al 12–22 % del color, texto en su tono oscuro.
+- Píldoras de 13 px (`--texto-min`), mayúsculas, peso 700. Fondo al 12–22 % del color, texto en su tono oscuro.
 - Solo tres: `Más pedido` (dorado), `Picante` (rojo), `Para compartir` (verde).
 
 ### Carrito
 - Panel lateral de `min(400px, 100vw)`, fondo `--crema`, borde izquierdo fino.
 - Velo `rgb(20 11 7 / 45%)` detrás, que cierra al tocarlo.
 - `z-index`: velo 35, carrito 40, aviso flotante 30 (nunca tapa el botón de enviar).
+- El aviso flotante (`#aviso`) ya no se pinta: tapaba controles abajo y arriba. La confirmación se ve
+  en el botón ("✓ Añadido") y en el globo; el aviso queda solo para lectores de pantalla (`aria-live`).
+- El globo del carrito late una vez (`scale 1.28`, 360 ms) cuando entra algo.
 - Foco atrapado dentro mientras está abierto; al cerrar vuelve al botón "Mi pedido".
+  Al tocar +/− el foco se queda en el mismo botón aunque la lista se repinte.
 
 ### Horario
 - Tabla de dos columnas, cifras tabulares, filetes punteados.
@@ -119,7 +131,9 @@ partes, y el rojo chile usado como acento quirúrgico — no como fondo de todo.
 
 ## 6. Movimiento
 
-- Duraciones cortas: 0.15 s (color), 0.22 s (panel), 0.25 s (aviso).
+- Duraciones cortas: 0.16 s (pulsar, color), 0.24 s (panel, aviso), 0.42 s (fotos).
+- Curva de salida fuerte para todo lo que entra o responde: `--salida: cubic-bezier(0.22, 1, 0.36, 1)`.
+  Nunca `ease-in` en la interfaz (empieza lento justo cuando se mira).
 - Aparición al hacer scroll con `animation-timeline: view()`, solo si el navegador lo soporta.
 - **Todo respeta `prefers-reduced-motion`**: sin animaciones ni scroll suave.
 - Nada de parallax, ni de elementos que se muevan solos, ni de contadores animados.
@@ -165,7 +179,7 @@ partes, y el rojo chile usado como acento quirúrgico — no como fondo de todo.
 
 ## 10. Cómo se comprueba un cambio
 
-1. `npm test` en verde (52 pruebas: lógica, interfaz, estilos y coherencia).
+1. `npm test` en verde (lógica, interfaz, estilos, coherencia, fotos, entrega y editor).
 2. `node --check main.js` y `node --check logica.js`.
 3. Llaves del CSS equilibradas.
 4. Las 6 rutas responden 200: `/`, `styles.css`, `main.js`, `datos.js`, `logica.js`, `favicon.svg`.

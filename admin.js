@@ -139,6 +139,8 @@ function revisar() {
   const lista = $("#errores");
   lista.innerHTML = errores.map((e) => `<li>${escapar(e)}</li>`).join("");
   lista.hidden = errores.length === 0;
+  // También junto a los botones: si no, al pulsar parecía que no pasaba nada.
+  if (errores.length) $("#resultado").textContent = `No se guardó: hay ${errores.length === 1 ? "un dato" : `${errores.length} datos`} por corregir (en rojo, arriba).`;
   if (errores.length) lista.scrollIntoView({ block: "center" });
   return errores.length === 0;
 }

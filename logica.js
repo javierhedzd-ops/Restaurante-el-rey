@@ -228,6 +228,12 @@ export function urlWhatsApp(carrito, negocio = NEGOCIO, entrega = null) {
   return `https://wa.me/${negocio.telefonoPedidos}?text=${encodeURIComponent(texto)}`;
 }
 
+/** URL de WhatsApp para preguntar por un plato sin precio fijo (el botón "Preguntar"). */
+export function urlPregunta(plato, negocio = NEGOCIO) {
+  const texto = `Hola, ${negocio.nombre}. ¿Qué tienen hoy de ${plato.nombre.toLowerCase()} y a cómo está?`;
+  return `https://wa.me/${negocio.telefonoPedidos}?text=${encodeURIComponent(texto)}`;
+}
+
 // ---------- Reservas ----------
 
 /** Cuántas personas caben en una sola reserva. */

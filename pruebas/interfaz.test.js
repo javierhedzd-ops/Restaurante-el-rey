@@ -171,9 +171,14 @@ test("los platos sin precio no se pueden añadir", () => {
   const sinPrecio = PLATOS.find((p) => p.precio === null);
   if (!sinPrecio) return; // hoy no hay ninguno; la prueba no aplica
 
-  const boton = d.querySelector(`[data-anadir="${sinPrecio.id}"]`);
-  assert.equal(boton.disabled, true);
-  boton.click();
+  // No tienen botón de añadir: en su lugar, "Preguntar" abre WhatsApp con la pregunta.
+  // (Antes era un botón deshabilitado que no hacía nada al tocarlo.)
+  const tarjeta = d.querySelector(`.plato[data-id="${sinPrecio.id}"]`);
+  assert.equal(tarjeta.querySelector("[data-anadir]"), null);
+  const preguntar = tarjeta.querySelector(".boton-anadir--preguntar");
+  assert.match(preguntar.getAttribute("href"), /^https:\/\/wa\.me\/\d+\?text=/);
+  assert.ok(decodeURIComponent(preguntar.getAttribute("href")).includes(sinPrecio.nombre.toLowerCase()));
+  preguntar.dispatchEvent(new w.MouseEvent("click", { bubbles: true, cancelable: true }));
   assert.equal(d.querySelectorAll("#carrito-lineas .linea").length, 0);
 });
 

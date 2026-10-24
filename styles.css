@@ -2,7 +2,7 @@
    Paleta: rojo chile, crema de tortilla, carbón y dorado.
    Sin CDN ni fuentes externas: la página carga sin red. */
 
-@layer reset, base, componentes, cazo, menu, preguntas, galeria, reservas, carrito, utilidades;
+@layer reset, base, componentes, cazo, menu, preguntas, galeria, reservas, carrito, acabados, utilidades;
 
 @layer reset {
   *, *::before, *::after { box-sizing: border-box; }
@@ -1610,6 +1610,221 @@
   .aviso-flotante.aviso--visible { transform: translate(-50%, 0); opacity: 1; }
 }
 
+@layer acabados {
+  /* ---------- Acabados: cómo responde lo que se toca ----------
+     Todo lo pulsable se hunde un poco al apretarlo (scale 0.97, 160 ms, ease-out
+     fuerte): la página "oye" el dedo. Con ratón, además, sube 1 px en hover.
+     En el táctil no hay hover, así que no se queda pegado ningún realce. */
+  .boton,
+  .boton-anadir,
+  .boton-carrito,
+  .filtro,
+  .pastilla span,
+  .linea__boton,
+  .carrito__cerrar,
+  .carrito__vaciar,
+  .carrito__deshacer,
+  .pregunta summary {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .boton:hover { transform: none; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .boton:hover,
+    .boton-anadir:hover:not(:disabled) { transform: translateY(-1px); }
+  }
+
+  .boton:active,
+  .boton-anadir:active:not(:disabled),
+  .carrito__cerrar:active,
+  .carrito__deshacer:active { transform: scale(0.97); }
+
+  .carrito__cerrar { transition: background var(--rapido) var(--salida), transform var(--rapido) var(--salida); }
+
+  /* ---------- Añadir → "Añadido" ----------
+     Las dos etiquetas ocupan la misma celda: el botón mide lo que la más larga
+     y no cambia de ancho al confirmar. */
+  .boton-anadir,
+  .armador__boton {
+    display: inline-grid;
+    place-items: center;
+    text-decoration: none;
+  }
+
+  .boton-anadir__texto,
+  .boton-anadir__hecho {
+    grid-area: 1 / 1;
+    transition: opacity var(--rapido) var(--salida), transform var(--rapido) var(--salida);
+  }
+
+  .boton-anadir__hecho {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  /* La palomita, dibujada con dos bordes: sin iconos ni fuentes de fuera. */
+  .boton-anadir__hecho::before {
+    content: "";
+    width: 0.62em;
+    height: 0.34em;
+    border-left: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateY(-0.12em) rotate(-45deg);
+  }
+
+  .hecho .boton-anadir__texto { opacity: 0; transform: translateY(-6px); }
+  .hecho .boton-anadir__hecho { opacity: 1; transform: none; }
+
+  /* Verde de "listo": blanco sobre #2f7d4f = 5.04 (AA). */
+  .boton-anadir.hecho,
+  .boton-anadir.hecho:hover:not(:disabled),
+  .armador__boton.hecho,
+  .armador__boton.hecho:hover { background: var(--verde); color: #fff; }
+
+  /* "Preguntar" (platos sin precio): un enlace a WhatsApp con forma de botón
+     secundario, no un botón gris que no hace nada. */
+  .boton-anadir--preguntar {
+    background: transparent;
+    color: var(--carbon);
+    box-shadow: inset 0 0 0 2px var(--carbon);
+  }
+
+  .boton-anadir--preguntar:hover:not(:disabled) { background: var(--carbon); color: var(--crema); }
+
+  /* El globo del carrito late una vez cuando entra algo. */
+  .globo--late { animation: latir 360ms var(--salida); }
+
+  @keyframes latir {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.28); }
+    100% { transform: scale(1); }
+  }
+
+  /* ---------- Aviso: solo para lectores de pantalla ----------
+     La confirmación se ve donde está el dedo (el botón dice "Añadido" y el
+     globo late). El aviso flotante tapaba controles abajo y arriba, así que
+     ya no se pinta: sigue anunciándose (role="status", aria-live). */
+  .aviso-flotante,
+  .aviso-flotante.aviso--visible {
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    box-shadow: none;
+  }
+
+  /* ---------- Deshacer "Vaciar" ---------- */
+  .carrito__deshacer {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 0.75rem;
+    padding: 0.5rem 1.1rem;
+    border: 2px solid var(--carbon);
+    border-radius: var(--radio-carta);
+    background: transparent;
+    color: var(--carbon);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--rapido) var(--salida), color var(--rapido) var(--salida), transform var(--rapido) var(--salida);
+  }
+
+  .carrito__deshacer:hover { background: var(--carbon); color: var(--crema); }
+
+  /* ---------- Áreas táctiles de 44 px (DESIGN.md §7) ---------- */
+  .marca,
+  .nav a,
+  .hero__tarjeta-enlace,
+  .redes a,
+  .visitanos__bloque > .enlace {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .nav a { padding-inline: 0.15rem; }
+  .hero__tarjeta-enlace { margin-top: 0.15rem; }
+  .redes { margin-top: 0.25rem; }
+
+  /* El campo de búsqueda ocupa todo el alto de su caja: tocar en cualquier
+     punto del borde ya enfoca. */
+  .buscador { padding-block: 0; }
+  .buscador input { min-height: 44px; }
+
+  /* ---------- Nosotros: cita y párrafos a la altura de la ficha ---------- */
+  .nosotros {
+    grid-template-areas:
+      "relato ficha"
+      "foto foto";
+  }
+
+  /* Flex y no grid: la cita y los párrafos traen grid-area (cita, texto) para
+     el teléfono, y dentro de una rejilla sin esas áreas se montaban uno encima
+     del otro. */
+  .nosotros__relato {
+    grid-area: relato;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .nosotros__foto { margin-top: clamp(0.5rem, 2vw, 1.5rem); }
+
+  .nosotros__foto img {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 21 / 8;
+    object-position: 50% 60%;
+  }
+
+  @media (max-width: 720px) {
+    .nosotros__relato { display: contents; }
+    .nosotros__foto { margin-top: 0; }
+  }
+
+  /* ---------- Galería: una grande y cinco que llenan la rejilla ----------
+     Escritorio (6 columnas): la grande ocupa 4×2, dos a su derecha y tres
+     debajo, sin huecos. Teléfono (2 columnas): si sobra una, va a lo ancho. */
+  .galeria { grid-auto-rows: clamp(150px, 17vw, 215px); }
+  .galeria__pieza { grid-column: span 2; }
+  .galeria__pieza--ancha { grid-column: span 4; grid-row: span 2; }
+
+  .galeria__pieza figcaption {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    letter-spacing: 0.01em;
+    text-transform: none;
+  }
+
+  @media (max-width: 720px) {
+    .galeria__pieza { grid-column: auto; }
+    .galeria__pieza--ancha { grid-column: span 2; }
+    .galeria__pieza:last-child:nth-child(even) { grid-column: span 2; }
+  }
+
+  /* ---------- Reservas: en el teléfono, personas y hora juntas y el día a lo ancho ---------- */
+  @media (max-width: 520px) {
+    .reserva__fila--cuando {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas:
+        "personas hora"
+        "fecha fecha";
+    }
+    .campo--personas { grid-area: personas; }
+    .campo--hora { grid-area: hora; }
+    .campo--fecha { grid-area: fecha; }
+  }
+}
+
 @layer utilidades {
   /* Aparición al hacer scroll: solo donde el navegador lo soporta. */
   @supports (animation-timeline: view()) {
@@ -1679,8 +1894,10 @@
        de tres palabras por línea. La foto va debajo, apaisada. */
     .cazo { grid-template-columns: minmax(0, 1fr); }
     .cazo__foto { aspect-ratio: 4 / 3; min-height: 0; }
-    .plato--con-foto { grid-template-columns: minmax(0, 1fr); gap: 0.85rem; }
-    .plato__foto { aspect-ratio: 16 / 9; }
+    /* La foto, cuadrada a la izquierda: con la foto a lo ancho la carta medía
+       más de 10 pantallas y había que bajar mucho para ver diez platos. */
+    .plato--con-foto { grid-template-columns: 6.25rem minmax(0, 1fr); gap: 0.9rem; }
+    .plato__foto { aspect-ratio: 1; }
     .plato { padding: 1.25rem 0; }
   }
 
@@ -1692,6 +1909,8 @@
     .filtro:hover { border-color: var(--crema-oscura); color: inherit; }
     .filtro--activo:hover { border-color: var(--carbon); color: var(--crema); }
     .boton-anadir:hover:not(:disabled) { background: var(--carbon); transform: none; }
+    .boton-anadir.hecho:hover:not(:disabled) { background: var(--verde); }
+    .boton-anadir--preguntar:hover:not(:disabled) { background: transparent; color: var(--carbon); }
     .linea__boton:hover { border-color: var(--crema-oscura); color: inherit; }
     .pastilla:hover span { border-color: var(--crema-oscura); color: inherit; }
     .pastilla input:checked + span { border-color: var(--carbon); color: var(--crema); }

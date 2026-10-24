@@ -12,6 +12,7 @@ import {
   totalCarrito,
   piezasCarrito,
   urlWhatsApp,
+  urlPregunta,
   validarEntrega,
   fechaHoy,
   validarReserva,
@@ -27,6 +28,8 @@ const estado = {
   categoria: "todo",
   texto: "",
   carrito: cargarCarrito(),
+  // Lo que había antes de "Vaciar", para poder deshacerlo.
+  vaciado: null,
 };
 
 // ---------- Utilidades ----------
@@ -123,9 +126,13 @@ function tarjetaPlato(plato) {
         ${etiquetas ? `<div class="plato__etiquetas">${etiquetas}</div>` : ""}
         <div class="plato__pie">
           ${opciones}
-          <button class="boton-anadir" type="button" data-anadir="${plato.id}" ${sinPrecio ? "disabled" : ""}>
-            ${sinPrecio ? "Preguntar" : "Añadir"}
-          </button>
+          ${sinPrecio
+            // Sin precio fijo no se puede sumar al pedido: el botón pregunta por WhatsApp.
+            ? `<a class="boton-anadir boton-anadir--preguntar" href="${escapar(urlPregunta(plato))}" target="_blank" rel="noopener">Preguntar</a>`
+            : `<button class="boton-anadir" type="button" data-anadir="${plato.id}">
+                 <span class="boton-anadir__texto">Añadir</span>
+                 <span class="boton-anadir__hecho" aria-hidden="true">Añadido</span>
+               </button>`}
         </div>
       </div>
     </article>`;
@@ -250,6 +257,7 @@ function conectarArmador() {
     guardarCarrito();
     pintarCarrito();
     avisar(`${KILOS_TEXTO[eleccion.clave].nombre} añadido`);
+    confirmarBoton($("#armador-anadir"));
   });
 
   pintarArmador();
@@ -268,9 +276,14 @@ function pintarCarrito() {
   const piezas = piezasCarrito(estado.carrito);
 
   if (globo) {
+    const antes = globo.hidden ? 0 : Number(globo.textContent);
     globo.textContent = piezas;
     globo.hidden = piezas === 0;
+    if (piezas > antes) latirGlobo(globo);
   }
+
+  const deshacer = $("#deshacer-vaciar");
+  if (deshacer) deshacer.hidden = !(estado.vaciado && !estado.carrito.length);
 
   if (!estado.carrito.length) {
     lista.innerHTML = "";
@@ -279,6 +292,8 @@ function pintarCarrito() {
     return;
   }
 
+  estado.vaciado = null;
+  if (deshacer) deshacer.hidden = true;
   if (vacio) vacio.hidden = true;
   if (pie) pie.hidden = false;
 
@@ -328,7 +343,7 @@ function atraparFoco(evento) {
   const panel = $("#carrito");
   if (!panel || panel.hidden || evento.key !== "Tab") return;
   const enfocables = $$(
-    'button:not([disabled]), a[href], input, select, [tabindex]:not([tabindex="-1"])',
+    'button:not([disabled]), a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
     panel
   ).filter((el) => el.offsetParent !== null);
   if (!enfocables.length) return;
@@ -341,6 +356,21 @@ function atraparFoco(evento) {
     evento.preventDefault();
     primero.focus();
   }
+}
+
+// El botón que se tocó dice "Añadido" un momento: la respuesta sale donde está el dedo.
+function confirmarBoton(boton) {
+  if (!boton) return;
+  boton.classList.add("hecho");
+  clearTimeout(boton.temporizador);
+  boton.temporizador = setTimeout(() => boton.classList.remove("hecho"), 1400);
+}
+
+// El globo del carrito da un saltito cuando cambia el número.
+function latirGlobo(globo) {
+  globo.classList.remove("globo--late");
+  void globo.offsetWidth; // reinicia la animación si se toca dos veces seguidas
+  globo.classList.add("globo--late");
 }
 
 function avisar(texto) {
@@ -544,6 +574,7 @@ function conectarEventos() {
     // El aviso se arma antes de repintar: pintarCarrito() rehace la lista y el
     // botón que se acaba de tocar deja de estar en la página.
     avisar(`${plato.nombre} añadido`);
+    confirmarBoton(boton);
     estado.carrito = agregarAlCarrito(estado.carrito, plato, opciones);
     guardarCarrito();
     pintarCarrito();
@@ -558,6 +589,12 @@ function conectarEventos() {
     if (mas || menos) {
       guardarCarrito();
       pintarCarrito();
+      // La lista se pinta de nuevo: el foco vuelve al mismo botón (o, si la
+      // línea se fue, al botón de cerrar) para que el teclado no se pierda.
+      const atributo = mas ? "data-mas" : "data-menos";
+      const clave = (mas || menos).getAttribute(atributo);
+      const mismo = $$(`[${atributo}]`, $("#carrito-lineas")).find((b) => b.getAttribute(atributo) === clave);
+      (mismo || $("#deshacer-vaciar:not([hidden])") || $("#cerrar-carrito"))?.focus();
     }
   });
 
@@ -567,7 +604,8 @@ function conectarEventos() {
   // Tocar el velo (fuera del panel) también cierra.
   $("#velo-carrito")?.addEventListener("click", () => abrirCarrito(false));
   document.addEventListener("keydown", (evento) => {
-    if (evento.key === "Escape") abrirCarrito(false);
+    // Solo si está abierto: si no, Escape en el buscador mandaba el foco al carrito.
+    if (evento.key === "Escape" && !$("#carrito")?.hidden) abrirCarrito(false);
     atraparFoco(evento);
   });
 
@@ -590,10 +628,30 @@ function conectarEventos() {
   });
 
   // Vaciar
+  // Vaciar no pregunta: deja un "Deshacer" a la vista hasta que se añada algo.
   $("#vaciar-carrito")?.addEventListener("click", () => {
+    if (!estado.carrito.length) return;
+    const antes = estado.carrito;
     estado.carrito = [];
     guardarCarrito();
     pintarCarrito();
+    estado.vaciado = antes;
+    const deshacer = $("#deshacer-vaciar");
+    if (deshacer) {
+      deshacer.hidden = false;
+      deshacer.focus();
+    } else {
+      $("#cerrar-carrito")?.focus();
+    }
+  });
+
+  $("#deshacer-vaciar")?.addEventListener("click", () => {
+    if (!estado.vaciado) return;
+    estado.carrito = estado.vaciado;
+    estado.vaciado = null;
+    guardarCarrito();
+    pintarCarrito();
+    $("#enviar-pedido")?.focus();
   });
 }
 

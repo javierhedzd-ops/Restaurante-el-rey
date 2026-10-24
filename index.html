@@ -140,7 +140,8 @@
           </div>
 
           <button class="boton boton--primario armador__boton" type="submit" id="armador-anadir">
-            Añadir a mi pedido
+            <span class="boton-anadir__texto">Añadir a mi pedido</span>
+            <span class="boton-anadir__hecho" aria-hidden="true">Añadido a tu pedido</span>
           </button>
         </form>
       </div>
@@ -192,12 +193,21 @@
   <section class="seccion seccion--oscura" id="nosotros" aria-labelledby="titulo-nosotros">
     <h2 class="seccion__titulo" id="titulo-nosotros">Cincuenta años en el cazo</h2>
     <div class="nosotros">
+      <!-- Cita y párrafos juntos a la izquierda, a la altura de la ficha; la foto
+           cierra la sección a lo ancho. En el teléfono el envoltorio se disuelve
+           (display: contents) y el orden es cita, ficha, párrafos y foto. -->
+      <div class="nosotros__relato">
       <blockquote class="nosotros__cita">
         <p class="nosotros__grande">
           Desde 1974 en Mérida: carnitas al estilo Michoacán, cocidas despacio en su
           manteca y servidas recién salidas del cazo.
         </p>
       </blockquote>
+      <div class="nosotros__columnas">
+        <p>Aquí se come surtido, maciza, costilla, buche, oreja, nana, cuerito, trompa, hígado y corazón. Con tortillas de maíz, salsas de la casa y un michelitro bien frío.</p>
+        <p>Ambiente familiar, música algunos días, asientos al aire libre y servicio a domicilio. Si vienes en grupo, pide un kilo y se arma la fiesta.</p>
+      </div>
+      </div>
       <dl class="nosotros__ficha">
         <div>
           <dt>Desde</dt>
@@ -216,10 +226,6 @@
           <dd>Kilos, tortas y tacos</dd>
         </div>
       </dl>
-      <div class="nosotros__columnas">
-        <p>Aquí se come surtido, maciza, costilla, buche, oreja, nana, cuerito, trompa, hígado y corazón. Con tortillas de maíz, salsas de la casa y un michelitro bien frío.</p>
-        <p>Ambiente familiar, música algunos días, asientos al aire libre y servicio a domicilio. Si vienes en grupo, pide un kilo y se arma la fiesta.</p>
-      </div>
       <figure class="nosotros__foto" data-foto="nosotros">
         <img src="fotos/sitio/nosotros.jpg" alt="Plato de carnitas servidas en un mercado de Michoacán" loading="lazy" decoding="async" width="960" height="638">
         <figcaption>Carnitas en Uruapan, Michoacán · AlejandroLinaresGarcia · CC BY-SA 4.0</figcaption>
@@ -345,18 +351,18 @@
           </label>
         </div>
 
-        <div class="reserva__fila">
-          <label class="campo">
+        <div class="reserva__fila reserva__fila--cuando">
+          <label class="campo campo--personas">
             <span class="campo__texto">Personas</span>
             <input id="reserva-personas" name="personas" type="number" inputmode="numeric" min="1" max="20" value="2" required aria-describedby="error-personas">
             <span class="campo__error" id="error-personas" aria-live="polite"></span>
           </label>
-          <label class="campo">
+          <label class="campo campo--fecha">
             <span class="campo__texto">Día</span>
             <input id="reserva-fecha" name="fecha" type="date" required aria-describedby="error-fecha">
             <span class="campo__error" id="error-fecha" aria-live="polite"></span>
           </label>
-          <label class="campo">
+          <label class="campo campo--hora">
             <span class="campo__texto">Hora</span>
             <select id="reserva-hora" name="hora" required aria-describedby="error-hora">
               <option value="">Elige</option>
@@ -457,6 +463,7 @@
   <p id="carrito-vacio" class="carrito__vacio">
     Todavía no hay nada. Añade tacos, tortas o un kilo desde el menú.
   </p>
+  <button id="deshacer-vaciar" class="carrito__deshacer" type="button" hidden>Deshacer y recuperar mi pedido</button>
   <ul id="carrito-lineas" class="carrito__lineas"></ul>
   <div id="carrito-pie" class="carrito__pie" hidden>
     <p class="carrito__total">

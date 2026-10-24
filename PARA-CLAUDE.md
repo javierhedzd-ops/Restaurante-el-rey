@@ -16,6 +16,25 @@ JS a mano, sin frameworks ni CDN. Menú, horario, carrito y pedido por WhatsApp.
 - Lógica pura: `logica.js` · DOM: `main.js` · Estilos: `styles.css`
 - Pruebas: `pruebas/` (52 pruebas, todas en verde ahora mismo)
 
+## Acabados premium (24 oct 2026)
+
+Javi pidió "acabados premium y ningún error en los botones". Se pulsaron todos los
+botones con Playwright en 390, 768 y 1440 px (y los del admin) y se arregló:
+
+- "Preguntar" (platos sin precio) era un botón deshabilitado: ahora abre WhatsApp
+  con la pregunta (`urlPregunta` en `logica.js`).
+- Escape fuera del carrito mandaba el foco a "Mi pedido"; +/− perdían el foco al
+  repintar; el atrapafoco no contaba los `textarea`.
+- Vaciar no tenía vuelta atrás: ahora deja "Deshacer" con el foco.
+- Áreas táctiles de menos de 44 px (marca, menú, "Armar mi kilo", Google Maps,
+  redes, buscador, "Ver la web" del admin).
+- El admin no decía nada junto a los botones cuando había datos por corregir.
+- Acabados: "✓ Añadido" en el propio botón, globo que late, pulsación `scale(0.97)`,
+  hover solo con ratón, carta del teléfono con foto cuadrada a la izquierda,
+  galería sin huecos, "Nosotros" sin hueco y reservas sin campo suelto.
+- Todo en la capa `acabados` de `styles.css` y anotado en `DESIGN.md`.
+  Pruebas nuevas en `pruebas/botones.test.js`.
+
 ## Estado actual (23 oct 2026)
 
 Hay **dos versiones** en el repo:
