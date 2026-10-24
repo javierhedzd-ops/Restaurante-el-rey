@@ -14,7 +14,7 @@ JS a mano, sin frameworks ni CDN. Menú, horario, carrito y pedido por WhatsApp.
 - Dirección de arte: `DESIGN.md`
 - Datos del negocio (precios, horario, teléfonos, FAQ): `datos.js`
 - Lógica pura: `logica.js` · DOM: `main.js` · Estilos: `styles.css`
-- Pruebas: `pruebas/` (49 pruebas, todas en verde ahora mismo)
+- Pruebas: `pruebas/` (52 pruebas, todas en verde ahora mismo)
 
 ## Estado actual (23 oct 2026)
 
@@ -60,9 +60,46 @@ Archivos temporales que **no** deben subirse: `maqueta/.probe-*.mjs`,
   corten ni se salgan.
 - **Portar** los cambios de `maqueta/` a la raíz (`index.html`, `styles.css`,
   `main.js`) sin romper el carrito ni las pruebas. La raíz es la que se sirve en
-  `http://192.168.1.156:8092/`; la maqueta, en el 8094.
+  `http://192.168.1.156:8092/`; la maqueta, en el 8097.
 - Al terminar: `npm test` y `~/bin/ari-web-check` en verde, y apuntar en
   `ARI.md` lo que cambie de costumbres.
+
+**Hecho por Claude (24 oct 2026), rama `ari/rediseno-cazo`:**
+
+- Revisión en Chromium de "Visítanos" y "Nosotros" a 390 y 1280 px: nada se
+  corta ni se sale (sin scroll horizontal, sin piezas fuera de pantalla, sin
+  solapes, imágenes cargadas). De paso se arregló:
+  - El aviso flotante ("… añadido") se asomaba vacío al pie de la pantalla
+    (pastilla oscura de 42×22 px): ahora, escondido, también es transparente.
+  - El mapa en el teléfono tenía letras de 6 px: en pantallas de 560 px o menos
+    se recorta (5:4) hacia el pin y la etiqueta. Es un enlace a Google Maps.
+  - El mapa traía calles inventadas ("Calle 93", "Calle 95", "Calle 16"; el
+    93-F es el número, no una calle) y una flecha de norte sin confirmar: se
+    quitaron. Solo queda la Calle 14.
+  - `taqueria.jpg` es la fachada de "Taquería Medina" en Isla Mujeres y se
+    usaba en Nosotros y Reservas como si fuera el local. Ahora van
+    `carnitas-michoacan.jpg` (Nosotros) y `salsas.jpg` (Reservas).
+- Portado a la raíz: `index.html` y `styles.css` de la maqueta, y
+  `fotos/mapa.svg`. Los JS de la raíz eran más nuevos (normalizarCarrito,
+  reservas que se limpian, aviso antes de repintar) y se quedaron; se copiaron
+  a `maqueta/` para que las dos versiones sean iguales.
+- Prueba nueva `pruebas/coherencia.test.js` (precios y teléfonos del HTML contra
+  `datos.js`, y que existan todas las fotos). `npm test`: 52/52.
+- Carrito y pedido por WhatsApp probados en Chromium de verdad: se añade, el
+  aviso sale y se va, el carrito abre y el enlace de WhatsApp lleva el pedido.
+- Temporales fuera del repo (`.gitignore`). Siguen en el historial por si hacen
+  falta: `git show b3285a9:maqueta/.probe-nosotros.mjs`.
+
+**Para que confirme Javi (no se tocaron, son datos del negocio):**
+
+- El enlace de Facebook de `datos.js` es la página "EL REY Suc Canek", no la de
+  Chuminópolis: ¿es la correcta?
+- `½ kg surtido` cuesta $240 y `1 kg surtida` $238: medio kilo sale más caro que
+  el kilo. ¿Es así?
+- `puesto.jpg` ("Local Carnitas Teremar") y `mercado.jpg` ("Carnitas Doña Lulú")
+  son de otros negocios y salen en la carta. Lo ideal: fotos propias.
+- El repositorio en GitHub es público: se ven `ARI.md`, este archivo y el
+  historial. Si no hace falta para GitHub Pages, mejor privado.
 
 ### 2. Herramientas que Ari ya usó (verificadas en este equipo)
 
@@ -115,7 +152,7 @@ clave desde el navegador (la clave quedaría a la vista). Lo que sí se puede:
 
 ### 4. Pruebas
 
-- `npm test` debe seguir en verde (49 pruebas ahora).
+- `npm test` debe seguir en verde (52 pruebas ahora).
 - `~/bin/ari-web-check` comprueba que el servidor responde 200 en `/`,
   `styles.css`, `main.js`, `datos.js`, `logica.js` y que el CSS servido lleva
   la regla `[hidden]`.
@@ -128,11 +165,11 @@ clave desde el navegador (la clave quedaría a la vista). Lo que sí se puede:
 ```bash
 cd ~/restaurante-el-rey
 python3 -m http.server 8092 --bind 0.0.0.0   # web real
-cd maqueta && python3 -m http.server 8094 --bind 0.0.0.0   # maqueta (8093 lo usa el guardián de Ari)
+cd maqueta && python3 -m http.server 8097 --bind 0.0.0.0   # maqueta (8090-8096 son de Ari)
 ```
 
 Desde el teléfono: `http://192.168.1.156:8092/` (comprobar la IP con `ifconfig`
-antes de darla; ha cambiado más de una vez). La maqueta, en el 8094.
+antes de darla; ha cambiado más de una vez). La maqueta, en el 8097.
 
 ## Costumbres
 
@@ -169,4 +206,13 @@ a mano, cumple esto:
 
 ## Peticiones a Ari (las escribe Claude, las decide Javi)
 
-- _(vacío por ahora)_
+- **Comprobación de secciones en la skill de diseño.** Las sondas
+  `.probe-*.mjs` eran de usar y tirar. Propuesta: un `scripts/secciones.mjs` en
+  `design-taste-frontend` que, para cada `#id` que se le pase y cada ancho, diga
+  si hay scroll horizontal, piezas fuera de la pantalla, contenido recortado
+  (`scrollWidth > clientWidth` con overflow oculto), hijos que se pisan e
+  imágenes que no cargan, y saque una captura de la sección sin la cabecera fija
+  (si no, la tapa). Es lo que se usó el 24/10 para revisar Visítanos y Nosotros.
+- **Elementos fijos que se asoman.** Que `inspect.mjs` avise de elementos
+  `position: fixed` visibles y sin texto (así se habría visto antes la pastilla
+  vacía del aviso).

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" role="img" aria-labelledby="titulo-mapa">
-  <title id="titulo-mapa">Mapa esquemático: Carnitas El Rey en Chuminópolis, Mérida</title>
+  <title id="titulo-mapa">Mapa esquemático: Carnitas El Rey, Calle 14, 93-F, Chuminópolis, Mérida</title>
 
   <!-- Fondo de papel crema, como el resto de la carta. -->
   <rect width="640" height="400" fill="#f6ecdc"/>
@@ -29,12 +29,9 @@
     <path d="M210 0 V400"/>
   </g>
 
-  <!-- Nombres de las calles. -->
+  <!-- Solo la calle que sabemos (la del domicilio): el mapa es un esquema, no un plano. -->
   <g fill="#7a5a3a" font-family="Georgia, serif" font-size="13" font-style="italic">
-    <text x="14" y="144">Calle 14</text>
-    <text x="14" y="274">Calle 16</text>
-    <text x="216" y="24" transform="rotate(90 216 24)">Calle 93</text>
-    <text x="406" y="24" transform="rotate(90 406 24)">Calle 95</text>
+    <text x="228" y="142">Calle 14</text>
   </g>
 
   <!-- El puesto: pin rojo con la corona. -->
@@ -52,10 +49,4 @@
     <text x="344" y="236" font-size="12" fill="#7a5a3a">Calle 14, 93-F · Chuminópolis</text>
   </g>
 
-  <!-- Norte. -->
-  <g transform="translate(596 348)" font-family="Georgia, serif">
-    <circle r="20" fill="#fffaf2" stroke="#e6d3b6"/>
-    <path d="M0 -12 L6 6 L0 2 L-6 6 Z" fill="#b3261e"/>
-    <text x="0" y="34" font-size="11" text-anchor="middle" fill="#7a5a3a">N</text>
-  </g>
 </svg>

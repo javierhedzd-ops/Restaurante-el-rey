@@ -704,7 +704,15 @@
     box-shadow: var(--sombra-carta);
   }
 
+  .visitanos__mapa-enlace { display: block; }
+  .visitanos__mapa-enlace:focus-visible { outline: 3px solid var(--rojo); outline-offset: -3px; }
   .visitanos__mapa img { display: block; width: 100%; height: auto; }
+
+  /* En el teléfono el mapa entero queda con letras de 6 px: se recorta a la
+     derecha, donde están el pin y la etiqueta, para que se lean. */
+  @media (max-width: 560px) {
+    .visitanos__mapa img { aspect-ratio: 5 / 4; object-fit: cover; object-position: 100% 50%; }
+  }
 
   .visitanos__mapa figcaption {
     padding: 0.6rem 0.9rem;
@@ -1602,11 +1610,14 @@
     font-size: 0.9rem;
     font-weight: 600;
     box-shadow: 0 10px 30px rgb(20 11 7 / 30%);
-    transition: transform var(--medio) var(--salida);
+    /* Escondido también se queda transparente: con solo bajarlo 150 % se
+       asomaba una pastilla oscura al pie de la pantalla. */
+    opacity: 0;
+    transition: transform var(--medio) var(--salida), opacity var(--medio) var(--salida);
     pointer-events: none;
   }
 
-  .aviso-flotante.aviso--visible { transform: translate(-50%, 0); }
+  .aviso-flotante.aviso--visible { transform: translate(-50%, 0); opacity: 1; }
 }
 
 @layer utilidades {

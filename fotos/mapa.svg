@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" width="640" height="400" role="img" aria-labelledby="titulo-mapa">
+  <title id="titulo-mapa">Mapa esquemático: Carnitas El Rey, Calle 14, 93-F, Chuminópolis, Mérida</title>
+
+  <!-- Fondo de papel crema, como el resto de la carta. -->
+  <rect width="640" height="400" fill="#f6ecdc"/>
+
+  <!-- Manzanas: bloques suaves que dan la sensación de colonia. -->
+  <g fill="#efe0c9">
+    <rect x="40" y="40" width="150" height="90" rx="6"/>
+    <rect x="230" y="40" width="150" height="90" rx="6"/>
+    <rect x="420" y="40" width="180" height="90" rx="6"/>
+    <rect x="40" y="170" width="150" height="90" rx="6"/>
+    <rect x="230" y="170" width="150" height="90" rx="6"/>
+    <rect x="420" y="170" width="180" height="90" rx="6"/>
+    <rect x="40" y="300" width="150" height="70" rx="6"/>
+    <rect x="230" y="300" width="150" height="70" rx="6"/>
+    <rect x="420" y="300" width="180" height="70" rx="6"/>
+  </g>
+
+  <!-- Calles: la 14 en horizontal, la 93 en vertical. -->
+  <g stroke="#f6ecdc" stroke-width="22" stroke-linecap="round">
+    <path d="M0 150 H640"/>
+    <path d="M0 280 H640"/>
+    <path d="M210 0 V400"/>
+    <path d="M400 0 V400"/>
+  </g>
+  <g stroke="#d9a441" stroke-width="2" stroke-dasharray="10 8" opacity="0.55">
+    <path d="M0 150 H640"/>
+    <path d="M210 0 V400"/>
+  </g>
+
+  <!-- Solo la calle que sabemos (la del domicilio): el mapa es un esquema, no un plano. -->
+  <g fill="#7a5a3a" font-family="Georgia, serif" font-size="13" font-style="italic">
+    <text x="228" y="142">Calle 14</text>
+  </g>
+
+  <!-- El puesto: pin rojo con la corona. -->
+  <g transform="translate(305 215)">
+    <circle cx="0" cy="0" r="34" fill="#b3261e" opacity="0.14"/>
+    <path d="M0 26 C-16 8 -24 -2 -24 -12 A24 24 0 0 1 24 -12 C24 -2 16 8 0 26 Z" fill="#b3261e"/>
+    <circle cx="0" cy="-12" r="10" fill="#f6ecdc"/>
+    <path d="M-6 -14 l3 2.4 3 -4 3 4 3 -2.4 -1 6 h-10 z" fill="#b3261e"/>
+  </g>
+
+  <!-- Etiqueta del negocio. -->
+  <g font-family="Georgia, serif">
+    <rect x="330" y="196" width="196" height="52" rx="8" fill="#fffaf2" stroke="#e6d3b6"/>
+    <text x="344" y="218" font-size="15" font-weight="700" fill="#2b1a12">Carnitas El Rey</text>
+    <text x="344" y="236" font-size="12" fill="#7a5a3a">Calle 14, 93-F · Chuminópolis</text>
+  </g>
+
+</svg>

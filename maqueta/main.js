@@ -38,8 +38,9 @@ function $$(selector, raiz = document) {
 
 function cargarCarrito() {
   try {
-    const guardado = JSON.parse(localStorage.getItem(CLAVE_CARRITO) || "[]");
-    return Array.isArray(guardado) ? guardado : [];
+    // normalizarCarrito descarta lo que no encaja (cantidades raras, precios
+    // que no son números): un carrito viejo o tocado a mano no rompe la página.
+    return normalizarCarrito(localStorage.getItem(CLAVE_CARRITO) || "[]");
   } catch {
     return [];
   }
@@ -355,9 +356,11 @@ function avisar(texto) {
 // ---------- Reservas ----------
 
 // Horas que se pueden reservar: de la apertura a RESERVA_ULTIMA_HORA, cada media hora.
+// La apertura sale del horario del negocio (datos.js), no de un 13 escrito a mano.
 function horasReserva() {
   const horas = [];
-  for (let minutos = 13 * 60; minutos <= RESERVA_ULTIMA_HORA * 60; minutos += 30) {
+  const apertura = NEGOCIO.horario[1]?.[0] ?? 13;
+  for (let minutos = apertura * 60; minutos <= RESERVA_ULTIMA_HORA * 60; minutos += 30) {
     const h = String(Math.floor(minutos / 60)).padStart(2, "0");
     const m = String(minutos % 60).padStart(2, "0");
     horas.push(`${h}:${m}`);
@@ -415,6 +418,15 @@ function conectarReserva() {
   pintarReserva();
   $("#reserva-fecha")?.addEventListener("change", pintarReserva);
 
+  // Al corregir un campo, su error se borra en cuanto deja de ser válido el
+  // motivo: no se queda el aviso rojo debajo de un dato ya arreglado.
+  formulario.addEventListener("input", (evento) => {
+    const campo = evento.target.id?.replace(/^reserva-/, "");
+    if (!campo) return;
+    const errores = validarReserva(leerReserva());
+    if (!errores[campo]) pintarErroresReserva(errores);
+  });
+
   formulario.addEventListener("submit", (evento) => {
     evento.preventDefault();
     const reserva = leerReserva();
@@ -426,6 +438,9 @@ function conectarReserva() {
     }
     window.open(urlWhatsAppReserva(reserva), "_blank", "noopener");
     avisar("Reserva lista para enviar por WhatsApp");
+    // La reserva ya salió: el formulario se limpia para la siguiente.
+    formulario.reset();
+    pintarReserva();
   });
 }
 
@@ -455,10 +470,12 @@ function conectarEventos() {
     if (!plato) return;
     const selector = $(`[data-proteina="${plato.id}"]`);
     const opciones = selector ? selector.value : "";
+    // El aviso se arma antes de repintar: pintarCarrito() rehace la lista y el
+    // botón que se acaba de tocar deja de estar en la página.
+    avisar(`${plato.nombre} añadido`);
     estado.carrito = agregarAlCarrito(estado.carrito, plato, opciones);
     guardarCarrito();
     pintarCarrito();
-    avisar(`${plato.nombre} añadido`);
   });
 
   // Controles del carrito

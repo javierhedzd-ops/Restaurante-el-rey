@@ -9,18 +9,27 @@ sin frameworks ni CDN. Menú, horario, carrito y pedido por WhatsApp.
 - Abrir: `http://192.168.1.156:8092/` (desde el teléfono o la red local; la IP
   cambia, comprobarla con `ifconfig`).
   Ojo: con `--bind 127.0.0.1` no se ve desde el navegador del teléfono.
-- Maqueta (rediseño en `maqueta/`): `cd maqueta && python3 -m http.server 8094 --bind 0.0.0.0`
-  → `http://192.168.1.156:8094/`. El 8093 es del guardián de Ari: no usarlo.
+- Maqueta (rediseño en `maqueta/`): `cd maqueta && python3 -m http.server 8097 --bind 0.0.0.0`
+  → `http://192.168.1.156:8097/`. No usar 8090-8096 ni 8082: son de Ari (8093 el
+  guardián, 8094 los ojos) y su Navegador no abre esos puertos.
 
 ## Cómo se comprueba
-- `npm test` — 49 pruebas: lógica pura (`pruebas/logica.test.js`), interfaz en
-  jsdom (`pruebas/interfaz.test.js`) y CSS (`pruebas/estilos.test.js`).
+- `npm test` — 52 pruebas: lógica pura (`pruebas/logica.test.js`), interfaz en
+  jsdom (`pruebas/interfaz.test.js`), CSS (`pruebas/estilos.test.js`) y
+  coherencia (`pruebas/coherencia.test.js`: los precios y teléfonos escritos en
+  `index.html` son los de `datos.js`, y existe cada foto o archivo que pide la página).
 - `~/bin/ari-web-check` — todo en uno: pruebas + que el servidor responda 200
   en `/`, `styles.css`, `main.js`, `datos.js`, `logica.js` + que el CSS servido
   lleve la regla `[hidden]`. Sale con código 0 si todo está bien.
   Uso: `ari-web-check [url]` (por defecto `http://127.0.0.1:8092/`).
 
 después de editar: npm test
+
+## Maqueta y web real
+- Desde el 24/10/2026 la raíz y `maqueta/` son iguales: el rediseño del cazo ya
+  está en la web real. Un rediseño nuevo se prueba en `maqueta/` y se porta
+  copiando `index.html` y `styles.css` (y las fotos nuevas); los JS se cambian
+  primero en la raíz y se copian a la maqueta, nunca al revés.
 
 ## Qué no tocar
 - Los valores esperados de `pruebas/logica.test.js` para "hacer pasar" un
@@ -32,6 +41,15 @@ después de editar: npm test
 - Lógica de negocio en `logica.js` (pura, testeable); DOM solo en `main.js`.
 - CSS con `@layer` (reset, base, componentes, utilidades).
 - Commits en español, en imperativo.
+- Si cambia un precio o un teléfono en `datos.js`, cámbialo también donde va
+  escrito en `index.html` (tarjeta del kilo, cierre de la carta, preguntas,
+  Visítanos): la prueba de coherencia avisa si se olvida.
+- Fotos: solo de comida o del puesto propio. Nada de fachadas o letreros de
+  otros negocios (la de "Taquería Medina" de Isla Mujeres parecía el local).
+- El mapa de Visítanos es un esquema: no se le ponen calles ni orientación que
+  no estén confirmadas.
+- Los temporales (`ari-bg.log`, `.taste-skill/`, `.probe-*.mjs`, `_vis.html`)
+  están en `.gitignore`; no se suben.
 
 ## Notas de este equipo (Termux aarch64)
 - jsdom no calcula CSS: las pruebas de interfaz comprueban el atributo `hidden`

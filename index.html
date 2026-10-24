@@ -27,6 +27,7 @@
   <nav class="nav" aria-label="Principal">
     <a href="#menu">Menú</a>
     <a href="#cazo">El cazo</a>
+    <a href="#nosotros">Nosotros</a>
     <a href="#galeria">Galería</a>
     <a href="#reservas">Reservas</a>
     <a href="#visitanos">Visítanos</a>
@@ -44,18 +45,14 @@
 
 <main>
 
-  <!-- HERO: la foto del cazo manda; el titular va encima, abajo a la izquierda. -->
+  <!-- HERO: el titular manda y va primero; la foto del cazo entra por la derecha
+       y en el teléfono se asoma por debajo, para que el h1 se lea sin bajar. -->
   <section class="hero" id="inicio">
-    <figure class="hero__foto">
-      <img src="fotos/cazo.jpg" width="1280" height="1700" alt="Cazo de cobre lleno de carnitas dorándose en su manteca" fetchpriority="high" decoding="async">
-      <figcaption class="hero__credito">Foto: Ferfive · CC BY 4.0 · Wikimedia Commons</figcaption>
-    </figure>
-
     <div class="hero__contenido">
       <p class="hero__etiqueta">Chuminópolis · Mérida · Desde 1974</p>
       <h1 class="hero__titulo">
-        Carnitas estilo Michoacán,
-        <em>recién salidas del cazo</em>
+        Carnitas del cazo,
+        <em>estilo Michoacán</em>
       </h1>
       <p class="hero__texto">
         Maciza, costilla, buche, oreja, nana, cuerito, trompa, hígado y corazón.
@@ -65,7 +62,20 @@
         <a class="boton boton--primario" href="#menu">Armar mi pedido</a>
         <a class="boton boton--secundario" href="tel:+529991190662">Llamar al 999 119 0662</a>
       </div>
+
+      <!-- La tarjeta del kilo: el precio de la casa, a la vista sin bajar al menú. -->
+      <div class="hero__tarjeta">
+        <p class="hero__tarjeta-titulo">El kilo de la casa</p>
+        <p class="hero__tarjeta-precio">$238 <small>el kilo surtido</small></p>
+        <p class="hero__tarjeta-nota">Con tortillas de maíz, cebolla, cilantro, limones, aguacate y salsas.</p>
+        <a class="hero__tarjeta-enlace" href="#cazo">Armar mi kilo</a>
+      </div>
     </div>
+
+    <figure class="hero__foto">
+      <img src="fotos/cazo.jpg" width="1280" height="1700" alt="Cazo de cobre lleno de carnitas dorándose en su manteca" fetchpriority="high" decoding="async">
+      <figcaption class="hero__credito">Foto: Ferfive · CC BY 4.0 · Wikimedia Commons</figcaption>
+    </figure>
 
     <ul class="hero__datos">
       <li><strong>4.3 <svg class="estrella" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.8L12 16.9l-5.3 2.7 1.1-5.8L3.5 9.7l5.9-.8L12 3.5z" fill="currentColor"/></svg></strong><span>571 reseñas en Google</span></li>
@@ -163,6 +173,21 @@
     </div>
 
     <div id="lista-platos" class="platos"></div>
+
+    <!-- Cierre de la carta: lo que se pide con el kilo, sin subir a buscarlo. -->
+    <aside class="menu__cierre" aria-labelledby="titulo-cierre">
+      <div>
+        <h3 class="menu__cierre-titulo" id="titulo-cierre">¿Se te antoja el kilo?</h3>
+        <p class="menu__cierre-texto">
+          El kilo surtido cuesta $238 y el kilo al gusto $273, con tortillas, cebolla,
+          cilantro, limones, aguacate y salsas de la casa. Medio kilo desde $240.
+        </p>
+      </div>
+      <div class="menu__cierre-acciones">
+        <a class="boton boton--primario" href="#cazo">Armar mi kilo</a>
+        <a class="boton boton--secundario menu__cierre-whats" href="https://wa.me/529991190662" target="_blank" rel="noopener">Pedir por WhatsApp</a>
+      </div>
+    </aside>
   </section>
 
   <!-- NOSOTROS -->
@@ -197,6 +222,10 @@
         <p>Aquí se come surtido, maciza, costilla, buche, oreja, nana, cuerito, trompa, hígado y corazón. Con tortillas de maíz, salsas de la casa y un michelitro bien frío.</p>
         <p>Ambiente familiar, música algunos días, asientos al aire libre y servicio a domicilio. Si vienes en grupo, pide un kilo y se arma la fiesta.</p>
       </div>
+      <figure class="nosotros__foto">
+        <img src="fotos/carnitas-michoacan.jpg" alt="Plato de carnitas servidas en un mercado de Michoacán" loading="lazy" decoding="async" width="960" height="638">
+        <figcaption>Carnitas en Uruapan, Michoacán · AlejandroLinaresGarcia · CC BY-SA 4.0</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -289,7 +318,7 @@
     <div class="reservas">
       <div class="reservas__intro">
         <p class="reservas__etiqueta">Reserva tu mesa</p>
-        <h2 class="seccion__titulo" id="titulo-reservas">Ven con hambre,<br>nosotros ponemos el cazo</h2>
+        <h2 class="seccion__titulo" id="titulo-reservas">Ven con hambre,<br>ponemos el cazo</h2>
         <p class="seccion__nota">
           Mesas para grupos, cumpleaños y comidas de familia. Reservamos de 13:00 a 21:00,
           de lunes a domingo (martes cerrado). Te confirmamos por WhatsApp.
@@ -299,6 +328,10 @@
           <li>Te guardamos la mesa 15 minutos.</li>
           <li>Para grupos grandes, llámanos al <a class="enlace" href="tel:+529991190662">999 119 0662</a>.</li>
         </ul>
+        <figure class="reservas__foto">
+          <img src="fotos/salsas.jpg" alt="Cebolla, cilantro, limones y salsas listos para la mesa" loading="lazy" decoding="async" width="960" height="1280">
+          <figcaption>Complementos del taco · Salazar Lira Hanna Elizabeth · CC BY-SA 4.0</figcaption>
+        </figure>
       </div>
 
       <form class="reserva" id="form-reserva" novalidate>
@@ -381,6 +414,28 @@
           <a href="https://www.instagram.com/carnitasmichoacanaselrey/" target="_blank" rel="noopener">Instagram</a>
           <a href="https://www.facebook.com/p/Carnitas-Michoac%C3%A1n-EL-REY-Suc-Canek-100063511536074/" target="_blank" rel="noopener">Facebook</a>
         </p>
+      </div>
+    </div>
+
+    <!-- Cierre de la página: el mapa a un lado y el último empujón al pedido al otro. -->
+    <div class="visitanos__cierre">
+      <figure class="visitanos__mapa">
+        <a class="visitanos__mapa-enlace" href="https://www.google.com/maps/search/?api=1&amp;query=Carnitas+Michoac%C3%A1n+El+Rey+Chumin%C3%B3polis+M%C3%A9rida" target="_blank" rel="noopener">
+          <img src="fotos/mapa.svg" alt="Mapa esquemático de Carnitas El Rey en Calle 14, 93-F, Chuminópolis. Abre la ubicación en Google Maps" loading="lazy" decoding="async" width="640" height="400">
+        </a>
+        <figcaption>Calle 14, 93-F · Chuminópolis, Mérida · Toca el mapa para abrirlo en Google Maps</figcaption>
+      </figure>
+      <div class="visitanos__llamada">
+        <p class="visitanos__etiqueta">Hoy se come en casa</p>
+        <h3 class="visitanos__titulo">Pide tu kilo y te lo llevamos</h3>
+        <p class="visitanos__texto">
+          Servicio a domicilio y para llevar, de 13:00 a 22:00 (martes cerrado).
+          Arma el pedido aquí y lo mandas por WhatsApp en un toque.
+        </p>
+        <div class="visitanos__acciones">
+          <a class="boton boton--primario" href="#menu">Armar mi pedido</a>
+          <a class="boton boton--secundario visitanos__llamar" href="tel:+529991190662">Llamar al 999 119 0662</a>
+        </div>
       </div>
     </div>
   </section>

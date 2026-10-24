@@ -92,3 +92,32 @@ export const PLATOS = [
   { id: "michelitro", nombre: "Michelitro", precio: 89, categoria: "bebidas", desc: "Promoción de miércoles.", etiquetas: ["popular"], foto: { src: "fotos/michelada.jpg", alt: "Michelada", credito: "Popo le Chien · CC BY-SA 3.0" } },
   { id: "cervezas", nombre: "Cervezas y coctelería", precio: null, categoria: "bebidas", desc: "Pregunta por la selección del día.", etiquetas: [] },
 ];
+
+// Preguntas que llegan por WhatsApp todos los días. Las respuestas salen de
+// NEGOCIO y de PLATOS: si cambia un precio o el horario, cambia aquí solo.
+export const PREGUNTAS = [
+  {
+    pregunta: "¿Hasta qué hora atienden?",
+    respuesta: "De 13:00 a 22:00, de lunes a domingo. Los martes cerramos.",
+  },
+  {
+    pregunta: "¿Cuánto cuesta un kilo?",
+    respuesta: "El kilo surtido cuesta $238 y el kilo al gusto $273, con tortillas, cebolla, cilantro, limones, aguacate y salsas. Medio kilo desde $240.",
+  },
+  {
+    pregunta: "¿Hacen servicio a domicilio?",
+    respuesta: "Sí, servicio a domicilio y para llevar. Pide al 999 119 0662 o al 999 221 2040.",
+  },
+  {
+    pregunta: "¿Se puede reservar?",
+    respuesta: "Sí. Llena el formulario de reservas de esta página y te llega el resumen por WhatsApp para confirmar.",
+  },
+  {
+    pregunta: "¿Qué proteínas tienen?",
+    respuesta: "Maciza, surtida, costilla, buche, oreja, nana, cuerito, trompa, hígado y corazón.",
+  },
+  {
+    pregunta: "¿Dónde están?",
+    respuesta: "Calle 14, 93-F, Chuminópolis, 97158, Mérida, Yucatán. Hay mapa en la sección Visítanos.",
+  },
+];
