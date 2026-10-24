@@ -2,7 +2,7 @@
    Paleta: rojo chile, crema de tortilla, carbón y dorado.
    Sin CDN ni fuentes externas: la página carga sin red. */
 
-@layer reset, base, componentes, cazo, menu, galeria, reservas, carrito, utilidades;
+@layer reset, base, componentes, cazo, menu, preguntas, galeria, reservas, carrito, utilidades;
 
 @layer reset {
   *, *::before, *::after { box-sizing: border-box; }
@@ -122,9 +122,10 @@
     justify-content: space-between;
     gap: 1rem;
     padding: calc(0.7rem + var(--seguro-arriba)) calc(clamp(1rem, 4vw, 2.5rem) + var(--seguro-lado)) 0.7rem;
-    background: rgb(20 11 7 / 88%);
+    /* Carbón sólido: el contraste del texto no depende de lo que pase por
+       debajo al hacer scroll (con el fondo translúcido se medía 1:1). */
+    background: var(--carbon);
     color: var(--crema);
-    backdrop-filter: blur(10px);
     border-bottom: 1px solid rgb(217 164 65 / 18%);
   }
 
@@ -205,22 +206,24 @@
   }
 
   /* ---------- Hero ---------- */
-  /* La foto manda: ocupa el ancho completo y el texto va encima, abajo a la
-     izquierda, sobre un velo cálido para que el contraste no dependa de la foto. */
+  /* El titular manda y va primero: en el teléfono se lee sin bajar, con la foto
+     del cazo asomando por debajo. En pantalla ancha, texto a la izquierda y la
+     foto sangrando por la derecha. */
   .hero {
     position: relative;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    align-items: end;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    align-items: start;
     min-height: min(88svh, 780px);
-    padding: clamp(3rem, 8vw, 6rem) calc(clamp(1rem, 4vw, 2.5rem) + var(--seguro-lado)) 0;
+    padding: clamp(2rem, 6vw, 4rem) calc(clamp(1rem, 4vw, 2.5rem) + var(--seguro-lado)) 0;
     overflow: hidden;
     color: var(--crema);
     background: var(--carbon);
   }
 
   /* En pantallas anchas la foto sangra por la derecha y el titular se parte
-     en dos líneas sobre el papel: la primera en tinta, la segunda en rojo. */
+     en dos líneas: la primera en crema, la segunda en rojo. */
   @media (min-width: 900px) {
     .hero {
       grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
@@ -235,13 +238,10 @@
     }
 
     .hero__foto {
-      position: relative;
-      inset: auto;
       grid-column: 2;
       grid-row: 1 / span 2;
       align-self: stretch;
       margin-right: calc(-1 * (clamp(1rem, 4vw, 2.5rem) + var(--seguro-lado)));
-      z-index: 0;
     }
 
     /* El velo va a la izquierda, para fundir la foto con el papel. */
@@ -280,6 +280,15 @@
     .hero__titulo em { color: var(--rojo-claro); }
   }
 
+  .hero__foto {
+    position: relative;
+    grid-row: 2;
+    align-self: stretch;
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+
   .hero__foto img {
     width: 100%;
     height: 100%;
@@ -287,19 +296,20 @@
     object-position: 50% 38%;
   }
 
-  /* Velo: oscurece abajo (donde va el texto) y deja respirar la foto arriba. */
+  /* Velo: funde la foto con el carbón por abajo y por arriba, para que el
+     titular y los datos no dependan de lo que haya en la foto. */
   .hero__foto::after {
     content: "";
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(180deg, rgb(20 11 7 / 55%) 0%, rgb(20 11 7 / 10%) 35%, rgb(20 11 7 / 82%) 78%, var(--carbon) 100%);
+      linear-gradient(180deg, var(--carbon) 0%, rgb(20 11 7 / 0%) 22%, rgb(20 11 7 / 0%) 70%, var(--carbon) 100%);
   }
 
   .hero__credito {
     position: absolute;
-    right: calc(0.75rem + var(--seguro-lado));
-    top: calc(0.75rem + var(--seguro-arriba));
+    right: 0.75rem;
+    bottom: 0.75rem;
     z-index: 1;
     font-size: 0.75rem;
     color: rgb(253 246 236 / 75%);
@@ -309,10 +319,11 @@
   .hero__contenido {
     position: relative;
     z-index: 1;
+    grid-row: 1;
     max-width: var(--ancho);
     width: 100%;
     margin-inline: auto;
-    padding-bottom: clamp(2rem, 5vw, 3.5rem);
+    padding-bottom: clamp(1.5rem, 4vw, 2.5rem);
   }
 
   .hero__etiqueta {
@@ -324,7 +335,8 @@
     margin-bottom: 1rem;
   }
 
-  .hero__titulo { max-width: 16ch; text-shadow: 0 2px 28px rgb(20 11 7 / 50%); }
+  /* Dos líneas: "Carnitas del cazo," y "estilo Michoacán". */
+  .hero__titulo { max-width: 14ch; font-size: clamp(2.25rem, 6.4vw, 4.4rem); }
 
   .hero__titulo em {
     display: block;
@@ -340,6 +352,61 @@
   }
 
   .hero__acciones { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+
+  /* Tarjeta del kilo: el precio de la casa, en el hero y sin bajar al menú. */
+  .hero__tarjeta {
+    max-width: 22rem;
+    margin-top: 1.75rem;
+    padding: 1rem 1.15rem;
+    border: 1px solid rgb(239 224 201 / 22%);
+    border-left: 3px solid var(--dorado);
+    border-radius: var(--radio-carta);
+    background: rgb(253 246 236 / 6%);
+  }
+
+  .hero__tarjeta-titulo {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--dorado);
+  }
+
+  .hero__tarjeta-precio {
+    margin-top: 0.35rem;
+    font-family: var(--fuente-titulo);
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--crema);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hero__tarjeta-precio small {
+    font-family: var(--fuente);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--crema-oscura);
+    opacity: 0.8;
+  }
+
+  .hero__tarjeta-nota {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: rgb(253 246 236 / 78%);
+  }
+
+  .hero__tarjeta-enlace {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dorado);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+
+  .hero__tarjeta-enlace:hover { color: var(--crema); }
 
   .boton {
     display: inline-flex;
@@ -488,12 +555,19 @@
   .nosotros {
     display: grid;
     grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    /* Sin filas implícitas: la cita y los párrafos van en la fila 1 (columna
+       izquierda) y la ficha y la foto en la fila 2, cada una en su columna. */
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "cita ficha"
+      "texto foto";
     gap: clamp(1.5rem, 4vw, 3.5rem);
     align-items: start;
     margin-top: 1.5rem;
   }
 
   .nosotros__cita {
+    grid-area: cita;
     margin: 0;
     padding-left: clamp(1rem, 2.5vw, 1.75rem);
     border-left: 3px solid var(--dorado);
@@ -509,6 +583,7 @@
   }
 
   .nosotros__ficha {
+    grid-area: ficha;
     display: grid;
     gap: 0.9rem;
     margin: 0;
@@ -538,16 +613,43 @@
     color: var(--crema);
   }
 
+  /* Los dos párrafos van en la columna izquierda, debajo de la cita: así la
+     ficha de la derecha queda sola y la sección no acaba en una fila de texto
+     suelto con la mitad derecha vacía. */
   .nosotros__columnas {
-    grid-column: 1 / -1;
+    grid-area: texto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.5rem;
-    margin-top: 0.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgb(239 224 201 / 18%);
+    gap: 0.9rem;
+    margin-top: 0.25rem;
     color: var(--crema-oscura);
     opacity: 0.85;
+  }
+
+  /* Foto del puesto en la columna derecha, pegada a la ficha: llena el hueco
+     que dejaban los dos párrafos y cierra la sección con imagen. */
+  .nosotros__foto {
+    grid-area: foto;
+    align-self: end;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 2px;
+  }
+
+  /* La foto se estira a lo alto de la columna derecha (ficha + párrafos):
+     con una proporción fija quedaba un hueco debajo de la ficha. */
+  .nosotros__foto img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 16rem;
+    object-fit: cover;
+    object-position: 50% 55%;
+  }
+
+  .nosotros__foto figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--crema-oscura);
   }
 
   /* ---------- Visítanos ---------- */
@@ -578,6 +680,69 @@
 
   .aviso { margin-top: 0.75rem; font-size: 0.8rem; color: var(--tinta-suave); }
   .redes { display: flex; gap: 1rem; margin-top: 0.75rem; }
+
+  /* Cierre de Visítanos: mapa a un lado, último empujón al pedido al otro. */
+  .visitanos__cierre {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: var(--filete);
+  }
+
+  @media (min-width: 820px) {
+    .visitanos__cierre { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 2.5rem; align-items: center; }
+  }
+
+  .visitanos__mapa {
+    margin: 0;
+    border: var(--filete);
+    border-radius: var(--radio-carta);
+    overflow: hidden;
+    background: var(--crema-oscura);
+    box-shadow: var(--sombra-carta);
+  }
+
+  .visitanos__mapa img { display: block; width: 100%; height: auto; }
+
+  .visitanos__mapa figcaption {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.8rem;
+    color: var(--tinta-suave);
+    border-top: var(--filete);
+    background: #fff;
+  }
+
+  .visitanos__etiqueta {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--rojo);
+  }
+
+  .visitanos__titulo {
+    margin-top: 0.5rem;
+    font-family: var(--fuente-titulo);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    line-height: 1.15;
+    color: var(--tinta);
+  }
+
+  .visitanos__texto {
+    margin-top: 0.6rem;
+    max-width: 46ch;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--tinta-suave);
+  }
+
+  .visitanos__acciones { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.25rem; }
+
+  /* Sobre fondo claro el botón secundario va en tinta, no en crema. */
+  .visitanos__llamar { color: var(--tinta); background: transparent; }
+  .visitanos__llamar:hover { background: var(--tinta); color: var(--crema); }
 
   /* ---------- Pie ---------- */
   .pie {
@@ -620,12 +785,16 @@
     margin-bottom: 0.75rem;
   }
 
+  /* La foto se estira a lo alto del armador en todos los anchos: así el lado
+     derecho de la sección llega hasta abajo y no queda un hueco vacío. */
   .cazo__foto {
     position: relative;
     border-radius: var(--radio-carta);
     overflow: hidden;
     box-shadow: var(--sombra-carta);
     aspect-ratio: 4 / 5;
+    align-self: stretch;
+    min-height: 22rem;
   }
 
   .cazo__foto img { width: 100%; height: 100%; object-fit: cover; }
@@ -757,14 +926,13 @@
     top: 3.6rem;
     z-index: 15;
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
-    overflow-x: auto;
     padding: 0.5rem 0;
     background: var(--crema);
-    scrollbar-width: none;
   }
 
-  .filtros::-webkit-scrollbar { display: none; }
+  /* Los filtros ya no se desplazan: se envuelven en varias líneas. */
 
   .filtro {
     flex: 0 0 auto;
@@ -790,8 +958,9 @@
 
   .contador { font-size: 0.82rem; color: var(--tinta-suave); }
 
-  /* La carta: una sola columna de filetes, como una carta impresa. Nada de
-     rejilla de tarjetas con sombra, que parece app de delivery. */
+  /* La carta: filetes como una carta impresa, en dos columnas en pantalla
+     ancha para que no queden pantallas a medio llenar. Nada de rejilla de
+     tarjetas con sombra, que parece app de delivery. */
   .platos {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -799,6 +968,14 @@
     max-width: 46rem;
     margin-inline: auto;
     border-top: 1px solid var(--crema-oscura);
+  }
+
+  @media (min-width: 1000px) {
+    .platos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: clamp(2rem, 4vw, 3.5rem);
+      max-width: var(--ancho);
+    }
   }
 
   .plato {
@@ -955,6 +1132,49 @@
     text-align: center;
     color: var(--tinta-suave);
   }
+
+  /* Cierre de la carta: el kilo, al final del menú, sin subir a buscarlo. */
+  .menu__cierre {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem 2rem;
+    max-width: var(--ancho);
+    margin: 2.5rem auto 0;
+    padding: 1.5rem clamp(1.15rem, 3vw, 2rem);
+    border: var(--filete);
+    border-left: 3px solid var(--rojo);
+    border-radius: var(--radio-carta);
+    background: #fff;
+    box-shadow: var(--sombra-carta);
+  }
+
+  .menu__cierre > div:first-child { flex: 1 1 22rem; }
+
+  .menu__cierre-titulo {
+    font-family: var(--fuente-titulo);
+    font-size: 1.35rem;
+    color: var(--tinta);
+  }
+
+  .menu__cierre-texto {
+    margin-top: 0.4rem;
+    max-width: 52ch;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--tinta-suave);
+  }
+
+  .menu__cierre-acciones { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+
+  /* Sobre fondo claro el botón secundario va en tinta, no en crema. */
+  .menu__cierre-whats {
+    color: var(--tinta);
+    background: transparent;
+  }
+
+  .menu__cierre-whats:hover { background: var(--tinta); color: var(--crema); }
 }
 
 @layer galeria {
@@ -1006,6 +1226,65 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--tinta-suave);
+  }
+}
+
+@layer preguntas {
+  /* ---------- Preguntas: acordeón de dos columnas con <details> nativo ---------- */
+  .preguntas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 0.75rem;
+    margin-top: 2rem;
+    align-items: start;
+  }
+
+  .pregunta {
+    border: var(--filete);
+    border-radius: var(--radio-carta);
+    background: #fff;
+    box-shadow: var(--sombra-carta);
+  }
+
+  .pregunta summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.15rem;
+    font-weight: 600;
+    color: var(--tinta);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .pregunta summary::-webkit-details-marker { display: none; }
+
+  /* El signo + que gira a × al abrir: sin iconos externos. */
+  .pregunta summary::after {
+    content: "+";
+    flex: none;
+    font-family: var(--fuente-cifras);
+    font-size: 1.15rem;
+    line-height: 1;
+    color: var(--rojo);
+    transition: transform var(--medio) var(--salida);
+  }
+
+  .pregunta[open] summary::after { transform: rotate(45deg); }
+
+  .pregunta summary:hover { color: var(--rojo); }
+
+  .pregunta p {
+    margin: 0;
+    padding: 0 1.15rem 1.1rem;
+    color: var(--tinta-suave);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pregunta summary::after { transition: none; }
   }
 }
 
@@ -1130,6 +1409,33 @@
     font-size: 0.8rem;
     color: var(--tinta-suave);
     text-align: center;
+  }
+
+  /* Cierre de la intro: la foto del puesto llena la columna izquierda, que
+     antes acababa en la lista y dejaba media sección vacía. */
+  .reservas__foto {
+    margin: 1.75rem 0 0;
+    overflow: hidden;
+    border-radius: var(--radio-carta);
+    box-shadow: var(--sombra-carta);
+  }
+
+  .reservas__foto img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 14rem;
+    max-height: 20rem;
+    object-fit: cover;
+    object-position: 50% 60%;
+  }
+
+  .reservas__foto figcaption {
+    padding: 0.55rem 0.9rem;
+    font-size: 0.75rem;
+    color: var(--tinta-suave);
+    background: #fff;
+    border-top: var(--filete);
   }
 }
 
@@ -1338,15 +1644,25 @@
   @media (max-width: 860px) {
     .nav { display: none; }
     .horario-vivo { display: none; }
+    /* En tableta la foto se queda al lado del armador y el texto ocupa el
+       ancho que le toca: si no, la mitad derecha de la sección se vacía. */
+    .cazo { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem; }
+    .cazo__texto { min-width: 0; }
+    /* La foto se estira a lo alto del armador (ya lo hace en la capa cazo). */
+    .cazo__foto { aspect-ratio: auto; }
   }
 
   @media (max-width: 720px) {
     .hero { min-height: min(92svh, 720px); }
     .hero__foto img { object-position: 50% 30%; }
     .hero__credito { font-size: 0.75rem; }
-    .cazo { grid-template-columns: 1fr; }
-    .cazo__foto { aspect-ratio: 16 / 10; order: -1; }
-    .nosotros { grid-template-columns: 1fr; }
+    /* A una columna: cita, ficha, párrafos y foto, en ese orden. */
+    .nosotros {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+      grid-template-areas: "cita" "ficha" "texto" "foto";
+    }
+    .nosotros__foto img { aspect-ratio: 16 / 9; }
     .reservas { grid-template-columns: 1fr; }
     .galeria { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: clamp(130px, 34vw, 200px); }
     .galeria__pieza--ancha { grid-column: span 2; grid-row: span 2; }

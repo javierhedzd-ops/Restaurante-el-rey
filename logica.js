@@ -79,6 +79,45 @@ export function diaSemana(ahora, negocio = NEGOCIO) {
   return { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 }[valor];
 }
 
+/**
+ * Lee un carrito guardado (el JSON de localStorage) y devuelve solo las líneas
+ * que se pueden usar: clave e id de texto, cantidad entera mayor que cero y
+ * precio número o null. Lo que no encaja se descarta en vez de romper la
+ * página. Si el texto no es un arreglo, devuelve un carrito vacío.
+ */
+export function normalizarCarrito(guardado) {
+  let lineas = guardado;
+  if (typeof lineas === "string") {
+    try {
+      lineas = JSON.parse(lineas);
+    } catch {
+      return [];
+    }
+  }
+  if (!Array.isArray(lineas)) return [];
+
+  return lineas
+    .filter(
+      (linea) =>
+        linea &&
+        typeof linea === "object" &&
+        typeof linea.clave === "string" &&
+        linea.clave !== "" &&
+        typeof linea.id === "string" &&
+        Number.isInteger(linea.cantidad) &&
+        linea.cantidad > 0 &&
+        (linea.precio === null || (typeof linea.precio === "number" && Number.isFinite(linea.precio)))
+    )
+    .map((linea) => ({
+      clave: linea.clave,
+      id: linea.id,
+      nombre: typeof linea.nombre === "string" ? linea.nombre : linea.id,
+      precio: linea.precio,
+      opciones: typeof linea.opciones === "string" ? linea.opciones : "",
+      cantidad: linea.cantidad,
+    }));
+}
+
 /** Añade un plato al carrito. Si ya existe con las mismas opciones, suma cantidad. */
 export function agregarAlCarrito(carrito, plato, opciones = "") {
   const clave = plato.id + (opciones ? "|" + opciones : "");

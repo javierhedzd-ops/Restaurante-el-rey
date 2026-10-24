@@ -6,11 +6,14 @@ sin frameworks ni CDN. Menú, horario, carrito y pedido por WhatsApp.
 ## Cómo se ejecuta
 - Servir: `cd ~/restaurante-el-rey && python3 -m http.server 8092 --bind 0.0.0.0`
   (en segundo plano: `ari-bg "web" python3 -m http.server 8092 --bind 0.0.0.0`)
-- Abrir: `http://192.168.1.27:8092/` (desde el teléfono o la red local).
+- Abrir: `http://192.168.1.156:8092/` (desde el teléfono o la red local; la IP
+  cambia, comprobarla con `ifconfig`).
   Ojo: con `--bind 127.0.0.1` no se ve desde el navegador del teléfono.
+- Maqueta (rediseño en `maqueta/`): `cd maqueta && python3 -m http.server 8094 --bind 0.0.0.0`
+  → `http://192.168.1.156:8094/`. El 8093 es del guardián de Ari: no usarlo.
 
 ## Cómo se comprueba
-- `npm test` — 34 pruebas: lógica pura (`pruebas/logica.test.js`), interfaz en
+- `npm test` — 49 pruebas: lógica pura (`pruebas/logica.test.js`), interfaz en
   jsdom (`pruebas/interfaz.test.js`) y CSS (`pruebas/estilos.test.js`).
 - `~/bin/ari-web-check` — todo en uno: pruebas + que el servidor responda 200
   en `/`, `styles.css`, `main.js`, `datos.js`, `logica.js` + que el CSS servido

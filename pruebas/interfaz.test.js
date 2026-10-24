@@ -296,3 +296,19 @@ test("la galería muestra fotos que existen en fotos/", () => {
     assert.ok(img.getAttribute("alt").length > 0, `${src} sin texto alternativo`);
   }
 });
+
+test("las preguntas frecuentes se abren y cierran con <details>", () => {
+  const w = abrir();
+  const d = w.document;
+  const preguntas = [...d.querySelectorAll("#preguntas details.pregunta")];
+  assert.ok(preguntas.length >= 4, "faltan preguntas frecuentes");
+  for (const p of preguntas) {
+    assert.ok(p.querySelector("summary")?.textContent.trim().length > 0, "pregunta sin título");
+    assert.ok(p.querySelector("p")?.textContent.trim().length > 0, "pregunta sin respuesta");
+    assert.equal(p.open, false, "las preguntas arrancan cerradas");
+  }
+  // El navegador abre y cierra el <details> solo; aquí se comprueba que el
+  // contenido está en el HTML y no depende de JavaScript.
+  preguntas[0].open = true;
+  assert.equal(preguntas[0].open, true);
+});

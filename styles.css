@@ -2,7 +2,7 @@
    Paleta: rojo chile, crema de tortilla, carbón y dorado.
    Sin CDN ni fuentes externas: la página carga sin red. */
 
-@layer reset, base, componentes, cazo, menu, galeria, reservas, carrito, utilidades;
+@layer reset, base, componentes, cazo, menu, preguntas, galeria, reservas, carrito, utilidades;
 
 @layer reset {
   *, *::before, *::after { box-sizing: border-box; }
@@ -946,6 +946,65 @@
     font-size: 0.72rem;
     color: rgb(253 246 236 / 90%);
     background: linear-gradient(180deg, transparent, rgb(20 11 7 / 72%));
+  }
+}
+
+@layer preguntas {
+  /* ---------- Preguntas: acordeón de dos columnas con <details> nativo ---------- */
+  .preguntas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    align-items: start;
+  }
+
+  .pregunta {
+    border: var(--filete);
+    border-radius: var(--radio-carta);
+    background: #fff;
+    box-shadow: var(--sombra-carta);
+  }
+
+  .pregunta summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.15rem;
+    font-weight: 600;
+    color: var(--tinta);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .pregunta summary::-webkit-details-marker { display: none; }
+
+  /* El signo + que gira a × al abrir: sin iconos externos. */
+  .pregunta summary::after {
+    content: "+";
+    flex: none;
+    font-family: var(--fuente-cifras);
+    font-size: 1.15rem;
+    line-height: 1;
+    color: var(--rojo);
+    transition: transform var(--medio) var(--salida);
+  }
+
+  .pregunta[open] summary::after { transform: rotate(45deg); }
+
+  .pregunta summary:hover { color: var(--rojo); }
+
+  .pregunta p {
+    margin: 0;
+    padding: 0 1.15rem 1.1rem;
+    color: var(--tinta-suave);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pregunta summary::after { transition: none; }
   }
 }
 
