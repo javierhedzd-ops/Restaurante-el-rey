@@ -1,2 +1,8 @@
 node_modules/
 servidor.log
+# Temporales de las revisiones (se regeneran; no van al repo)
+ari-bg.log
+.taste-skill/
+**/.taste-skill/
+**/.probe-*.mjs
+**/_vis.html
