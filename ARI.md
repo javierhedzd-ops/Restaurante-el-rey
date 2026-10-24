@@ -25,6 +25,28 @@ sin frameworks ni CDN. Menú, horario, carrito y pedido por WhatsApp.
 
 después de editar: npm test
 
+## Skills y plugin de diseño en el repositorio (para Claude Code)
+- En `.claude/skills/` (las carga cualquier sesión de Claude Code en este repo):
+  `design-taste-frontend` (tasteskill v2, Leonxlnx/taste-skill), `impeccable`
+  (pbakaus/impeccable) y las de Emil Kowalski (emilkowalski/skill):
+  `emil-design-eng`, `animate`, `improve-animations`, `review-animations`,
+  `find-animation-opportunities`, `animation-vocabulary`, `animation-performance`,
+  `break-ui`, `apple-design` y `prototype`. Copiadas tal cual el 24/10/2026.
+- `.claude/settings.json` activa el plugin oficial `figma@claude-plugins-official`
+  (necesita que Javi conecte su cuenta de Figma la primera vez).
+- Los hooks de Impeccable (un programa suyo en cada edición y al terminar) **no**
+  están activados; lo decide Javi.
+- Las reglas de este proyecto mandan sobre las skills: nada de CDN (algunas
+  skills proponen GSAP o Lenis desde jsdelivr, o Google Fonts), nada de fuentes
+  externas, y DESIGN.md decide lo que choque.
+
+## Fotos reales del restaurante
+- Van en `fotos/` con su origen apuntado en `fotos/CREDITOS.md` ("Foto del
+  restaurante, cedida por el dueño"). Solo fotos del dueño o tomadas por Javi:
+  las que suben clientes a Google Maps son de esas personas y no se usan sin su
+  permiso. Cuando lleguen, sustituyen a las de Wikimedia empezando por la
+  portada, Nosotros y la carta.
+
 ## Maqueta y web real
 - Desde el 24/10/2026 la raíz y `maqueta/` son iguales: el rediseño del cazo ya
   está en la web real. Un rediseño nuevo se prueba en `maqueta/` y se porta
