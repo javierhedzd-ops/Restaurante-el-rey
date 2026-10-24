@@ -163,7 +163,44 @@ export function piezasCarrito(carrito) {
 }
 
 /** Arma el texto del pedido para WhatsApp. */
-export function mensajePedido(carrito, negocio = NEGOCIO) {
+/**
+ * Comprueba los datos de entrega del pedido. entrega = { modo, nombre,
+ * direccion, referencias }, con modo "domicilio" (por defecto) o "recoger".
+ * A domicilio hacen falta nombre y dirección; para recoger, solo el nombre.
+ * Devuelve { campo: mensaje } con lo que falta; vacío si está bien.
+ */
+export function validarEntrega(entrega = {}) {
+  const errores = {};
+  const nombre = (entrega.nombre || "").trim();
+  const direccion = (entrega.direccion || "").trim();
+  const referencias = (entrega.referencias || "").trim();
+
+  if (nombre.length < 2) errores.nombre = "Escribe tu nombre.";
+  else if (nombre.length > 60) errores.nombre = "El nombre es demasiado largo.";
+
+  if (entrega.modo !== "recoger") {
+    if (direccion.length < 8) errores.direccion = "Escribe la dirección: calle, número y colonia.";
+    else if (direccion.length > 160) errores.direccion = "La dirección es demasiado larga.";
+  }
+  if (referencias.length > 160) errores.referencias = "Las referencias son demasiado largas.";
+  return errores;
+}
+
+// Las líneas del mensaje con los datos de entrega (vacío si no hay entrega).
+function lineasEntrega(entrega) {
+  if (!entrega) return [];
+  const limpio = (t) => String(t || "").replace(/\s+/g, " ").trim();
+  if (entrega.modo === "recoger") return ["Paso a recogerlo.", `Nombre: ${limpio(entrega.nombre)}`];
+  const lineas = ["Para entrega a domicilio:", `Nombre: ${limpio(entrega.nombre)}`, `Dirección: ${limpio(entrega.direccion)}`];
+  if (limpio(entrega.referencias)) lineas.push(`Referencias: ${limpio(entrega.referencias)}`);
+  return lineas;
+}
+
+/**
+ * El texto del pedido para WhatsApp. Con entrega (ver validarEntrega) añade
+ * el nombre y, a domicilio, la dirección; sin entrega, el mensaje de siempre.
+ */
+export function mensajePedido(carrito, negocio = NEGOCIO, entrega = null) {
   if (!carrito.length) return "";
   const lineas = carrito.map((linea) => {
     const opciones = linea.opciones ? ` (${linea.opciones})` : "";
@@ -177,14 +214,17 @@ export function mensajePedido(carrito, negocio = NEGOCIO) {
     ...lineas,
     "",
     `Total: ${formatearPrecio(total)}`,
+    ...(entrega ? ["", ...lineasEntrega(entrega)] : []),
     "",
-    "¿Me confirman disponibilidad y tiempo de entrega?",
+    entrega && entrega.modo === "recoger"
+      ? "¿Me confirman disponibilidad y a qué hora paso?"
+      : "¿Me confirman disponibilidad y tiempo de entrega?",
   ].join("\n");
 }
 
 /** URL de WhatsApp con el pedido ya escrito. */
-export function urlWhatsApp(carrito, negocio = NEGOCIO) {
-  const texto = mensajePedido(carrito, negocio);
+export function urlWhatsApp(carrito, negocio = NEGOCIO, entrega = null) {
+  const texto = mensajePedido(carrito, negocio, entrega);
   return `https://wa.me/${negocio.telefonoPedidos}?text=${encodeURIComponent(texto)}`;
 }
 

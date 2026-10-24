@@ -12,6 +12,7 @@ import {
   totalCarrito,
   piezasCarrito,
   urlWhatsApp,
+  validarEntrega,
   fechaHoy,
   validarReserva,
   urlWhatsAppReserva,
@@ -19,6 +20,8 @@ import {
 } from "./logica.js";
 
 const CLAVE_CARRITO = "elrey-carrito-v1";
+// Nombre y dirección del último pedido: así no hay que escribirlos cada vez.
+const CLAVE_ENTREGA = "elrey-entrega-v1";
 
 const estado = {
   categoria: "todo",
@@ -442,6 +445,78 @@ function conectarReserva() {
 
 // ---------- Eventos ----------
 
+// ---------- Entrega del pedido ----------
+
+function leerEntrega() {
+  return {
+    modo: $('input[name="entrega-modo"]:checked')?.value || "domicilio",
+    nombre: $("#entrega-nombre")?.value || "",
+    direccion: $("#entrega-direccion")?.value || "",
+    referencias: $("#entrega-referencias")?.value || "",
+  };
+}
+
+const CAMPOS_ENTREGA = ["nombre", "direccion", "referencias"];
+
+function pintarCampoEntrega(campo, mensaje) {
+  const entrada = $(`#entrega-${campo}`);
+  const salida = $(`#error-entrega-${campo}`);
+  if (salida) salida.textContent = mensaje;
+  if (entrada) {
+    entrada.classList.toggle("campo--error", Boolean(mensaje));
+    if (mensaje) entrada.setAttribute("aria-invalid", "true");
+    else entrada.removeAttribute("aria-invalid");
+  }
+}
+
+// Pinta los errores de entrega por campo y devuelve true si no hay ninguno.
+function pintarErroresEntrega(errores) {
+  for (const campo of CAMPOS_ENTREGA) pintarCampoEntrega(campo, errores[campo] || "");
+  return Object.keys(errores).length === 0;
+}
+
+function guardarEntrega(entrega) {
+  try {
+    localStorage.setItem(CLAVE_ENTREGA, JSON.stringify(entrega));
+  } catch {
+    // Sin almacenamiento (modo privado): se vuelve a escribir la próxima vez.
+  }
+}
+
+// La dirección solo se pide a domicilio.
+function pintarModoEntrega() {
+  const domicilio = $("#entrega-domicilio");
+  if (domicilio) domicilio.hidden = leerEntrega().modo === "recoger";
+}
+
+function conectarEntrega() {
+  // Rellena con lo del último pedido.
+  try {
+    const guardada = JSON.parse(localStorage.getItem(CLAVE_ENTREGA) || "null");
+    if (guardada && typeof guardada === "object") {
+      for (const campo of CAMPOS_ENTREGA) {
+        const entrada = $(`#entrega-${campo}`);
+        if (entrada && typeof guardada[campo] === "string") entrada.value = guardada[campo].slice(0, 160);
+      }
+      const modo = $(`input[name="entrega-modo"][value="${guardada.modo === "recoger" ? "recoger" : "domicilio"}"]`);
+      if (modo) modo.checked = true;
+    }
+  } catch {
+    // Datos guardados rotos: se empieza en blanco.
+  }
+  pintarModoEntrega();
+
+  const fieldset = $("#entrega");
+  fieldset?.addEventListener("change", pintarModoEntrega);
+  // Al corregir un campo, su aviso rojo se va en cuanto el dato ya vale.
+  fieldset?.addEventListener("input", () => {
+    const errores = validarEntrega(leerEntrega());
+    for (const campo of CAMPOS_ENTREGA) {
+      if (!errores[campo] && $(`#error-entrega-${campo}`)?.textContent) pintarCampoEntrega(campo, "");
+    }
+  });
+}
+
 function conectarEventos() {
   // Filtros
   $("#filtros")?.addEventListener("click", (evento) => {
@@ -496,10 +571,21 @@ function conectarEventos() {
     atraparFoco(evento);
   });
 
-  // Enviar pedido: abre WhatsApp y cierra el panel para dejar ver la página.
+  conectarEntrega();
+
+  // Enviar pedido: pide nombre (y dirección si es a domicilio), abre WhatsApp
+  // con todo y cierra el panel para dejar ver la página.
   $("#enviar-pedido")?.addEventListener("click", () => {
     if (!estado.carrito.length) return;
-    window.open(urlWhatsApp(estado.carrito), "_blank", "noopener");
+    const entrega = leerEntrega();
+    const errores = validarEntrega(entrega);
+    if (!pintarErroresEntrega(errores)) {
+      const campo = CAMPOS_ENTREGA.find((c) => errores[c]);
+      $(`#entrega-${campo}`)?.focus();
+      return;
+    }
+    guardarEntrega(entrega);
+    window.open(urlWhatsApp(estado.carrito, NEGOCIO, entrega), "_blank", "noopener");
     abrirCarrito(false);
   });
 

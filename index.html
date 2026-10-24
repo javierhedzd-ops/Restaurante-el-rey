@@ -463,6 +463,36 @@
       <span>Total</span>
       <strong id="carrito-total">$0</strong>
     </p>
+    <fieldset class="entrega" id="entrega">
+      <legend class="entrega__titulo">¿Cómo lo quieres?</legend>
+      <div class="entrega__modos">
+        <label class="pastilla">
+          <input type="radio" name="entrega-modo" value="domicilio" checked>
+          <span>A domicilio</span>
+        </label>
+        <label class="pastilla">
+          <input type="radio" name="entrega-modo" value="recoger">
+          <span>Paso a recogerlo</span>
+        </label>
+      </div>
+      <label class="campo">
+        <span class="campo__texto">Nombre</span>
+        <input id="entrega-nombre" type="text" autocomplete="name" maxlength="60" required aria-describedby="error-entrega-nombre">
+        <span class="campo__error" id="error-entrega-nombre" aria-live="polite"></span>
+      </label>
+      <div class="entrega__domicilio" id="entrega-domicilio">
+        <label class="campo">
+          <span class="campo__texto">Dirección</span>
+          <textarea id="entrega-direccion" rows="2" autocomplete="street-address" maxlength="160" required placeholder="Calle, número y colonia" aria-describedby="error-entrega-direccion"></textarea>
+          <span class="campo__error" id="error-entrega-direccion" aria-live="polite"></span>
+        </label>
+        <label class="campo">
+          <span class="campo__texto">Referencias <small>(opcional)</small></span>
+          <input id="entrega-referencias" type="text" maxlength="160" placeholder="Entre calles, color de la casa…" aria-describedby="error-entrega-referencias">
+          <span class="campo__error" id="error-entrega-referencias" aria-live="polite"></span>
+        </label>
+      </div>
+    </fieldset>
     <button id="enviar-pedido" class="boton boton--whatsapp" type="button">Enviar pedido por WhatsApp</button>
     <button id="vaciar-carrito" class="carrito__vaciar" type="button">Vaciar</button>
     <p class="carrito__nota">Te confirmamos disponibilidad y tiempo de entrega por WhatsApp.</p>

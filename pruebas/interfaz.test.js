@@ -182,6 +182,9 @@ test("el botón de enviar pedido apunta a WhatsApp con el pedido", () => {
   const d = w.document;
 
   clic(w, `[data-anadir="${plato("taco-maciza").id}"]`);
+  // Desde que el pedido lleva datos de entrega, sin nombre y dirección no se envía.
+  escribir(w, "#entrega-nombre", "Javi");
+  escribir(w, "#entrega-direccion", "Calle 14 93-F, Chuminópolis");
   // jsdom no navega: se intercepta window.open para ver la URL.
   let abierta = null;
   w.open = (url) => {
