@@ -307,3 +307,21 @@ export function urlWhatsAppReserva(reserva, negocio = NEGOCIO) {
   const texto = mensajeReserva(reserva, negocio);
   return `https://wa.me/${negocio.telefonoPedidos}?text=${encodeURIComponent(texto)}`;
 }
+
+/**
+ * Los créditos de todas las fotos (las de la página y las de los platos), sin
+ * repetir y en el orden en que aparecen. Las fotos propias (credito vacío o
+ * null) no salen. Con esto se escribe el pie de página.
+ */
+export function creditosFotos(fotos, platos = []) {
+  const todos = [
+    ...Object.values(fotos || {}).map((f) => f && f.credito),
+    ...platos.map((p) => p && p.foto && p.foto.credito),
+  ];
+  const vistos = new Set();
+  return todos.filter((c) => {
+    if (typeof c !== "string" || !c.trim() || vistos.has(c.trim())) return false;
+    vistos.add(c.trim());
+    return true;
+  }).map((c) => c.trim());
+}

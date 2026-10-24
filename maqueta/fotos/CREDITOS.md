@@ -1,5 +1,9 @@
 # Fotos y créditos
 
+Las fotos de la página (portada, Arma tu kilo, Nosotros, galería y reservas)
+están en `fotos/sitio/` con un nombre por hueco; cómo cambiarlas está en
+`fotos/LEEME.md`. Las de los platos se eligen en `datos.js` (campo `foto`).
+
 Todas de Wikimedia Commons, con licencia que permite uso comercial.
 Se sirven desde esta carpeta: la página no depende de ningún servidor externo.
 
@@ -17,7 +21,6 @@ Se sirven desde esta carpeta: la página no depende de ningún servidor externo.
 | `michelada.jpg` | Michelada en Yucatán | Popo le Chien | CC BY-SA 3.0 | [Michelada 2.jpg](https://commons.wikimedia.org/wiki/File:Michelada_2.jpg) |
 | `tortillas.jpg` | Tortillas de nixtamal en comal de barro | German matus | CC BY-SA 4.0 | [Tortillas de maíz.jpg](https://commons.wikimedia.org/wiki/File:Tortillas_de_ma%C3%ADz.jpg) |
 | `salsas.jpg` | Complementos del taco: cebolla, cilantro, limón y salsas | Salazar Lira Hanna Elizabeth | CC BY-SA 4.0 | [Complementos del taco.jpg](https://commons.wikimedia.org/wiki/File:Complementos_del_taco.jpg) |
-| `taqueria.jpg` | Taquería en Isla Mujeres | Larry D. Moore | CC BY 4.0 | [Taqueria Medina Isla Mujeres 2017.jpg](https://commons.wikimedia.org/wiki/File:Taqueria_Medina_Isla_Mujeres_2017.jpg) |
 
 CC BY y CC BY-SA piden crédito (y CC BY-SA, que lo que se derive quede igual de
 libre). El crédito va en el pie de cada foto y en el pie de página.

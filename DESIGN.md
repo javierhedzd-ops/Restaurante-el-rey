@@ -141,7 +141,9 @@ partes, y el rojo chile usado como acento quirúrgico — no como fondo de todo.
 ## 8. Anti-patrones (prohibido)
 
 - ❌ CDN, Google Fonts, Font Awesome, jQuery, frameworks de UI.
-- ❌ Fotos de stock de tacos genéricos. Si no hay foto real del plato, no hay foto.
+- ❌ Fotos de otros negocios o que se hagan pasar por el local. Mientras no haya fotos
+  propias se usan fotos libres de Wikimedia con su crédito (decisión de Javi, 24/10/2026),
+  cada una en su hueco de `fotos/sitio/` para cambiarla sin tocar el HTML (`fotos/LEEME.md`).
 - ❌ Degradados morados/azules "de startup", glassmorphism, neón.
 - ❌ Emojis como iconos de interfaz más allá del carrito y la corona de la marca.
 - ❌ Texto gris claro sobre crema (falla contraste).

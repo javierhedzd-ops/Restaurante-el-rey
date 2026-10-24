@@ -152,6 +152,13 @@ Arreglado de paso (no salía en el informe, se veía en las capturas):
   derecha, a la altura del titular, desde arriba.
 - El pie decía `fotos/CREDITOS.md` en monoespaciada: ahora es un enlace normal.
 
+**Fotos que se pueden cambiar (24 oct 2026, noche):** Javi decidió no usar
+fotos reales por ahora. Cada foto de la página tiene un hueco con nombre en
+`fotos/sitio/` y sus datos en `FOTOS` (`datos.js`); `npm run fotos` deja
+`index.html` al día (también corrigió medidas que estaban mal en la galería) y
+rehace los créditos del pie. 7 pruebas nuevas en `pruebas/fotos.test.js`
+(`npm test`: 59). Se quitó `taqueria.jpg` (otro negocio, ya sin usar).
+
 ### 2. Herramientas que Ari ya usó (verificadas en este equipo)
 
 Ari trabaja en **Termux aarch64** (Android). Esto es lo que comprobó de verdad,

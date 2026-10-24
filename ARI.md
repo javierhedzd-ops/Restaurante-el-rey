@@ -40,12 +40,17 @@ después de editar: npm test
   skills proponen GSAP o Lenis desde jsdelivr, o Google Fonts), nada de fuentes
   externas, y DESIGN.md decide lo que choque.
 
-## Fotos reales del restaurante
-- Van en `fotos/` con su origen apuntado en `fotos/CREDITOS.md` ("Foto del
-  restaurante, cedida por el dueño"). Solo fotos del dueño o tomadas por Javi:
-  las que suben clientes a Google Maps son de esas personas y no se usan sin su
-  permiso. Cuando lleguen, sustituyen a las de Wikimedia empezando por la
-  portada, Nosotros y la carta.
+## Fotos (se pueden cambiar)
+- Decisión de Javi (24/10/2026): por ahora fotos libres de Wikimedia con su
+  crédito, preparadas para cambiarse por fotos propias cuando las haya.
+- Cada foto de la página es un hueco con nombre: `<figure data-foto="portada">`
+  y su archivo en `fotos/sitio/portada.jpg`. Sus datos (alt, pie, crédito) están
+  en `FOTOS`, en `datos.js`. Las de los platos, en `PLATOS` (campo `foto`).
+- Para cambiar una: archivo nuevo con el mismo nombre, corregir `FOTOS`, y
+  `npm run fotos` (pone src, alt, medidas reales, pies y los créditos del pie de
+  página en `index.html`). Nunca a mano en el HTML: `pruebas/fotos.test.js`
+  falla si `index.html` no está al día con `datos.js`. Guía: `fotos/LEEME.md`.
+- Nada de fotos de clientes de Google Maps sin permiso ni de otros negocios.
 
 ## Maqueta y web real
 - Desde el 24/10/2026 la raíz y `maqueta/` son iguales: el rediseño del cazo ya

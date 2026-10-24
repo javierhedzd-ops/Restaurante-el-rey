@@ -121,3 +121,23 @@ export const PREGUNTAS = [
     respuesta: "Calle 14, 93-F, Chuminópolis, 97158, Mérida, Yucatán. Hay mapa en la sección Visítanos.",
   },
 ];
+
+// Fotos de la página: cada una tiene un hueco con nombre fijo en fotos/sitio/.
+// Para cambiar una: pon la nueva imagen con el mismo nombre de archivo (o cambia
+// "src"), corrige alt, pie y credito aquí y corre `npm run fotos`, que deja
+// index.html al día (medidas, textos y créditos del pie). Guía: fotos/LEEME.md.
+//   alt: qué se ve, para quien no ve la imagen.
+//   pie: el texto debajo de la foto ("" = sin pie).
+//   credito: "Autor · Licencia" para el pie de página; null si la foto es propia.
+export const FOTOS = {
+  portada: { src: "fotos/sitio/portada.jpg", alt: "Cazo de cobre lleno de carnitas dorándose en su manteca", pie: "Foto: Ferfive · CC BY 4.0 · Wikimedia Commons", credito: "Ferfive · CC BY 4.0" },
+  "arma-tu-kilo": { src: "fotos/sitio/arma-tu-kilo.jpg", alt: "Kilo de carnitas servido con tortillas y salsa", pie: "Foto: ProtoplasmaKid · CC BY 4.0 · Wikimedia Commons", credito: "ProtoplasmaKid · CC BY 4.0" },
+  nosotros: { src: "fotos/sitio/nosotros.jpg", alt: "Plato de carnitas servidas en un mercado de Michoacán", pie: "Carnitas en Uruapan, Michoacán · AlejandroLinaresGarcia · CC BY-SA 4.0", credito: "AlejandroLinaresGarcia · CC BY-SA 4.0" },
+  "galeria-1": { src: "fotos/sitio/galeria-1.jpg", alt: "Cazo de cobre lleno de carnitas dorándose en su manteca", pie: "Cazo de cobre · Ferfive · CC BY 4.0", credito: "Ferfive · CC BY 4.0" },
+  "galeria-2": { src: "fotos/sitio/galeria-2.jpg", alt: "Taco de carnitas en tortilla hecha a mano", pie: "Taco de carnitas · Missvain · CC0", credito: "Missvain · CC0" },
+  "galeria-3": { src: "fotos/sitio/galeria-3.jpg", alt: "Carnitas en el mercado", pie: "En el mercado · DaliaMonge · CC BY-SA 4.0", credito: "DaliaMonge · CC BY-SA 4.0" },
+  "galeria-4": { src: "fotos/sitio/galeria-4.jpg", alt: "Tortillas de maíz en comal de barro", pie: "Tortillas de nixtamal · German matus · CC BY-SA 4.0", credito: "German matus · CC BY-SA 4.0" },
+  "galeria-5": { src: "fotos/sitio/galeria-5.jpg", alt: "Salsas y complementos del taco", pie: "Salsas de la casa · Salazar Lira H. E. · CC BY-SA 4.0", credito: "Salazar Lira Hanna Elizabeth · CC BY-SA 4.0" },
+  "galeria-6": { src: "fotos/sitio/galeria-6.jpg", alt: "Michelada servida en vaso escarchado", pie: "Michelada · Popo le Chien · CC BY-SA 3.0", credito: "Popo le Chien · CC BY-SA 3.0" },
+  reservas: { src: "fotos/sitio/reservas.jpg", alt: "Cebolla, cilantro, limones y salsas listos para la mesa", pie: "Complementos del taco · Salazar Lira Hanna Elizabeth · CC BY-SA 4.0", credito: "Salazar Lira Hanna Elizabeth · CC BY-SA 4.0" },
+};
