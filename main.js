@@ -84,10 +84,7 @@ function marcarDiaDeHoy() {
 
 // ---------- Menú ----------
 
-function tarjetaPlato(plato, indice) {
-  // Número de orden de la carta: 01, 02… Se reinicia en cada categoría.
-  const numero = String(indice + 1).padStart(2, "0");
-
+function tarjetaPlato(plato) {
   const etiquetas = (plato.etiquetas || [])
     .map((e) => `<span class="etiqueta etiqueta--${e}">${escapar(nombreEtiqueta(e))}</span>`)
     .join("");
@@ -116,7 +113,6 @@ function tarjetaPlato(plato, indice) {
       ${foto}
       <div class="plato__cuerpo">
         <div class="plato__cabecera">
-          <span class="plato__numero" aria-hidden="true">${numero}</span>
           <h3 class="plato__nombre">${escapar(plato.nombre)}</h3>
           <span class="plato__precio">${formatearPrecio(plato.precio)}</span>
         </div>
@@ -149,7 +145,7 @@ function pintarMenu() {
   if (!visibles.length) {
     contenedor.innerHTML = `<p class="vacio">No encontramos nada con eso. Prueba con "taco", "kilo" o "guacamole".</p>`;
   } else {
-    contenedor.innerHTML = visibles.map((plato, i) => tarjetaPlato(plato, i)).join("");
+    contenedor.innerHTML = visibles.map((plato) => tarjetaPlato(plato)).join("");
   }
 
   const contador = $("#contador-platos");

@@ -11,7 +11,7 @@
   img { max-width: 100%; display: block; }
   a { color: inherit; }
   table { border-collapse: collapse; }
-  button, input, select { font: inherit; color: inherit; }
+  button, input, select, textarea { font: inherit; color: inherit; }
   fieldset { padding: 0; border: 0; }
   /* El carrito y el velo usan display:flex/grid, que gana al [hidden] del
      navegador: sin esto se quedan abiertos y no hay forma de cerrarlos. */
@@ -38,7 +38,10 @@
     --ancho: 1140px;
     --fuente: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
     --fuente-titulo: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-    --fuente-cifras: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    /* Cifras en la letra del texto con números tabulares (font-variant-numeric). */
+    --fuente-cifras: var(--fuente);
+    /* Lo más pequeño que se escribe: 13px. Por debajo no se lee en el teléfono. */
+    --texto-min: 0.8125rem;
     --filete: 1px solid rgb(20 11 7 / 12%);
     --grano: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
 
@@ -143,7 +146,7 @@
   .marca__texto { display: flex; flex-direction: column; line-height: 1.1; }
 
   .marca__texto small {
-    font-size: 0.75rem;
+    font-size: var(--texto-min);
     font-weight: 500;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -158,7 +161,7 @@
   .cabecera__acciones { display: flex; align-items: center; gap: 0.75rem; }
 
   .horario-vivo {
-    font-size: 0.78rem;
+    font-size: var(--texto-min);
     padding: 0.3rem 0.7rem;
     border-radius: var(--radio-carta);
     border: 1px solid currentColor;
@@ -201,7 +204,7 @@
     border-radius: 999px;
     background: var(--dorado);
     color: var(--carbon);
-    font-size: 0.75rem;
+    font-size: var(--texto-min);
     font-weight: 800;
   }
 
@@ -220,64 +223,6 @@
     overflow: hidden;
     color: var(--crema);
     background: var(--carbon);
-  }
-
-  /* En pantallas anchas la foto sangra por la derecha y el titular se parte
-     en dos líneas: la primera en crema, la segunda en rojo. */
-  @media (min-width: 900px) {
-    .hero {
-      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-      grid-template-rows: 1fr auto;
-      align-items: end;
-      column-gap: clamp(2rem, 5vw, 4.5rem);
-      min-height: min(86svh, 760px);
-      padding-top: clamp(4rem, 9vw, 7rem);
-      background:
-        linear-gradient(90deg, var(--carbon) 0%, var(--carbon) 46%, rgb(20 11 7 / 0%) 62%),
-        var(--carbon);
-    }
-
-    .hero__foto {
-      grid-column: 2;
-      grid-row: 1 / span 2;
-      align-self: stretch;
-      margin-right: calc(-1 * (clamp(1rem, 4vw, 2.5rem) + var(--seguro-lado)));
-    }
-
-    /* El velo va a la izquierda, para fundir la foto con el papel. */
-    .hero__foto::after {
-      background:
-        linear-gradient(90deg, var(--carbon) 0%, rgb(20 11 7 / 55%) 22%, rgb(20 11 7 / 0%) 55%),
-        linear-gradient(180deg, rgb(20 11 7 / 0%) 60%, rgb(20 11 7 / 70%) 100%);
-    }
-
-    .hero__contenido {
-      grid-column: 1;
-      grid-row: 1;
-      align-self: end;
-      margin-inline: 0;
-      padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
-    }
-
-    .hero__datos {
-      grid-column: 1;
-      grid-row: 2;
-      margin-inline: 0;
-    }
-
-    .hero__credito {
-      top: auto;
-      bottom: 0.75rem;
-      right: calc(0.75rem + var(--seguro-lado));
-    }
-
-    .hero__titulo {
-      max-width: 13ch;
-      font-size: clamp(3rem, 5.4vw, 5.2rem);
-      line-height: 1.02;
-    }
-
-    .hero__titulo em { color: var(--rojo-claro); }
   }
 
   .hero__foto {
@@ -311,9 +256,11 @@
     right: 0.75rem;
     bottom: 0.75rem;
     z-index: 1;
-    font-size: 0.75rem;
-    color: rgb(253 246 236 / 75%);
-    text-shadow: 0 1px 2px rgb(20 11 7 / 80%);
+    font-size: var(--texto-min);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    background: rgb(20 11 7 / 62%);
+    color: rgb(253 246 236 / 92%);
   }
 
   .hero__contenido {
@@ -327,7 +274,7 @@
   }
 
   .hero__etiqueta {
-    font-size: 0.78rem;
+    font-size: var(--texto-min);
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--dorado);
@@ -335,14 +282,8 @@
     margin-bottom: 1rem;
   }
 
-  /* Dos líneas: "Carnitas del cazo," y "estilo Michoacán". */
-  .hero__titulo { max-width: 14ch; font-size: clamp(2.25rem, 6.4vw, 4.4rem); }
-
-  .hero__titulo em {
-    display: block;
-    font-style: italic;
-    color: #f3c46a;
-  }
+  /* Dos líneas, una por frase ("Carnitas del cazo," / "estilo Michoacán"), en la misma letra. */
+  .hero__titulo { max-width: 18ch; font-size: clamp(2.25rem, 6.4vw, 4.4rem); }
 
   .hero__texto {
     max-width: 48ch;
@@ -365,7 +306,7 @@
   }
 
   .hero__tarjeta-titulo {
-    font-size: 0.72rem;
+    font-size: var(--texto-min);
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -426,7 +367,7 @@
   .boton:hover { transform: translateY(-2px); }
   .boton:active { transform: translateY(0) scale(0.98); }
 
-  .boton--primario { background: var(--rojo); color: #fff; box-shadow: 0 8px 20px rgb(179 38 30 / 25%); }
+  .boton--primario { background: var(--rojo); color: #fff; }
   .boton--primario:hover { background: var(--rojo-oscuro); }
 
   .boton--secundario { border: 2px solid currentColor; color: var(--crema); background: rgb(20 11 7 / 25%); }
@@ -465,10 +406,70 @@
     gap: 0.3rem;
   }
   .hero__datos span {
-    font-size: 0.78rem;
+    font-size: var(--texto-min);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: rgb(253 246 236 / 72%);
+  }
+
+  /* En pantallas anchas la foto sangra por la derecha, a la altura del titular.
+     Va después de las reglas base de la portada: si va antes, las base (misma
+     especificidad) la pisan y la foto se cae debajo del texto. */
+  @media (min-width: 900px) {
+    .hero {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      grid-template-rows: 1fr auto;
+      align-items: end;
+      column-gap: clamp(2rem, 5vw, 4.5rem);
+      min-height: min(86svh, 760px);
+      padding-top: clamp(4rem, 9vw, 7rem);
+      background:
+        linear-gradient(90deg, var(--carbon) 0%, var(--carbon) 46%, rgb(20 11 7 / 0%) 62%),
+        var(--carbon);
+    }
+
+    .hero__foto {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      align-self: stretch;
+      /* Sube hasta el borde de arriba de la portada (anula el padding-top). */
+      margin-top: calc(-1 * clamp(4rem, 9vw, 7rem));
+      margin-right: calc(-1 * (clamp(1rem, 4vw, 2.5rem) + var(--seguro-lado)));
+    }
+
+    /* El velo va a la izquierda, para fundir la foto con el papel. */
+    .hero__foto::after {
+      background:
+        linear-gradient(90deg, var(--carbon) 0%, rgb(20 11 7 / 55%) 22%, rgb(20 11 7 / 0%) 55%),
+        linear-gradient(180deg, rgb(20 11 7 / 0%) 60%, rgb(20 11 7 / 70%) 100%);
+    }
+
+    .hero__contenido {
+      grid-column: 1;
+      grid-row: 1;
+      align-self: end;
+      margin-inline: 0;
+      padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+    }
+
+    .hero__datos {
+      grid-column: 1;
+      grid-row: 2;
+      margin-inline: 0;
+    }
+
+    .hero__credito {
+      top: auto;
+      bottom: 0.75rem;
+      right: calc(0.75rem + var(--seguro-lado));
+    }
+
+    .hero__titulo {
+      max-width: 18ch;
+      font-size: clamp(3rem, 5.4vw, 5.2rem);
+      line-height: 1.02;
+    }
+
   }
 
   .estrella { width: 0.95rem; height: 0.95rem; color: var(--dorado); flex: none; }
@@ -501,7 +502,7 @@
     margin-bottom: 1rem;
     background: var(--rojo);
   }
-  .seccion__nota { color: var(--tinta-suave); font-size: 0.95rem; max-width: 52ch; }
+  .seccion__nota { color: var(--tinta-suave); font-size: 1rem; max-width: 52ch; }
 
   .seccion--oscura {
     max-width: none;
@@ -575,9 +576,10 @@
 
   .nosotros__grande {
     font-family: var(--fuente-titulo);
-    font-size: clamp(1.45rem, 3.2vw, 2.15rem);
+    /* Una frase grande, no un titular: 32px como mucho y tres líneas en el escritorio. */
+    font-size: clamp(1.35rem, 2.4vw, 2rem);
     line-height: 1.35;
-    max-width: 34ch;
+    max-width: 40ch;
     color: var(--crema);
     text-wrap: balance;
   }
@@ -600,7 +602,7 @@
   .nosotros__ficha div:last-child { border-bottom: 0; padding-bottom: 0; }
 
   .nosotros__ficha dt {
-    font-size: 0.75rem;
+    font-size: var(--texto-min);
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -648,7 +650,7 @@
 
   .nosotros__foto figcaption {
     margin-top: 0.5rem;
-    font-size: 0.75rem;
+    font-size: var(--texto-min);
     color: var(--crema-oscura);
   }
 
@@ -661,7 +663,7 @@
   }
 
   .visitanos__bloque h3 {
-    font-size: 0.75rem;
+    font-size: var(--texto-min);
     text-transform: uppercase;
     letter-spacing: 0.16em;
     color: var(--rojo);
@@ -678,7 +680,7 @@
   .horario .cerrado { color: var(--rojo); font-weight: 600; }
   .horario__hoy th, .horario__hoy td { color: var(--rojo); font-weight: 700; }
 
-  .aviso { margin-top: 0.75rem; font-size: 0.8rem; color: var(--tinta-suave); }
+  .aviso { margin-top: 0.75rem; font-size: var(--texto-min); color: var(--tinta-suave); }
   .redes { display: flex; gap: 1rem; margin-top: 0.75rem; }
 
   /* Cierre de Visítanos: mapa a un lado, último empujón al pedido al otro. */
@@ -716,19 +718,12 @@
 
   .visitanos__mapa figcaption {
     padding: 0.6rem 0.9rem;
-    font-size: 0.8rem;
+    font-size: var(--texto-min);
     color: var(--tinta-suave);
     border-top: var(--filete);
     background: #fff;
   }
 
-  .visitanos__etiqueta {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--rojo);
-  }
 
   .visitanos__titulo {
     margin-top: 0.5rem;
@@ -741,7 +736,7 @@
   .visitanos__texto {
     margin-top: 0.6rem;
     max-width: 46ch;
-    font-size: 0.95rem;
+    font-size: 1rem;
     line-height: 1.6;
     color: var(--tinta-suave);
   }
@@ -763,8 +758,8 @@
 
   .pie__marca { display: flex; align-items: center; justify-content: center; gap: 0.4rem; font-weight: 700; font-size: 1.1rem; color: var(--crema); margin-bottom: 0.5rem; }
   .pie__corona { width: 1.1rem; height: 1.1rem; color: var(--dorado); flex: none; }
-  .pie__nota { margin-top: 0.75rem; opacity: 0.7; font-size: 0.8rem; }
-  .pie__creditos { margin-top: 1.25rem; font-size: 0.75rem; opacity: 0.6; max-width: 60ch; margin-inline: auto; }
+  .pie__nota { margin-top: 0.75rem; opacity: 0.7; font-size: var(--texto-min); }
+  .pie__creditos { margin-top: 1.25rem; font-size: var(--texto-min); opacity: 0.6; max-width: 60ch; margin-inline: auto; }
 }
 
 @layer cazo {
@@ -784,14 +779,6 @@
     margin-inline: auto;
   }
 
-  .cazo__etiqueta {
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--rojo);
-    margin-bottom: 0.75rem;
-  }
 
   /* La foto se estira a lo alto del armador en todos los anchos: así el lado
      derecho de la sección llega hasta abajo y no queda un hueco vacío. */
@@ -813,7 +800,7 @@
     right: 0;
     bottom: 0;
     padding: 1.5rem 0.75rem 0.6rem;
-    font-size: 0.75rem;
+    font-size: var(--texto-min);
     color: rgb(253 246 236 / 85%);
     background: linear-gradient(180deg, transparent, rgb(20 11 7 / 70%));
   }
@@ -830,7 +817,7 @@
   .armador__grupo { display: grid; gap: 0.5rem; }
 
   .armador__leyenda {
-    font-size: 0.75rem;
+    font-size: var(--texto-min);
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -1035,7 +1022,7 @@
 
   .plato__cabecera {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: baseline;
     gap: 0.6rem;
   }
@@ -1048,15 +1035,6 @@
     margin-left: 0.5rem;
     border-bottom: 1px dotted rgb(107 87 72 / 45%);
     transform: translateY(-0.25em);
-  }
-
-  .plato__numero {
-    font-family: var(--fuente-titulo);
-    font-size: 0.95rem;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-    color: var(--dorado);
-    letter-spacing: 0.02em;
   }
 
   .plato__nombre {
@@ -1078,12 +1056,12 @@
     white-space: nowrap;
   }
 
-  .plato__desc { font-size: 0.95rem; color: var(--tinta-suave); max-width: 58ch; }
+  .plato__desc { font-size: 1rem; color: var(--tinta-suave); max-width: 58ch; }
 
   .plato__etiquetas { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 
   .etiqueta {
-    font-size: 0.75rem;
+    font-size: var(--texto-min);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -1103,7 +1081,7 @@
     margin-top: 0.35rem;
   }
 
-  .opciones { display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.8rem; }
+  .opciones { display: flex; flex-direction: column; gap: 0.15rem; font-size: var(--texto-min); }
 
   .opciones__texto { color: var(--tinta-suave); text-transform: uppercase; letter-spacing: 0.08em; }
 
@@ -1169,7 +1147,7 @@
   .menu__cierre-texto {
     margin-top: 0.4rem;
     max-width: 52ch;
-    font-size: 0.92rem;
+    font-size: 1rem;
     line-height: 1.55;
     color: var(--tinta-suave);
   }
@@ -1230,7 +1208,7 @@
 
   .galeria__pieza figcaption {
     flex: none;
-    font-size: 0.68rem;
+    font-size: var(--texto-min);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--tinta-suave);
@@ -1283,11 +1261,12 @@
 
   .pregunta summary:hover { color: var(--rojo); }
 
+  /* La respuesta es lo que se vino a leer: va en la tinta del cuerpo (DESIGN.md), no en la secundaria. */
   .pregunta p {
     margin: 0;
     padding: 0 1.15rem 1.1rem;
-    color: var(--tinta-suave);
-    font-size: 0.95rem;
+    color: var(--tinta);
+    font-size: 1rem;
     line-height: 1.55;
   }
 
@@ -1300,9 +1279,7 @@
   /* ---------- Reservas: intro a la izquierda, formulario en tarjeta ---------- */
   .seccion--reservas {
     max-width: none;
-    background:
-      radial-gradient(120% 90% at 100% 0%, rgb(217 164 65 / 16%), transparent 60%),
-      var(--crema-oscura);
+    background: var(--crema-oscura);
     border-block: 1px solid rgb(20 11 7 / 8%);
   }
 
@@ -1315,20 +1292,12 @@
     margin-inline: auto;
   }
 
-  .reservas__etiqueta {
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--rojo);
-    margin-bottom: 0.75rem;
-  }
 
   .reservas__puntos {
     display: grid;
     gap: 0.5rem;
     margin-top: 1.5rem;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: var(--tinta-suave);
   }
 
@@ -1406,7 +1375,7 @@
 
   .campo__error {
     min-height: 1.1em;
-    font-size: 0.8rem;
+    font-size: var(--texto-min);
     color: var(--rojo);
     font-weight: 600;
   }
@@ -1414,7 +1383,7 @@
   .reserva__boton { width: 100%; }
 
   .reserva__nota {
-    font-size: 0.8rem;
+    font-size: var(--texto-min);
     color: var(--tinta-suave);
     text-align: center;
   }
@@ -1440,7 +1409,7 @@
 
   .reservas__foto figcaption {
     padding: 0.55rem 0.9rem;
-    font-size: 0.75rem;
+    font-size: var(--texto-min);
     color: var(--tinta-suave);
     background: #fff;
     border-top: var(--filete);
@@ -1535,7 +1504,7 @@
 
   .linea__info { display: flex; flex-direction: column; }
   .linea__nombre { font-weight: 600; font-size: 0.92rem; }
-  .linea__opciones { font-size: 0.8rem; color: var(--tinta-suave); }
+  .linea__opciones { font-size: var(--texto-min); color: var(--tinta-suave); }
 
   .linea__controles {
     grid-row: 2;
@@ -1594,7 +1563,7 @@
     cursor: pointer;
   }
 
-  .carrito__nota { margin-top: 0.6rem; font-size: 0.75rem; color: var(--tinta-suave); text-align: center; }
+  .carrito__nota { margin-top: 0.6rem; font-size: var(--texto-min); color: var(--tinta-suave); text-align: center; }
 
   /* Por debajo del carrito (40): el aviso nunca tapa el botón de enviar. */
   .aviso-flotante {
@@ -1624,7 +1593,7 @@
   /* Aparición al hacer scroll: solo donde el navegador lo soporta. */
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
-      .plato, .visitanos__bloque, .nosotros__grande, .cazo__foto {
+      .plato, .visitanos__bloque, .nosotros__grande {
         animation: aparecer linear both;
         animation-timeline: view();
         animation-range: entry 0% entry 60%;
@@ -1666,7 +1635,7 @@
   @media (max-width: 720px) {
     .hero { min-height: min(92svh, 720px); }
     .hero__foto img { object-position: 50% 30%; }
-    .hero__credito { font-size: 0.75rem; }
+    .hero__credito { font-size: var(--texto-min); }
     /* A una columna: cita, ficha, párrafos y foto, en ese orden. */
     .nosotros {
       grid-template-columns: 1fr;
@@ -1685,6 +1654,10 @@
 
   /* En el teléfono la carta va a una columna: foto arriba, texto debajo. */
   @media (max-width: 560px) {
+    /* El armador a una columna en el teléfono: a dos columnas el texto quedaba
+       de tres palabras por línea. La foto va debajo, apaisada. */
+    .cazo { grid-template-columns: minmax(0, 1fr); }
+    .cazo__foto { aspect-ratio: 4 / 3; min-height: 0; }
     .plato--con-foto { grid-template-columns: minmax(0, 1fr); gap: 0.85rem; }
     .plato__foto { aspect-ratio: 16 / 9; }
     .plato { padding: 1.25rem 0; }

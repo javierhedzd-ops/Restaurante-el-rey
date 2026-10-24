@@ -62,8 +62,12 @@ partes, y el rojo chile usado como acento quirúrgico — no como fondo de todo.
   - `h3`: `1.05rem`
   - cuerpo: `1rem` / `1.6`
   - secundario: `0.88rem`
-  - etiquetas y microtexto: `0.68–0.78rem`, mayúsculas, `letter-spacing: 0.12em`
-- **Cursiva** solo en el hero, para la segunda línea del titular. En ningún otro sitio.
+  - etiquetas y microtexto: `0.8125rem` (13 px, token `--texto-min`), mayúsculas, `letter-spacing: 0.12em`.
+    **Nada que se lea va por debajo de 13 px** (pedido de Javi, 24/10/2026; antes era 0.68–0.78rem).
+- **Sin cursiva ni cambio de letra dentro de un titular** (pedido de Javi, 24/10/2026). El titular
+  del hero va en dos líneas de la misma serif: "Carnitas del cazo," / "estilo Michoacán".
+- **Cifras** (precios, totales): en la letra del texto con `font-variant-numeric: tabular-nums`.
+  Nada de monoespaciada.
 - `text-wrap: balance` en `h1` y `h2`. Nada de titulares de una sola palabra huérfana.
 
 ---
@@ -76,7 +80,8 @@ partes, y el rojo chile usado como acento quirúrgico — no como fondo de todo.
 - Radios: `999px` en píldoras (botones, filtros, etiquetas), `16px` en tarjetas,
   `8px` en controles pequeños. **Nada de esquinas a 0** salvo filetes.
 - Sombras: una sola, suave y cálida — `0 12px 32px rgb(20 11 7 / 10%)`.
-  En hover, `0 16px 36px rgb(20 11 7 / 16%)`. Sin sombras de colores.
+  En hover, `0 16px 36px rgb(20 11 7 / 16%)`. Sin sombras de colores (por eso los
+  botones rojos van planos, sin sombra roja).
 
 ---
 
@@ -158,7 +163,7 @@ partes, y el rojo chile usado como acento quirúrgico — no como fondo de todo.
 
 ## 10. Cómo se comprueba un cambio
 
-1. `npm test` en verde (19 pruebas de dominio).
+1. `npm test` en verde (52 pruebas: lógica, interfaz, estilos y coherencia).
 2. `node --check main.js` y `node --check logica.js`.
 3. Llaves del CSS equilibradas.
 4. Las 6 rutas responden 200: `/`, `styles.css`, `main.js`, `datos.js`, `logica.js`, `favicon.svg`.

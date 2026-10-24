@@ -31,6 +31,29 @@ después de editar: npm test
   copiando `index.html` y `styles.css` (y las fotos nuevas); los JS se cambian
   primero en la raíz y se copian a la maqueta, nunca al revés.
 
+## Diseño: la skill design-taste-frontend (tasteskill v2)
+- Qué es: la skill anti-slop de diseño web, sacada del estudio de 247 webs de
+  galería (One Page Love, Awwwards), con un inspector que mide la página en un
+  Chromium de verdad. Ruta: `~/ari-skills/design-taste-frontend/` (el original
+  está en github.com/Leonxlnx/taste-skill, carpeta `skills/taste-skill`).
+- **Antes de diseñar, lee `~/ari-skills/design-taste-frontend/SKILL.md` entero**
+  y después `DESIGN.md`.
+- Comprobar: `~/bin/ari-bg "inspect" node ~/ari-skills/design-taste-frontend/scripts/inspect.mjs index.html --widths 1440,768,390 --out .taste-skill/<nombre>`
+  (con `ari-bg`: abre Chromium y en primer plano se corta). La última pasada de
+  referencia, after11, está en el historial: `git show b3285a9:maqueta/.taste-skill/after11/report.json`.
+- Criterio (pedido de Javi, 24/10/2026): `lopsided`, `small-text`,
+  `mixed-font-headline` y `statement-length` se arreglan de verdad. Antes de tocar
+  `eyebrow`, `mono`, `numbering`, `micro-label`, `gradient`, `shadow`,
+  `text-shadow`, `button-fx`, `hairline` o `palette-cream`, mira `DESIGN.md`: si
+  choca, no lo cambies y apúntalo en "Peticiones a Ari" de `PARA-CLAUDE.md` para
+  que decida Javi.
+- Lecciones del 24/10: la animación de aparición al hacer scroll empieza en
+  opacidad 0 y el inspector mide con la página arriba, así que no se le pone a la
+  foto principal de una sección (eso era el lopsided de "Arma tu kilo"). Los
+  `@media` de escritorio van **después** de las reglas base del mismo componente:
+  si van antes, las base los pisan (eso tiraba la foto de la portada debajo del texto).
+  Lo mínimo que se escribe es `var(--texto-min)` (13 px).
+
 ## Qué no tocar
 - Los valores esperados de `pruebas/logica.test.js` para "hacer pasar" un
   cambio: si un cambio los rompe, se avisa y se decide si era el correcto.

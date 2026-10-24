@@ -101,6 +101,57 @@ Archivos temporales que **no** deben subirse: `maqueta/.probe-*.mjs`,
 - El repositorio en GitHub es público: se ven `ARI.md`, este archivo y el
   historial. Si no hace falta para GitHub Pages, mejor privado.
 
+**Ronda de diseño de Claude (24 oct 2026, tarde), contra after11 de tasteskill v2:**
+
+`inspect.mjs` no se pudo ejecutar en el contenedor de Claude (no deja correr
+código descargado). Se midió con un script propio con las mismas reglas y
+umbrales que `scripts/lib/probe.mjs` y `rules.mjs`, a 1440, 768 y 390 px.
+**Falta la pasada oficial en el teléfono** (ver "Para Ari: comprobar" abajo).
+
+FAIL de after11 (10) y cómo quedan:
+- `small-text` (25 textos < 13 px) → **arreglado**: 0. Token `--texto-min` (13 px).
+- `mono` (precios en ui-monospace) → **arreglado**: cifras en la letra del texto
+  con números tabulares, que es lo que pide DESIGN.md ("tabular").
+- `numbering` (01, 02… en la carta) → **arreglado**: fuera (DESIGN.md no los pide).
+- `gradient` (radial de #reservas) → **arreglado**: fondo liso `--crema-oscura`.
+- `text-shadow` (crédito de la foto del hero) → **arreglado**: fondo liso detrás.
+- `button-fx` (sombra roja en los botones) → **arreglado**: DESIGN.md prohíbe
+  "sombras de colores".
+- `eyebrow` (3) → 2 de 3 arreglados: "La cosa viva" (jerga interna) fuera;
+  "Reserva tu mesa" metido en el titular ("Reserva tu mesa, ponemos el cazo").
+  **Se queda** la del hero ("Chuminópolis · Mérida · Desde 1974"): DESIGN.md la
+  nombra ("rojo… etiqueta del hero"). Petición abajo.
+- `micro-label` (40 → 39) → **se queda**: DESIGN.md define "etiquetas y
+  microtexto en mayúsculas con letter-spacing" (ahora a 13 px). Petición abajo.
+- `shadow` (sombras en reposo) → **se queda** la sombra suave de tarjetas y
+  fotos: DESIGN.md §4 la define. Las de color se quitaron. Petición abajo.
+- `hairline` (39 filetes) → **se queda**: el concepto de DESIGN.md es "filetes
+  finos en vez de cajas". Petición abajo.
+
+WARN de after11 (11):
+- `lopsided` ("Arma tu kilo", 396 px a 768) → **arreglado**. La causa: la foto
+  tenía la animación de aparición (opacidad 0 hasta entrar en pantalla) y el
+  inspector mide arriba. Ahora la foto está siempre visible. Además en el
+  teléfono "Arma tu kilo" iba a dos columnas de tres palabras por línea: ahora
+  una columna.
+- `mixed-font-headline` (cursiva en "estilo Michoacán") → **arreglado**: el
+  titular en una sola serif, dos líneas. DESIGN.md actualizado (pedido de Javi).
+- `statement-length` (cita de Nosotros, 5 líneas a 34 px) → **arreglado**: 18
+  palabras, 32 px, 3 líneas en escritorio.
+- `font-count` (3) → **arreglado**: 2 (sans del sistema y serif). También el
+  cuadro de notas de reservas salía en monoespaciada: ahora hereda la letra.
+- `body-size` (15.2 px) → **arreglado**: el texto corrido a 16 px (DESIGN.md: 1rem).
+- `grey-body`, `palette-cream`, `dashed`, `outlined-box`, `no-footage` → se
+  quedan (DESIGN.md los define: descripciones en `--tinta-suave`, `--crema`,
+  filetes punteados, borde de tarjeta, "nada que se mueva solo"). Peticiones abajo.
+- `size-count` (13 tamaños) → sin cambios; bajarlo pide rehacer la escala.
+
+Arreglado de paso (no salía en el informe, se veía en las capturas):
+- La foto de la portada caía debajo del texto en escritorio (el `@media` de
+  escritorio iba antes de las reglas base y estas lo pisaban). Ahora va a la
+  derecha, a la altura del titular, desde arriba.
+- El pie decía `fotos/CREDITOS.md` en monoespaciada: ahora es un enlace normal.
+
 ### 2. Herramientas que Ari ya usó (verificadas en este equipo)
 
 Ari trabaja en **Termux aarch64** (Android). Esto es lo que comprobó de verdad,
@@ -213,6 +264,25 @@ a mano, cumple esto:
   (`scrollWidth > clientWidth` con overflow oculto), hijos que se pisan e
   imágenes que no cargan, y saque una captura de la sección sin la cabecera fija
   (si no, la tapa). Es lo que se usó el 24/10 para revisar Visítanos y Nosotros.
+- **Reglas de tasteskill que chocan con DESIGN.md (decide Javi).** Se dejaron
+  como están; si Javi elige seguir a la skill, se cambia DESIGN.md primero:
+  - `eyebrow` del hero ("Chuminópolis · Mérida · Desde 1974"): ¿se mete en el
+    texto de debajo del titular y se borra?
+  - `micro-label` (39 etiquetas en mayúsculas espaciadas: "Desde", "Sucursal",
+    "¿Cuánto?", "Más pedido"…): ¿pasan a minúscula normal a 13 px?
+  - `hairline` (filetes de la carta, del horario, de la cabecera): ¿se cambian
+    por espacio o un cambio de tono, como pide la skill?
+  - `shadow` (sombra suave de tarjetas, preguntas, fotos y formulario):
+    ¿se quitan y se separan por tono?
+  - `palette-cream` (`--crema` #fdf6ec): ¿se pasa a un hueso menos amarillo?
+  - `grey-body` (descripciones en `--tinta-suave`), `dashed` (filetes punteados),
+    `outlined-box` (borde de tarjetas) y `no-footage` (sin video: DESIGN.md dice
+    "nada de elementos que se muevan solos").
+- **Para Ari: comprobar con el inspector de verdad.** Después del `git pull`:
+  `cd ~/restaurante-el-rey && ~/bin/ari-bg "inspect" node ~/ari-skills/design-taste-frontend/scripts/inspect.mjs index.html --widths 1440,768,390 --out .taste-skill/after12`,
+  y compara `after12/report.json` con `git show b3285a9:maqueta/.taste-skill/after11/report.json`.
+  Lo esperado: FAIL solo en `eyebrow` (1, el del hero), `micro-label`, `shadow` y
+  `hairline`, los cuatro de DESIGN.md. Si sale otro, apúntalo aquí.
 - **Elementos fijos que se asoman.** Que `inspect.mjs` avise de elementos
   `position: fixed` visibles y sin texto (así se habría visto antes la pastilla
   vacía del aviso).
