@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Editar la carta · Carnitas Michoacán El Rey</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin">
+
+<header class="admin__cabecera">
+  <div>
+    <p class="admin__marca">El Rey · Administración</p>
+    <h1 class="admin__titulo">Editar la carta</h1>
+  </div>
+  <a class="enlace" href="./">Ver la web</a>
+</header>
+
+<main class="admin__cuerpo">
+  <p class="admin__ayuda">
+    Cambia precios, nombres y descripciones, añade o quita productos. Deja el precio
+    vacío para que diga "Consultar". Nada se publica hasta que pulses
+    <strong>Publicar en la web</strong>.
+  </p>
+
+  <div id="carta" class="admin__carta" aria-live="polite"></div>
+
+  <section class="admin__guardar" aria-labelledby="titulo-guardar">
+    <h2 id="titulo-guardar" class="admin__subtitulo">Guardar los cambios</h2>
+    <ul id="errores" class="admin__errores" hidden></ul>
+
+    <label class="campo">
+      <span class="campo__texto">Llave de GitHub <small>(para publicar)</small></span>
+      <input id="llave" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…">
+    </label>
+    <label class="admin__recordar">
+      <input id="recordar" type="checkbox"> Recordar la llave en este dispositivo
+    </label>
+
+    <div class="admin__acciones">
+      <button id="publicar" class="boton boton--primario" type="button">Publicar en la web</button>
+      <button id="descargar" class="boton boton--secundario admin__descargar" type="button">Descargar archivos</button>
+    </div>
+    <p id="resultado" class="admin__resultado" role="status" aria-live="polite"></p>
+    <p class="admin__nota">
+      La llave es un token de GitHub con permiso de escritura solo en este repositorio
+      (cómo crearla: <a class="enlace" href="https://github.com/javierhedzd-ops/Restaurante-el-rey/blob/ari/rediseno-cazo/ADMIN.md" target="_blank" rel="noopener">guía</a>). Sin llave, descarga <code>datos.js</code>
+      y súbelo al repositorio.
+    </p>
+  </section>
+</main>
+
+<script type="module" src="admin.js"></script>
+</body>
+</html>

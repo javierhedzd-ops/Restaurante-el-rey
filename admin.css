@@ -1,0 +1,87 @@
+/* Página de administración de la carta (admin.html). Usa los tokens y componentes de styles.css. */
+@layer componentes {
+  .admin { background: var(--crema); color: var(--tinta); }
+
+  .admin__cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem;
+    padding: calc(1.25rem + var(--seguro-arriba)) calc(1rem + var(--seguro-lado)) 1rem;
+    background: var(--carbon);
+    color: var(--crema);
+  }
+
+  .admin__cabecera .enlace { color: var(--crema); }
+  .admin__marca { font-size: var(--texto-min); color: var(--dorado); font-weight: 700; }
+  .admin__titulo { font-family: var(--fuente-titulo); font-size: clamp(1.6rem, 5vw, 2.2rem); }
+
+  .admin__cuerpo {
+    max-width: 52rem;
+    margin-inline: auto;
+    padding: 1.25rem calc(1rem + var(--seguro-lado)) calc(3rem + var(--seguro-abajo));
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .admin__ayuda { color: var(--tinta-suave); }
+  .admin__carta { display: grid; gap: 2rem; }
+  .admin__categoria-bloque { display: grid; gap: 0.9rem; }
+  .admin__subtitulo { font-family: var(--fuente-titulo); font-size: 1.4rem; }
+  .admin__subtitulo small { font-family: var(--fuente); font-size: var(--texto-min); color: var(--tinta-suave); }
+
+  .admin__plato {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: var(--radio-carta);
+    background: #fff;
+    border: 1px solid var(--crema-oscura);
+  }
+
+  .admin__fila { display: grid; grid-template-columns: minmax(0, 1fr) 8rem; gap: 0.75rem; }
+  .admin__fila--opciones { grid-template-columns: minmax(0, 12rem) minmax(0, 1fr); align-items: end; }
+  .admin__marcas { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; padding-bottom: 0.5rem; }
+  .admin__marca-check { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px; font-size: 0.95rem; }
+  .admin__marca-check input { width: 1.15rem; height: 1.15rem; accent-color: var(--rojo); }
+
+  .admin__pie-plato { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .admin__foto { font-size: var(--texto-min); color: var(--tinta-suave); }
+
+  .admin__quitar {
+    min-height: 44px;
+    padding: 0.4rem 0.9rem;
+    border: 0;
+    background: transparent;
+    color: var(--rojo);
+    font-weight: 600;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .admin__anadir { justify-self: start; color: var(--carbon); background: transparent; }
+  .admin__anadir:hover { background: var(--carbon); color: var(--crema); }
+
+  .admin__guardar {
+    position: sticky;
+    bottom: 0;
+    display: grid;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: var(--radio-carta);
+    background: var(--crema-oscura);
+  }
+
+  .admin__errores { padding-left: 1.2rem; list-style: disc; color: var(--rojo); font-weight: 600; }
+  .admin__recordar { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; }
+  .admin__acciones { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .admin__descargar { color: var(--carbon); background: transparent; }
+  .admin__descargar:hover { background: var(--carbon); color: var(--crema); }
+  .admin__resultado { font-weight: 600; }
+  .admin__nota { font-size: var(--texto-min); color: var(--tinta-suave); }
+
+  @media (max-width: 560px) {
+    .admin__fila, .admin__fila--opciones { grid-template-columns: minmax(0, 1fr); }
+    .admin__guardar { position: static; }
+  }
+}
