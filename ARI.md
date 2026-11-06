@@ -21,6 +21,16 @@ pruebas) sigue en el historial: commit `14ff34c`. Para verla:
   Si falta una, la página muestra el hueco vacío.
 - `pruebas/web.test.js` — pruebas sin dependencias.
 
+## Modo dueño (demostración)
+- Se abre añadiendo `#dueno` a la dirección: `…/Restaurante-el-rey/#dueno`.
+  Los clientes no ven ningún botón.
+- Permite cambiar precios (en la carta y la galería) y poner fotos (portada,
+  carrusel, restaurante y galería). Se guarda **solo en el navegador de quien lo
+  usa** (`localStorage`: `rey_demo_precios`, `rey_demo_fotos`); los clientes
+  siguen viendo los precios de `MENU` y las fotos de `fotos/`.
+- Es para que el dueño lo pruebe. Si le gusta, el panel de verdad (que todos
+  vean los cambios) necesita un servicio con base de datos; se habló de Supabase.
+
 ## Paleta (sale del logo)
 Mostaza `#D9942A` (escudo), negro café `#22150E` (contornos), madera `#875628`,
 rojo `#D7261E` de los flyers. Encabezado negro café con filo mostaza; tarjetas
