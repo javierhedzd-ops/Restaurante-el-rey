@@ -143,15 +143,16 @@
 
   .marca__corona { width: 1.4rem; height: 1.4rem; color: var(--dorado); flex: none; }
 
-  .marca__texto { display: flex; flex-direction: column; line-height: 1.1; }
+  /* el logo va en el naranja dorado de la corona y de los rótulos (Javi, 6/11) */
+  .marca__texto { display: flex; flex-direction: column; line-height: 1.1; color: var(--dorado); }
 
   .marca__texto small {
     font-size: var(--texto-min);
     font-weight: 500;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--crema-oscura);
-    opacity: 0.75;
+    color: var(--dorado);
+    opacity: 0.85;
   }
 
   .nav { display: flex; gap: clamp(0.75rem, 2vw, 1.6rem); font-size: 0.95rem; }
@@ -756,7 +757,7 @@
     font-size: 0.9rem;
   }
 
-  .pie__marca { display: flex; align-items: center; justify-content: center; gap: 0.4rem; font-weight: 700; font-size: 1.1rem; color: var(--crema); margin-bottom: 0.5rem; }
+  .pie__marca { display: flex; align-items: center; justify-content: center; gap: 0.4rem; font-weight: 700; font-size: 1.1rem; color: var(--dorado); margin-bottom: 0.5rem; }
   .pie__corona { width: 1.1rem; height: 1.1rem; color: var(--dorado); flex: none; }
   .pie__nota { margin-top: 0.75rem; opacity: 0.7; font-size: var(--texto-min); }
   .pie__creditos { margin-top: 1.25rem; font-size: var(--texto-min); opacity: 0.6; max-width: 60ch; margin-inline: auto; }
