@@ -1,512 +1,884 @@
 <!DOCTYPE html>
-<html lang="es-MX">
+<html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
-<title>Carnitas Michoacán El Rey — Chuminópolis, Mérida</title>
-<meta name="description" content="Carnitas estilo Michoacán desde 1974. Tacos, tortas, kilos y michelitos en Chuminópolis, Mérida. Pide por WhatsApp.">
-<meta name="theme-color" content="#140b07">
-<meta property="og:title" content="Carnitas Michoacán El Rey — Chuminópolis, Mérida">
-<meta property="og:description" content="Cincuenta años de carnitas estilo Michoacán. Pide por WhatsApp.">
-<meta property="og:type" content="restaurant">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="preload" as="image" href="fotos/cazo.jpg" fetchpriority="high">
-<link rel="stylesheet" href="styles.css">
-<script type="module" src="main.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Carnitas Michoacán El Rey · Mérida</title>
+  <meta name="description" content="Carnitas estilo Michoacán en Chuminópolis, Mérida. Maciza, costilla, surtida y chamorro de cazo, tacos, reynas y más. Pide por WhatsApp al 999 119 0662.">
+  <meta name="theme-color" content="#F7F4EE">
+  <meta property="og:title" content="Carnitas Michoacán El Rey · Mérida">
+  <meta property="og:description" content="Carnitas de cazo en Chuminópolis. Pide por WhatsApp.">
+  <meta property="og:image" content="fotos/portada.jpg">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="logo-escudo.png">
+
+
+  <style>
+    /* Letras incluidas en el repositorio (sin Google Fonts) */
+    @font-face {
+      font-family: 'Inter Tight'; font-style: normal; font-weight: 400 700; font-display: swap;
+      src: url('fuentes/inter-tight.woff2') format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+    @font-face {
+      font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400 700; font-display: swap;
+      src: url('fuentes/jetbrains-mono.woff2') format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+    :root {
+      /* Paleta del logo El Rey: mostaza, negro café y madera; rojo de los flyers */
+      --bg: #FAF5EA;
+      --card: #FFFFFF;
+      --card-alt: #F8E9C9;
+      --btn: #F3E4C4;
+      --btn-hover: #EED39C;
+      --border: #E8D7B4;
+      --border-subtle: #CFB487;
+
+      --text: #22150E;
+      --text-sec: #4E3A2A;
+      --text-muted: #85705A;
+
+      --ink: #22150E;        /* negro café de los contornos del logo */
+      --mustard: #D9942A;    /* mostaza del escudo */
+      --mustard-hover: #E6A53F;
+      --wood: #875628;       /* vetas de madera */
+      --accent: #9A5C10;     /* mostaza oscuro para texto sobre blanco */
+      --accent-bright: #D9942A;
+      --on-accent: #22150E;
+
+      --fire: #D7261E;
+      --good: #2F8F5B;
+
+      --font-body: 'Inter Tight', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 96px;
+    }
+    body.no-scroll { overflow: hidden; }
+
+    a { color: inherit; }
+
+    .container { width: 100%; max-width: 620px; margin: 0 auto; padding: 0 16px; }
+
+    header {
+      padding: 10px 0;
+      border-bottom: 3px solid var(--mustard);
+      position: sticky; top: 0;
+      background: var(--ink);
+      z-index: 30;
+    }
+    .nav-inner { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .brand-logo-area { display: flex; align-items: center; gap: 12px; text-decoration: none; min-width: 0; }
+
+    .logo-escudo { flex-shrink: 0; }
+    .logo-escudo img { width: 88px; height: 55px; object-fit: contain; display: block; }
+    .logo-footer { width: 200px; height: auto; display: block; margin: 0 auto 14px; }
+
+    .brand-title { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
+    header .brand-title { color: #FFF6E4; }
+
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-mono); font-size: 11px; white-space: nowrap;
+      color: #7FDCA6;
+      background: rgba(127, 220, 166, 0.12);
+      border: 1px solid rgba(127, 220, 166, 0.35);
+      padding: 2px 8px; border-radius: 999px; flex-shrink: 0;
+    }
+    .status-badge::before { content: ''; width: 6px; height: 6px; background: currentColor; border-radius: 50%; }
+    .status-badge.cerrado { color: #FF8A80; background: rgba(255, 138, 128, 0.12); border-color: rgba(255, 138, 128, 0.35); }
+
+    .mono-label { font-family: var(--font-mono); font-size: 11px; color: var(--accent); letter-spacing: 0.04em; font-weight: 600; }
+    .fire-label { font-family: var(--font-mono); font-size: 11px; color: var(--fire); letter-spacing: 0.04em; font-weight: 700; }
+
+    h1 { font-size: 24px; font-weight: 700; color: var(--text); line-height: 1.2; }
+    h2 { font-size: 17px; font-weight: 600; color: var(--text); }
+
+    section { padding: 18px 0; opacity: 0; transform: translateY(6px); animation: enter 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes enter { to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) { section { animation: none; opacity: 1; transform: none; } }
+
+    /* Fotos: si el archivo no existe se muestra el marcador */
+    .img-slot {
+      width: 100%; height: 230px; background: #F1E3C6; position: relative;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; border-bottom: 1px solid var(--border);
+    }
+    /* El ícono queda de fondo; si la foto existe, la tapa */
+    .img-slot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; z-index: 1; }
+    .img-slot.has-image img { display: block; }
+    .img-slot.clickable { cursor: pointer; }
+
+    .placeholder-view {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: var(--text-muted); font-family: var(--font-mono); font-size: 11px;
+      text-align: center; padding: 16px; user-select: none;
+    }
+    .placeholder-icon { width: 30px; height: 30px; stroke: var(--text-muted); stroke-width: 1.5; fill: none; }
+
+    .photo-hero, .showcase-card {
+      background: var(--card); border: 2px solid var(--ink); border-radius: 18px;
+      overflow: hidden; margin-top: 12px; box-shadow: 5px 5px 0 var(--mustard);
+    }
+    .photo-content, .dish-info { padding: 16px; }
+    .dish-info { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+
+    .showcase-header {
+      padding: 10px 16px; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 2px solid var(--ink); background: var(--card-alt);
+    }
+    .showcase-tap-badge {
+      font-family: var(--font-mono); font-size: 11px; color: var(--ink);
+      background: var(--mustard); border: 1px solid var(--ink);
+      border-radius: 999px; padding: 2px 8px; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;
+    }
+    .nav-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+      width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer;
+      background: rgba(255, 255, 255, 0.85); color: var(--text); font-size: 24px; line-height: 1;
+      display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .nav-arrow:hover { background: #fff; color: var(--accent); }
+    .nav-arrow.prev { left: 10px; }
+    .nav-arrow.next { right: 10px; }
+    .progress-line { width: 100%; height: 2px; background: var(--border); overflow: hidden; }
+    .progress-fill { height: 100%; width: 0%; background: var(--mustard); }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      min-height: 44px; padding: 0 18px; border-radius: 999px; font-family: var(--font-body);
+      font-size: 14px; font-weight: 500; text-decoration: none; cursor: pointer;
+      border: 1px solid transparent; transition: background 0.2s; background: var(--btn); color: var(--text);
+    }
+    .btn:hover { background: var(--btn-hover); border-color: var(--border-subtle); }
+    .btn-primary { background: var(--mustard); color: var(--ink); font-weight: 700; border-color: var(--ink); }
+    .btn-primary:hover { background: var(--mustard-hover); border-color: var(--ink); }
+    .btn-fire { background: var(--fire); color: #FFFFFF; font-weight: 600; }
+    .btn-fire:hover { background: #E8372E; }
+    .btn-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .btn-block { width: 100%; }
+
+    .tabs-bar { display: flex; gap: 8px; overflow-x: auto; padding: 8px 0; margin-top: 12px; scrollbar-width: none; }
+    .tabs-bar::-webkit-scrollbar { display: none; }
+    .tab-chip {
+      background: var(--card); border: 1px solid var(--border); color: var(--text-sec);
+      border-radius: 999px; padding: 0 16px; min-height: 38px; font-size: 13px; font-family: var(--font-body);
+      white-space: nowrap; cursor: pointer; display: inline-flex; align-items: center; transition: all 0.2s;
+    }
+    .tab-chip[aria-selected="true"] { background: var(--mustard); border-color: var(--ink); color: var(--ink); font-weight: 700; }
+
+    .card-list { background: var(--card); border: 2px solid var(--ink); border-radius: 18px; padding: 4px 16px; margin-top: 12px; box-shadow: 5px 5px 0 var(--mustard); }
+    .menu-item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); gap: 12px; }
+    .menu-item-row:last-child { border-bottom: none; }
+    .menu-title { font-size: 15px; font-weight: 500; color: var(--text); }
+    .menu-desc { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+    .menu-note { font-size: 12px; color: var(--text-muted); padding: 12px 0 4px; border-bottom: 1px solid var(--border); }
+    .price { font-family: var(--font-mono); font-size: 14px; color: var(--accent); font-weight: 600; flex-shrink: 0; }
+    .price.pendiente { font-size: 11px; color: var(--text-muted); font-weight: 500; text-align: right; }
+    .row-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+    .btn-add, .qty button {
+      width: 44px; height: 44px; border-radius: 50%; background: var(--btn);
+      border: 1px solid var(--border); color: var(--text); display: inline-flex;
+      align-items: center; justify-content: center; cursor: pointer; font-size: 20px; line-height: 1;
+      transition: all 0.2s; flex-shrink: 0; font-family: var(--font-body);
+    }
+    .btn-add:hover, .qty button:hover { background: var(--mustard); border-color: var(--ink); color: var(--ink); }
+    .qty { display: inline-flex; align-items: center; gap: 4px; }
+    .qty button { width: 36px; height: 36px; font-size: 18px; }
+    .qty output { min-width: 22px; text-align: center; font-family: var(--font-mono); font-weight: 600; }
+
+    /* Barra inferior del pedido */
+    .order-bar {
+      position: fixed; bottom: calc(16px + env(safe-area-inset-bottom)); left: 16px; right: 16px; max-width: 588px; margin: 0 auto;
+      background: var(--ink); border: 2px solid var(--mustard); border-radius: 999px;
+      padding: 8px 8px 8px 18px; display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); z-index: 50;
+      transform: translateY(160%); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); color: #FFFFFF;
+    }
+    .order-bar.show { transform: translateY(0); }
+    .order-bar .cant { font-size: 13px; color: #CFC6B8; }
+    .order-bar .price { font-size: 16px; color: var(--mustard); }
+
+    /* Capas (galería y pedido) */
+    .overlay {
+      position: fixed; inset: 0; z-index: 100; display: none;
+      background: rgba(34, 21, 14, 0.5);
+    }
+    .overlay.active { display: block; }
+
+    .gallery-panel {
+      position: absolute; inset: 0; background: var(--bg); overflow-y: auto; padding: 0 16px 32px;
+    }
+    .panel-header {
+      display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 0;
+      border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 2;
+    }
+    .gallery-inner { max-width: 620px; margin: 0 auto; }
+    .gallery-card { background: var(--card); border: 2px solid var(--ink); border-radius: 18px; overflow: hidden; margin-top: 14px; scroll-margin-top: 90px; }
+    .gallery-card .img-slot { height: 240px; }
+    .gallery-card .dish-info + .dish-info { border-top: 1px solid var(--border); }
+    .gallery-cat { margin-top: 22px; }
+
+    .sheet {
+      position: absolute; left: 0; right: 0; bottom: 0; max-width: 620px; margin: 0 auto;
+      max-height: 92vh; overflow-y: auto; background: var(--bg);
+      border-radius: 22px 22px 0 0; padding: 0 16px calc(20px + env(safe-area-inset-bottom));
+    }
+    .sheet .panel-header { background: var(--bg); }
+    .cart-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .cart-total { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0 4px; font-weight: 600; }
+    .cart-total .price { font-size: 18px; }
+    .aviso { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+    .form { margin-top: 16px; display: grid; gap: 12px; }
+    .form label { display: grid; gap: 4px; font-size: 13px; color: var(--text-sec); font-weight: 500; }
+    .form input[type="text"], .form textarea {
+      font: inherit; color: var(--text); background: var(--card); border: 1px solid var(--border-subtle);
+      border-radius: 12px; padding: 10px 12px; min-height: 44px; width: 100%;
+    }
+    .form textarea { min-height: 64px; resize: vertical; }
+    .form input:focus, .form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .seg label {
+      display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px;
+      border: 1px solid var(--border-subtle); border-radius: 12px; background: var(--card); cursor: pointer; color: var(--text);
+    }
+    .seg input { accent-color: var(--ink); }
+    .seg label:has(input:checked) { border-color: var(--ink); background: var(--mustard); color: var(--ink); font-weight: 700; }
+    .error { color: var(--fire); font-size: 12px; min-height: 16px; }
+
+    .toast {
+      border: 1px solid var(--mustard);
+      position: fixed; left: 50%; bottom: calc(92px + env(safe-area-inset-bottom)); transform: translate(-50%, 20px);
+      background: var(--text); color: #fff; font-size: 13px; padding: 8px 14px; border-radius: 999px;
+      opacity: 0; pointer-events: none; transition: all 0.2s; z-index: 60; max-width: calc(100% - 32px);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    .icon { width: 16px; height: 16px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; flex-shrink: 0; }
+    .hours { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; margin-top: 12px; }
+    footer { border-top: 1px solid var(--border); padding: 24px 0; text-align: center; }
+    footer a { color: var(--accent); font-weight: 600; text-decoration: none; }
+
+    button:focus-visible, a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
 </head>
 <body>
 
-<a class="saltar" href="#menu">Saltar al menú</a>
 
-<header class="cabecera">
-  <a class="marca" href="#inicio">
-    <svg class="marca__corona" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 8l4.5 3.5L12 5l4.5 6.5L21 8l-1.6 10H4.6L3 8z" fill="currentColor"/></svg>
-    <span class="marca__texto">El Rey<small>Carnitas Michoacán</small></span>
-  </a>
+  <header>
+    <div class="container nav-inner">
+      <a class="brand-logo-area" href="#" aria-label="Carnitas Michoacán El Rey, inicio">
+        <div class="logo-escudo" aria-hidden="true">
+          <img src="logo-escudo.png" alt="" width="88" height="55">
+        </div>
+        <div class="brand-title">Carnitas Michoacán El Rey</div>
+      </a>
+      <span class="status-badge" id="status-badge">Horario</span>
+    </div>
+  </header>
 
-  <nav class="nav" aria-label="Principal">
-    <a href="#menu">Menú</a>
-    <a href="#cazo">El cazo</a>
-    <a href="#nosotros">Nosotros</a>
-    <a href="#galeria">Galería</a>
-    <a href="#reservas">Reservas</a>
-    <a href="#visitanos">Visítanos</a>
-  </nav>
+  <main class="container">
 
-  <div class="cabecera__acciones">
-    <span id="estado-horario" class="horario-vivo" aria-live="polite">Comprobando horario…</span>
-    <button id="abrir-carrito" class="boton-carrito" type="button" aria-expanded="false" aria-controls="carrito">
-      <svg class="boton-carrito__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 4h2.2l2.4 10.2h9.6L19 7H6.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="19" r="1.6" fill="currentColor"/><circle cx="16.5" cy="19" r="1.6" fill="currentColor"/></svg>
-      <span class="boton-carrito__texto">Mi pedido</span>
-      <span id="globo-carrito" class="globo" hidden>0</span>
+    <section>
+      <div class="photo-hero">
+        <div class="img-slot has-image">
+          <img src="fotos/portada.jpg" alt="Carnitas recién salidas del cazo" onerror="this.parentNode.classList.remove('has-image')">
+          <div class="placeholder-view" aria-hidden="true">
+            <svg class="placeholder-icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <span>Carnitas de cazo</span>
+          </div>
+        </div>
+        <div class="photo-content">
+          <div class="fire-label">"PURO SABOR MEXICANO"</div>
+          <h1 style="margin-top: 4px;">Carnitas Michoacán El Rey</h1>
+          <p style="color: var(--text-sec); font-size: 14px; margin-top: 4px;">
+            Maciza, costilla, surtida y chamorro cocidos despacio en su cazo tradicional. Tortillas de mano y salsas de molcajete.
+          </p>
+          <div class="btn-group">
+            <a href="#menu" class="btn btn-fire">
+              <span>Ver menú completo</span>
+              <svg class="icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="https://maps.google.com/?q=Carnitas+Michoacan+El+Rey+Chuminopolis+Merida" target="_blank" rel="noopener" class="btn">
+              <span>Ubicación</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="mono-label">VITRINA DE PLATILLOS</div>
+      <h2>Especialidades de la casa</h2>
+
+      <div class="showcase-card" id="showcase" aria-roledescription="carrusel">
+        <div class="showcase-header">
+          <span class="mono-label" id="showcase-counter"></span>
+          <button type="button" class="showcase-tap-badge" onclick="abrirGaleria()">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Ver galería completa</span>
+          </button>
+        </div>
+
+        <div class="progress-line"><div class="progress-fill" id="showcase-progress"></div></div>
+
+        <div class="img-slot clickable" id="slot-showcase" onclick="tocarFotoVitrina()">
+          <img id="showcase-img" alt="">
+          <div class="placeholder-view" aria-hidden="true">
+            <svg class="placeholder-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <button type="button" class="nav-arrow prev" onclick="event.stopPropagation(); moverManual(-1)" aria-label="Platillo anterior">‹</button>
+          <button type="button" class="nav-arrow next" onclick="event.stopPropagation(); moverManual(1)" aria-label="Platillo siguiente">›</button>
+        </div>
+
+        <div class="dish-info">
+          <div style="min-width: 0;">
+            <div class="menu-title" id="showcase-title"></div>
+            <div class="menu-desc" id="showcase-desc"></div>
+          </div>
+          <div class="row-right">
+            <span class="price" id="showcase-price"></span>
+            <button type="button" class="btn-add" id="showcase-add" onclick="sumarVitrinaActual()" aria-label="Agregar al pedido">+</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="menu">
+      <div class="mono-label">CARTA Y PRECIOS</div>
+      <h2>Elige lo que se te antoje</h2>
+
+      <div class="tabs-bar" role="tablist" id="tabs"></div>
+      <div class="card-list" id="lista-platos" role="tabpanel"></div>
+    </section>
+
+    <section>
+      <div class="mono-label">SUCURSAL CHUMINÓPOLIS</div>
+      <h2>Pasa a comer al restaurante</h2>
+
+      <div class="photo-hero">
+        <div class="img-slot has-image">
+          <img src="fotos/restaurante.jpg" alt="Salón del restaurante" onerror="this.parentNode.classList.remove('has-image')">
+          <div class="placeholder-view" aria-hidden="true">
+            <svg class="placeholder-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Te esperamos en Chuminópolis</span>
+          </div>
+        </div>
+        <div class="photo-content">
+          <div class="menu-title">Calle 14 #93-F x 13 y 15, Chuminópolis</div>
+          <p style="color: var(--text-sec); font-size: 13px; margin-top: 4px;">
+            Ambiente familiar, mesas de madera y servicio para comer en el lugar o llevar empacado.
+          </p>
+          <div class="hours mono-label">
+            <span>MIÉ A LUN · 12:30 PM A 11:50 PM</span>
+            <span style="color: var(--fire);">MARTES CERRADO</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <img class="logo-footer" src="logo-completo.png" alt="El Rey Carnitas · Puro sabor mexicano" width="200" height="88">
+      <p class="mono-label" style="color: var(--text-muted);">CARNITAS MICHOACÁN EL REY · MÉRIDA · 2026</p>
+      <p style="font-size: 13px; color: var(--text-sec); margin-top: 4px;">
+        Servicio a domicilio: <a href="tel:+529991190662">999 119 0662</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Barra del pedido -->
+  <div class="order-bar" id="barra-pedido" aria-live="polite">
+    <div>
+      <div class="cant" id="articulos-cant">0 productos</div>
+      <div class="price" id="total-cuenta">$0</div>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="abrirPedido()">
+      <span>Ver pedido</span>
+      <svg class="icon" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
     </button>
   </div>
-</header>
 
-<main>
+  <div class="toast" id="toast" role="status"></div>
 
-  <!-- HERO: el titular manda y va primero; la foto del cazo entra por la derecha
-       y en el teléfono se asoma por debajo, para que el h1 se lea sin bajar. -->
-  <section class="hero" id="inicio">
-    <div class="hero__contenido">
-      <p class="hero__etiqueta">Chuminópolis · Mérida · Desde 1974</p>
-      <h1 class="hero__titulo">
-        Carnitas del cazo,<br> estilo Michoacán
-      </h1>
-      <p class="hero__texto">
-        Maciza, costilla, buche, oreja, nana, cuerito, trompa, hígado y corazón.
-        Tacos, tortas, kilos para llevar y michelitros bien fríos.
-      </p>
-      <div class="hero__acciones">
-        <a class="boton boton--primario" href="#menu">Armar mi pedido</a>
-        <a class="boton boton--secundario" href="tel:+529991190662">Llamar al 999 119 0662</a>
-      </div>
-
-      <!-- La tarjeta del kilo: el precio de la casa, a la vista sin bajar al menú. -->
-      <div class="hero__tarjeta">
-        <p class="hero__tarjeta-titulo">El kilo de la casa</p>
-        <p class="hero__tarjeta-precio">$238 <small>el kilo surtido</small></p>
-        <p class="hero__tarjeta-nota">Con tortillas de maíz, cebolla, cilantro, limones, aguacate y salsas.</p>
-        <a class="hero__tarjeta-enlace" href="#cazo">Armar mi kilo</a>
-      </div>
-    </div>
-
-    <figure class="hero__foto" data-foto="portada">
-      <img src="fotos/sitio/portada.jpg" width="1280" height="1700" alt="Cazo de cobre lleno de carnitas dorándose en su manteca" fetchpriority="high" decoding="async">
-      <figcaption class="hero__credito">Foto: Ferfive · CC BY 4.0 · Wikimedia Commons</figcaption>
-    </figure>
-
-    <ul class="hero__datos">
-      <li><strong>4.3 <svg class="estrella" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.8L12 16.9l-5.3 2.7 1.1-5.8L3.5 9.7l5.9-.8L12 3.5z" fill="currentColor"/></svg></strong><span>571 reseñas en Google</span></li>
-      <li><strong>13:00–22:00</strong><span>Lunes, miércoles a domingo</span></li>
-      <li><strong>Domicilio</strong><span>Y para llevar</span></li>
-    </ul>
-  </section>
-
-  <!-- EL CAZO: el selector de kilo arma el pedido de verdad. -->
-  <section class="seccion seccion--cazo" id="cazo" aria-labelledby="titulo-cazo">
-    <div class="cazo">
-      <div class="cazo__texto">
-        <h2 class="seccion__titulo" id="titulo-cazo">Arma tu kilo</h2>
-        <p class="seccion__nota">
-          Elige cuánto y de qué. Te lo pesamos al momento, con tortillas de maíz,
-          cebolla, cilantro, limones, aguacate y salsas de la casa.
-        </p>
-
-        <form class="armador" id="armador" novalidate>
-          <fieldset class="armador__grupo">
-            <legend class="armador__leyenda">¿Cuánto?</legend>
-            <div class="armador__opciones" role="radiogroup" aria-label="Cantidad">
-              <label class="pastilla">
-                <input type="radio" name="peso" value="medio" checked>
-                <span>½ kg</span>
-              </label>
-              <label class="pastilla">
-                <input type="radio" name="peso" value="kilo">
-                <span>1 kg</span>
-              </label>
-            </div>
-          </fieldset>
-
-          <fieldset class="armador__grupo">
-            <legend class="armador__leyenda">¿De qué?</legend>
-            <div class="armador__opciones" role="radiogroup" aria-label="Proteína">
-              <label class="pastilla">
-                <input type="radio" name="proteina" value="surtida" checked>
-                <span>Surtida</span>
-              </label>
-              <label class="pastilla">
-                <input type="radio" name="proteina" value="maciza">
-                <span>Maciza</span>
-              </label>
-              <label class="pastilla">
-                <input type="radio" name="proteina" value="al-gusto">
-                <span>Al gusto</span>
-              </label>
-            </div>
-          </fieldset>
-
-          <label class="armador__select" id="armador-proteina-campo" hidden>
-            <span class="armador__leyenda">Elige la proteína</span>
-            <select id="armador-proteina"></select>
-          </label>
-
-          <div class="armador__resultado" aria-live="polite">
-            <p class="armador__linea">
-              <span id="armador-nombre">½ kg surtido</span>
-              <strong id="armador-precio">$240</strong>
-            </p>
-            <p class="armador__nota" id="armador-nota">Con todo lo de acompañamiento.</p>
+  <!-- Galería -->
+  <div class="overlay" id="galeria" role="dialog" aria-modal="true" aria-labelledby="galeria-titulo">
+    <div class="gallery-panel">
+      <div class="gallery-inner">
+        <div class="panel-header">
+          <div>
+            <div class="brand-title" id="galeria-titulo">Galería de platillos</div>
+            <div class="mono-label">Toca + para agregar a tu pedido</div>
           </div>
-
-          <button class="boton boton--primario armador__boton" type="submit" id="armador-anadir">
-            <span class="boton-anadir__texto">Añadir a mi pedido</span>
-            <span class="boton-anadir__hecho" aria-hidden="true">Añadido a tu pedido</span>
-          </button>
-        </form>
-      </div>
-
-      <figure class="cazo__foto" data-foto="arma-tu-kilo">
-        <img src="fotos/sitio/arma-tu-kilo.jpg" width="1280" height="1707" alt="Kilo de carnitas servido con tortillas y salsa" loading="lazy" decoding="async">
-        <figcaption>Foto: ProtoplasmaKid · CC BY 4.0 · Wikimedia Commons</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <!-- MENÚ INTERACTIVO -->
-  <section class="seccion" id="menu" aria-labelledby="titulo-menu">
-    <div class="seccion__cabecera">
-      <div>
-        <h2 class="seccion__titulo" id="titulo-menu">El menú</h2>
-        <p class="seccion__nota">Precios en pesos mexicanos, sujetos a cambio. Arma tu pedido y lo mandas por WhatsApp.</p>
-      </div>
-      <label class="buscador">
-        <svg class="buscador__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M15 15l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        <input id="buscador" type="search" placeholder="Buscar: taco, kilo, guacamole…" aria-label="Buscar en el menú">
-      </label>
-    </div>
-
-    <div class="menu__barra">
-      <div id="filtros" class="filtros" role="tablist" aria-label="Categorías del menú"></div>
-      <span id="contador-platos" class="contador" aria-live="polite"></span>
-    </div>
-
-    <div id="lista-platos" class="platos"></div>
-
-    <!-- Cierre de la carta: lo que se pide con el kilo, sin subir a buscarlo. -->
-    <aside class="menu__cierre" aria-labelledby="titulo-cierre">
-      <div>
-        <h3 class="menu__cierre-titulo" id="titulo-cierre">¿Se te antoja el kilo?</h3>
-        <p class="menu__cierre-texto">
-          El kilo surtido cuesta $238 y el kilo al gusto $273, con tortillas, cebolla,
-          cilantro, limones, aguacate y salsas de la casa. Medio kilo desde $240.
-        </p>
-      </div>
-      <div class="menu__cierre-acciones">
-        <a class="boton boton--primario" href="#cazo">Armar mi kilo</a>
-        <a class="boton boton--secundario menu__cierre-whats" href="https://wa.me/529991190662" target="_blank" rel="noopener">Pedir por WhatsApp</a>
-      </div>
-    </aside>
-  </section>
-
-  <!-- NOSOTROS -->
-  <section class="seccion seccion--oscura" id="nosotros" aria-labelledby="titulo-nosotros">
-    <h2 class="seccion__titulo" id="titulo-nosotros">Cincuenta años en el cazo</h2>
-    <div class="nosotros">
-      <!-- Cita y párrafos juntos a la izquierda, a la altura de la ficha; la foto
-           cierra la sección a lo ancho. En el teléfono el envoltorio se disuelve
-           (display: contents) y el orden es cita, ficha, párrafos y foto. -->
-      <div class="nosotros__relato">
-      <blockquote class="nosotros__cita">
-        <p class="nosotros__grande">
-          Desde 1974 en Mérida: carnitas al estilo Michoacán, cocidas despacio en su
-          manteca y servidas recién salidas del cazo.
-        </p>
-      </blockquote>
-      <div class="nosotros__columnas">
-        <p>Aquí se come surtido, maciza, costilla, buche, oreja, nana, cuerito, trompa, hígado y corazón. Con tortillas de maíz, salsas de la casa y un michelitro bien frío.</p>
-        <p>Ambiente familiar, música algunos días, asientos al aire libre y servicio a domicilio. Si vienes en grupo, pide un kilo y se arma la fiesta.</p>
-      </div>
-      </div>
-      <dl class="nosotros__ficha">
-        <div>
-          <dt>Desde</dt>
-          <dd>1974</dd>
+          <button type="button" class="btn" style="min-height: 36px; padding: 0 12px;" onclick="cerrarGaleria()">Cerrar ✕</button>
         </div>
-        <div>
-          <dt>Sucursal</dt>
-          <dd>Chuminópolis</dd>
-        </div>
-        <div>
-          <dt>La casa</dt>
-          <dd>Carnitas, tortillas de maíz y salsas propias</dd>
-        </div>
-        <div>
-          <dt>Para llevar</dt>
-          <dd>Kilos, tortas y tacos</dd>
-        </div>
-      </dl>
-      <figure class="nosotros__foto" data-foto="nosotros">
-        <img src="fotos/sitio/nosotros.jpg" alt="Plato de carnitas servidas en un mercado de Michoacán" loading="lazy" decoding="async" width="960" height="638">
-        <figcaption>Carnitas en Uruapan, Michoacán · AlejandroLinaresGarcia · CC BY-SA 4.0</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <!-- PREGUNTAS: lo que más se pregunta por WhatsApp, respondido sin esperar. -->
-  <section class="seccion" id="preguntas" aria-labelledby="titulo-preguntas">
-    <div class="seccion__cabecera">
-      <div>
-        <h2 class="seccion__titulo" id="titulo-preguntas">Lo que más nos preguntan</h2>
-        <p class="seccion__nota">Si te queda otra duda, escríbenos por WhatsApp y te contestamos.</p>
+        <div id="galeria-lista"></div>
       </div>
     </div>
-    <div class="preguntas">
-      <details class="pregunta">
-        <summary>¿Hasta qué hora atienden?</summary>
-        <p>De 13:00 a 22:00, de lunes a domingo. Los martes cerramos.</p>
-      </details>
-      <details class="pregunta">
-        <summary>¿Cuánto cuesta un kilo?</summary>
-        <p>El kilo surtido cuesta $238 y el kilo al gusto $273, con tortillas, cebolla, cilantro, limones, aguacate y salsas. Medio kilo desde $240.</p>
-      </details>
-      <details class="pregunta">
-        <summary>¿Hacen servicio a domicilio?</summary>
-        <p>Sí, servicio a domicilio y para llevar. Pide al <a class="enlace" href="tel:+529991190662">999 119 0662</a> o al <a class="enlace" href="tel:+529992212040">999 221 2040</a>.</p>
-      </details>
-      <details class="pregunta">
-        <summary>¿Se puede reservar?</summary>
-        <p>Sí. Llena el <a class="enlace" href="#reservas">formulario de reservas</a> y te llega el resumen por WhatsApp para confirmar.</p>
-      </details>
-      <details class="pregunta">
-        <summary>¿Qué proteínas tienen?</summary>
-        <p>Maciza, surtida, costilla, buche, oreja, nana, cuerito, trompa, hígado y corazón.</p>
-      </details>
-      <details class="pregunta">
-        <summary>¿Dónde están?</summary>
-        <p>Calle 14, 93-F, Chuminópolis, 97158, Mérida, Yucatán. El mapa está en <a class="enlace" href="#visitanos">Visítanos</a>.</p>
-      </details>
-    </div>
-  </section>
+  </div>
 
-  <!-- GALERÍA: fotos del cazo, del puesto y de la mesa. -->
-  <section class="seccion" id="galeria" aria-labelledby="titulo-galeria">
-    <div class="seccion__cabecera">
-      <div>
-        <h2 class="seccion__titulo" id="titulo-galeria">Así se ve el cazo</h2>
-        <p class="seccion__nota">Carnitas de Michoacán, tortillas hechas a mano y salsas de la casa.</p>
-      </div>
-    </div>
-    <ul class="galeria">
-      <li class="galeria__pieza galeria__pieza--ancha">
-        <figure data-foto="galeria-1">
-          <img src="fotos/sitio/galeria-1.jpg" alt="Cazo de cobre lleno de carnitas dorándose en su manteca" loading="lazy" decoding="async" width="1280" height="1700">
-          <figcaption>Cazo de cobre · Ferfive · CC BY 4.0</figcaption>
-        </figure>
-      </li>
-      <li class="galeria__pieza">
-        <figure data-foto="galeria-2">
-          <img src="fotos/sitio/galeria-2.jpg" alt="Taco de carnitas en tortilla hecha a mano" loading="lazy" decoding="async" width="960" height="720">
-          <figcaption>Taco de carnitas · Missvain · CC0</figcaption>
-        </figure>
-      </li>
-      <li class="galeria__pieza">
-        <figure data-foto="galeria-3">
-          <img src="fotos/sitio/galeria-3.jpg" alt="Carnitas en el mercado" loading="lazy" decoding="async" width="960" height="1280">
-          <figcaption>En el mercado · DaliaMonge · CC BY-SA 4.0</figcaption>
-        </figure>
-      </li>
-      <li class="galeria__pieza">
-        <figure data-foto="galeria-4">
-          <img src="fotos/sitio/galeria-4.jpg" alt="Tortillas de maíz en comal de barro" loading="lazy" decoding="async" width="960" height="1095">
-          <figcaption>Tortillas de nixtamal · German matus · CC BY-SA 4.0</figcaption>
-        </figure>
-      </li>
-      <li class="galeria__pieza">
-        <figure data-foto="galeria-5">
-          <img src="fotos/sitio/galeria-5.jpg" alt="Salsas y complementos del taco" loading="lazy" decoding="async" width="960" height="1280">
-          <figcaption>Salsas de la casa · Salazar Lira H. E. · CC BY-SA 4.0</figcaption>
-        </figure>
-      </li>
-      <li class="galeria__pieza">
-        <figure data-foto="galeria-6">
-          <img src="fotos/sitio/galeria-6.jpg" alt="Michelada servida en vaso escarchado" loading="lazy" decoding="async" width="960" height="1707">
-          <figcaption>Michelada · Popo le Chien · CC BY-SA 3.0</figcaption>
-        </figure>
-      </li>
-    </ul>
-  </section>
-
-  <!-- RESERVAS: el formulario valida en el navegador y manda la reserva por WhatsApp. -->
-  <section class="seccion seccion--reservas" id="reservas" aria-labelledby="titulo-reservas">
-    <div class="reservas">
-      <div class="reservas__intro">
-        <h2 class="seccion__titulo" id="titulo-reservas">Reserva tu mesa, ponemos el cazo</h2>
-        <p class="seccion__nota">
-          Mesas para grupos, cumpleaños y comidas de familia. Reservamos de 13:00 a 21:00,
-          de lunes a domingo (martes cerrado). Te confirmamos por WhatsApp.
-        </p>
-        <ul class="reservas__puntos">
-          <li>Hasta 20 personas por reserva.</li>
-          <li>Te guardamos la mesa 15 minutos.</li>
-          <li>Para grupos grandes, llámanos al <a class="enlace" href="tel:+529991190662">999 119 0662</a>.</li>
-        </ul>
-        <figure class="reservas__foto" data-foto="reservas">
-          <img src="fotos/sitio/reservas.jpg" alt="Cebolla, cilantro, limones y salsas listos para la mesa" loading="lazy" decoding="async" width="960" height="1280">
-          <figcaption>Complementos del taco · Salazar Lira Hanna Elizabeth · CC BY-SA 4.0</figcaption>
-        </figure>
+  <!-- Hoja del pedido -->
+  <div class="overlay" id="pedido" role="dialog" aria-modal="true" aria-labelledby="pedido-titulo" onclick="if (event.target === this) cerrarPedido()">
+    <div class="sheet">
+      <div class="panel-header">
+        <div class="brand-title" id="pedido-titulo">Tu pedido</div>
+        <button type="button" class="btn" style="min-height: 36px; padding: 0 12px;" onclick="cerrarPedido()">Cerrar ✕</button>
       </div>
 
-      <form class="reserva" id="form-reserva" novalidate>
-        <div class="reserva__fila">
-          <label class="campo">
-            <span class="campo__texto">Nombre</span>
-            <input id="reserva-nombre" name="nombre" type="text" autocomplete="name" maxlength="60" required aria-describedby="error-nombre">
-            <span class="campo__error" id="error-nombre" aria-live="polite"></span>
-          </label>
-          <label class="campo">
-            <span class="campo__texto">Teléfono</span>
-            <input id="reserva-telefono" name="telefono" type="tel" inputmode="tel" autocomplete="tel" placeholder="999 000 0000" required aria-describedby="error-telefono">
-            <span class="campo__error" id="error-telefono" aria-live="polite"></span>
-          </label>
-        </div>
+      <div id="pedido-lista"></div>
+      <div class="cart-total"><span>Total estimado</span><span class="price" id="pedido-total">$0</span></div>
+      <p class="aviso" id="pedido-aviso"></p>
 
-        <div class="reserva__fila reserva__fila--cuando">
-          <label class="campo campo--personas">
-            <span class="campo__texto">Personas</span>
-            <input id="reserva-personas" name="personas" type="number" inputmode="numeric" min="1" max="20" value="2" required aria-describedby="error-personas">
-            <span class="campo__error" id="error-personas" aria-live="polite"></span>
-          </label>
-          <label class="campo campo--fecha">
-            <span class="campo__texto">Día</span>
-            <input id="reserva-fecha" name="fecha" type="date" required aria-describedby="error-fecha">
-            <span class="campo__error" id="error-fecha" aria-live="polite"></span>
-          </label>
-          <label class="campo campo--hora">
-            <span class="campo__texto">Hora</span>
-            <select id="reserva-hora" name="hora" required aria-describedby="error-hora">
-              <option value="">Elige</option>
-            </select>
-            <span class="campo__error" id="error-hora" aria-live="polite"></span>
-          </label>
-        </div>
-
-        <label class="campo">
-          <span class="campo__texto">Notas <small>(opcional)</small></span>
-          <textarea id="reserva-notas" name="notas" rows="2" maxlength="200" placeholder="Cumpleaños, silla para bebé, mesa al aire libre…"></textarea>
+      <form class="form" id="pedido-form" onsubmit="enviarWhatsApp(event)" novalidate>
+        <label>Tu nombre
+          <input type="text" id="f-nombre" autocomplete="name" required>
         </label>
-
-        <button class="boton boton--primario reserva__boton" type="submit" id="enviar-reserva">
-          Reservar por WhatsApp
+        <div>
+          <div style="font-size: 13px; color: var(--text-sec); font-weight: 500; margin-bottom: 4px;">¿Cómo lo quieres?</div>
+          <div class="seg">
+            <label><input type="radio" name="entrega" value="recoger" checked onchange="toggleDireccion()"> Paso a recoger</label>
+            <label><input type="radio" name="entrega" value="domicilio" onchange="toggleDireccion()"> A domicilio</label>
+          </div>
+        </div>
+        <label id="f-direccion-wrap" hidden>Dirección de entrega
+          <input type="text" id="f-direccion" autocomplete="street-address" placeholder="Calle, número, cruzamientos y colonia">
+        </label>
+        <label>Notas (opcional)
+          <textarea id="f-notas" placeholder="Ej. sin cebolla, salsa aparte…"></textarea>
+        </label>
+        <div class="error" id="f-error" role="alert"></div>
+        <button type="submit" class="btn btn-primary btn-block">
+          <span>Enviar pedido por WhatsApp</span>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         </button>
-        <p class="reserva__nota">No se cobra nada. La mesa queda cuando te contestamos.</p>
       </form>
     </div>
-  </section>
-
-  <!-- VISÍTANOS -->
-  <section class="seccion" id="visitanos" aria-labelledby="titulo-visitanos">
-    <h2 class="seccion__titulo" id="titulo-visitanos">Visítanos</h2>
-    <div class="visitanos">
-      <div class="visitanos__bloque">
-        <h3>Dirección</h3>
-        <p>Calle 14, 93-F<br>Chuminópolis, 97158<br>Mérida, Yucatán</p>
-        <a class="enlace" href="https://www.google.com/maps/search/?api=1&amp;query=Carnitas+Michoac%C3%A1n+El+Rey+Chumin%C3%B3polis+M%C3%A9rida" target="_blank" rel="noopener">Abrir en Google Maps</a>
-      </div>
-      <div class="visitanos__bloque">
-        <h3>Horario</h3>
-        <table class="horario">
-          <tbody>
-            <tr data-dia="1"><th scope="row">Lunes</th><td>13:00 – 22:00</td></tr>
-            <tr data-dia="2"><th scope="row">Martes</th><td class="cerrado">Cerrado</td></tr>
-            <tr data-dia="3"><th scope="row">Miércoles</th><td>13:00 – 22:00</td></tr>
-            <tr data-dia="4"><th scope="row">Jueves</th><td>13:00 – 22:00</td></tr>
-            <tr data-dia="5"><th scope="row">Viernes</th><td>13:00 – 22:00</td></tr>
-            <tr data-dia="6"><th scope="row">Sábado</th><td>13:00 – 22:00</td></tr>
-            <tr data-dia="0"><th scope="row">Domingo</th><td>13:00 – 22:00</td></tr>
-          </tbody>
-        </table>
-        <p class="aviso">Confirma el horario por teléfono antes de venir.</p>
-      </div>
-      <div class="visitanos__bloque">
-        <h3>Pedidos</h3>
-        <p><a class="enlace" href="tel:+529991190662">999 119 0662</a><br>
-           <a class="enlace" href="tel:+529992212040">999 221 2040</a></p>
-        <p>Servicio a domicilio y para llevar.</p>
-        <p class="redes">
-          <a href="https://www.instagram.com/carnitasmichoacanaselrey/" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://www.facebook.com/p/Carnitas-Michoac%C3%A1n-EL-REY-Suc-Canek-100063511536074/" target="_blank" rel="noopener">Facebook</a>
-        </p>
-      </div>
-    </div>
-
-    <!-- Cierre de la página: el mapa a un lado y el último empujón al pedido al otro. -->
-    <div class="visitanos__cierre">
-      <figure class="visitanos__mapa">
-        <a class="visitanos__mapa-enlace" href="https://www.google.com/maps/search/?api=1&amp;query=Carnitas+Michoac%C3%A1n+El+Rey+Chumin%C3%B3polis+M%C3%A9rida" target="_blank" rel="noopener">
-          <img src="fotos/mapa.svg" alt="Mapa esquemático de Carnitas El Rey en Calle 14, 93-F, Chuminópolis. Abre la ubicación en Google Maps" loading="lazy" decoding="async" width="640" height="400">
-        </a>
-        <figcaption>Calle 14, 93-F · Chuminópolis, Mérida · Toca el mapa para abrirlo en Google Maps</figcaption>
-      </figure>
-      <div class="visitanos__llamada">
-        <h3 class="visitanos__titulo">Pide tu kilo y te lo llevamos</h3>
-        <p class="visitanos__texto">
-          Servicio a domicilio y para llevar, de 13:00 a 22:00 (martes cerrado).
-          Arma el pedido aquí y lo mandas por WhatsApp en un toque.
-        </p>
-        <div class="visitanos__acciones">
-          <a class="boton boton--primario" href="#menu">Armar mi pedido</a>
-          <a class="boton boton--secundario visitanos__llamar" href="tel:+529991190662">Llamar al 999 119 0662</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-</main>
-
-<footer class="pie">
-  <p class="pie__marca"><svg class="pie__corona" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 8l4.5 3.5L12 5l4.5 6.5L21 8l-1.6 10H4.6L3 8z" fill="currentColor"/></svg> Carnitas Michoacán El Rey</p>
-  <p>Chuminópolis, Mérida, Yucatán · Desde 1974</p>
-  <p class="pie__nota">Precios en pesos mexicanos, sujetos a cambio.</p>
-  <p class="pie__creditos">
-    Créditos de las fotos: Ferfive · CC BY 4.0; ProtoplasmaKid · CC BY 4.0; AlejandroLinaresGarcia · CC BY-SA 4.0; Missvain · CC0; DaliaMonge · CC BY-SA 4.0; German matus · CC BY-SA 4.0; Salazar Lira Hanna Elizabeth · CC BY-SA 4.0; Popo le Chien · CC BY-SA 3.0; Jj saezdeo · CC BY-SA 4.0; Koffermejia · CC0. Créditos completos en <a class="enlace" href="fotos/CREDITOS.md">la lista de fotos</a>.
-  </p>
-</footer>
-
-<!-- Carrito -->
-<div id="velo-carrito" class="velo" hidden></div>
-<aside id="carrito" class="carrito" hidden aria-labelledby="titulo-carrito" role="dialog" aria-modal="true">
-  <div class="carrito__cabecera">
-    <h2 id="titulo-carrito">Mi pedido</h2>
-    <button id="cerrar-carrito" class="carrito__cerrar" type="button" aria-label="Cerrar el pedido"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
   </div>
-  <p id="carrito-vacio" class="carrito__vacio">
-    Todavía no hay nada. Añade tacos, tortas o un kilo desde el menú.
-  </p>
-  <button id="deshacer-vaciar" class="carrito__deshacer" type="button" hidden>Deshacer y recuperar mi pedido</button>
-  <ul id="carrito-lineas" class="carrito__lineas"></ul>
-  <div id="carrito-pie" class="carrito__pie" hidden>
-    <p class="carrito__total">
-      <span>Total</span>
-      <strong id="carrito-total">$0</strong>
-    </p>
-    <fieldset class="entrega" id="entrega">
-      <legend class="entrega__titulo">¿Cómo lo quieres?</legend>
-      <div class="entrega__modos">
-        <label class="pastilla">
-          <input type="radio" name="entrega-modo" value="domicilio" checked>
-          <span>A domicilio</span>
-        </label>
-        <label class="pastilla">
-          <input type="radio" name="entrega-modo" value="recoger">
-          <span>Paso a recogerlo</span>
-        </label>
-      </div>
-      <label class="campo">
-        <span class="campo__texto">Nombre</span>
-        <input id="entrega-nombre" type="text" autocomplete="name" maxlength="60" required aria-describedby="error-entrega-nombre">
-        <span class="campo__error" id="error-entrega-nombre" aria-live="polite"></span>
-      </label>
-      <div class="entrega__domicilio" id="entrega-domicilio">
-        <label class="campo">
-          <span class="campo__texto">Dirección</span>
-          <textarea id="entrega-direccion" rows="2" autocomplete="street-address" maxlength="160" required placeholder="Calle, número y colonia" aria-describedby="error-entrega-direccion"></textarea>
-          <span class="campo__error" id="error-entrega-direccion" aria-live="polite"></span>
-        </label>
-        <label class="campo">
-          <span class="campo__texto">Referencias <small>(opcional)</small></span>
-          <input id="entrega-referencias" type="text" maxlength="160" placeholder="Entre calles, color de la casa…" aria-describedby="error-entrega-referencias">
-          <span class="campo__error" id="error-entrega-referencias" aria-live="polite"></span>
-        </label>
-      </div>
-    </fieldset>
-    <button id="enviar-pedido" class="boton boton--whatsapp" type="button">Enviar pedido por WhatsApp</button>
-    <button id="vaciar-carrito" class="carrito__vaciar" type="button">Vaciar</button>
-    <p class="carrito__nota">Te confirmamos disponibilidad y tiempo de entrega por WhatsApp.</p>
-  </div>
-</aside>
 
-<div id="aviso" class="aviso-flotante" role="status" aria-live="polite"></div>
+  <script>
+    /* =========================================================
+       CONFIGURACIÓN — aquí se edita todo el contenido
+       ========================================================= */
+    const WHATSAPP = '529991190662';
 
+    // Horario en hora de Mérida. Días: 0 = domingo, 1 = lunes, 2 = martes...
+    // abre / cierra en formato de 24 horas, "HH:MM"
+    const HORARIO = { diasCerrado: [2], abre: '12:30', cierra: '23:50' };
+
+    // p: precio en pesos. p: null = "precio por confirmar" (se puede pedir igual).
+    // foto: nombre de la foto en la carpeta "fotos", sin ".jpg".
+    //   Ej. foto: 'taco-lengua'  →  fotos/taco-lengua.jpg
+    //   Si la foto todavía no está subida, se ve el espacio vacío.
+    const MENU = [
+      { cat: 'entradas', titulo: 'Entradas', items: [
+        { id: 'e_guac',  n: 'Guacamole',  d: 'Con aguacate fresco y totopos', p: 95, foto: 'guacamole' },
+        { id: 'e_chich', n: 'Chicharrón', d: 'Crujiente recién dorado', p: 105, foto: 'chicharron' },
+        { id: 'e_yuc',   n: 'Yucateco',   d: 'Especialidad de la casa con habanero', p: 125, foto: 'yucateco' },
+        { id: 'e_rey',   n: 'El Rey',     d: 'Entrada especial surtida', p: 185, foto: 'el-rey' }
+      ]},
+      { cat: 'kilos', titulo: '½ kg y kilo', etiqueta: 'Kilos', nota: 'Incluyen salsas, tortillas, limones y cebolla con cilantro. Extras $20 c/u. Pedido mínimo $200.', items: [
+        { id: 'k_promo',       n: 'Promokilo',       d: '½ kg de maciza + ½ kg de surtido, con tortillas, salsas, cebolla con cilantro y limones', p: 409, foto: 'promokilo' },
+        { id: 'k_surt_medio',  n: 'Surtido · ½ kg',  d: 'Combinación de todas nuestras carnitas, ya listo e incluye hígado', p: 210, foto: 'surtido' },
+        { id: 'k_surt_kilo',   n: 'Surtido · 1 kg',  d: 'Combinación de todas nuestras carnitas, ya listo e incluye hígado', p: 399, foto: 'surtido' },
+        { id: 'k_mac_medio',   n: 'Maciza · ½ kg',   d: 'La pura carnita blanca', p: 240, foto: 'maciza' },
+        { id: 'k_mac_kilo',    n: 'Maciza · 1 kg',   d: 'La pura carnita blanca', p: 460, foto: 'maciza' },
+        { id: 'k_gusto_medio', n: 'Al gusto · ½ kg', d: 'Solas o combinadas: costilla, buche, oreja, nana, cuero, chamorro, lengua, trompa, hígado y corazón', p: 240, foto: 'al-gusto' },
+        { id: 'k_gusto_kilo',  n: 'Al gusto · 1 kg', d: 'Solas o combinadas: costilla, buche, oreja, nana, cuero, chamorro, lengua, trompa, hígado y corazón', p: 460, foto: 'al-gusto' }
+      ]},
+      { cat: 'tacos', titulo: 'Tacos', nota: 'Tacos de $35 c/u. Surtidos a $28.', items: [
+        { id: 't_mac',  n: 'Taco de maciza',   d: 'La pura carnita blanca', p: 35, foto: 'taco-maciza' },
+        { id: 't_cos',  n: 'Taco de costilla', d: 'Carne jugosa al hueso', p: 35, foto: 'taco-costilla' },
+        { id: 't_buch', n: 'Taco de buche',    d: 'Suave y bien sazonado', p: 35, foto: 'taco-buche' },
+        { id: 't_or',   n: 'Taco de oreja',    d: 'Doradito con buen sazón', p: 35, foto: 'taco-oreja' },
+        { id: 't_nan',  n: 'Taco de nana',     d: 'Tradicional del cazo', p: 35, foto: 'taco-nana' },
+        { id: 't_cham', n: 'Taco de chamorro', d: 'Suave y deshebrado', p: 35, foto: 'taco-chamorro' },
+        { id: 't_cuer', n: 'Taco de cuero',    d: 'Con textura gelatinosa perfecta', p: 35, foto: 'taco-cuero' },
+        { id: 't_leng', n: 'Taco de lengua',   d: 'Corte fino especial', p: 35, foto: 'taco-lengua' },
+        { id: 't_hig',  n: 'Taco de hígado',   d: 'Preparado al estilo de la casa', p: 35, foto: 'taco-higado' },
+        { id: 't_cor',  n: 'Taco de corazón',  d: 'Firme y bien sazonado', p: 35, foto: 'taco-corazon' },
+        { id: 't_surt_promo', n: 'Taco surtido', d: 'Precio especial', p: 28, foto: 'taco-surtido' }
+      ]},
+      { cat: 'especiales', titulo: 'Especialidades', nota: 'Pueden llevar verdura no mencionada. Cualquier extra o cambio $20.', items: [
+        { id: 'esp_chil',  n: 'Chilaquiles', d: 'Totopos bañados en salsa de chipotle, carnita a tu elección, crema y queso artesanal', p: 145, foto: 'chilaquiles' },
+        { id: 'esp_reyn',  n: 'Reyna (1 pza)',       d: '3/4 de barra de pan de horno de leña rellena de carnita a tu elección', p: 75, foto: 'reyna' },
+        { id: 'esp_reyn_surt', n: 'Reyna surtida (1 pza)', d: 'Pan de horno de leña relleno de carnita surtida', p: 65, foto: 'reyna-surtida' },
+        { id: 'esp_quek',  n: 'Quekarnita (1 pza)',  d: 'Tortilla artesanal, queso Oaxaca original y carnita a elegir', p: 55, foto: 'quekarnita' },
+        { id: 'esp_sopes', n: 'Sope (1 pza)',        d: 'Tortilla hecha a mano, carnita, crema y queso artesanal', p: 55, foto: 'sope' },
+        { id: 'esp_tost',  n: 'Tostada (1 pza)',     d: 'Tostada con frijolito, pierna, crema y queso fresco', p: 75, foto: 'tostada' },
+        { id: 'esp_burro', n: 'Megaburro',           d: 'Tortillón con frijol, carnita, queso y guacamole', p: 165, foto: 'megaburro' },
+        { id: 'esp_gord',  n: 'Gordita (1 pza)',     d: 'Hecha a mano, rellena de carnitas con crema y queso fresco', p: 45, foto: 'gordita' },
+        { id: 'esp_frij',  n: 'Frijoles puercos',    d: 'Receta tradicional espesa', p: 95, foto: 'frijoles-puercos' }
+      ]},
+      { cat: 'bebidas', titulo: 'Bebidas', items: [
+        { id: 'b_ref',   n: 'Refresco',        d: 'Frío, en botella o lata', p: 35, foto: 'refresco' },
+        { id: 'b_nat',   n: 'Natural',         d: 'Agua fresca de fruta natural', p: 55, foto: 'natural' },
+        { id: 'b_aguas', n: 'Agua de sabor',   d: 'Horchata, jamaica o limón', p: 45, foto: 'agua-de-sabor' }
+      ]},
+      { cat: 'postres', titulo: 'Postres', items: [
+        { id: 'p_qbol', n: 'Queso de bola napolitano', d: 'Con el toque clásico yucateco', p: 95, foto: 'queso-de-bola' },
+        { id: 'p_qnap', n: 'Queso napolitano',  d: 'Flan clásico tradicional casero', p: 85, foto: 'queso-napolitano' },
+        { id: 'p_sanp', n: 'Helado San Patricio', d: 'Crema con licores y espresso', p: 119, foto: 'helado-san-patricio' },
+        { id: 'p_temp', n: 'Postre de temporada', d: 'Pregunta por el dulce del día', p: 119, foto: 'postre-temporada' }
+      ]}
+    ];
+
+    // El carrusel recorre TODO el menú. Estos platillos salen primero (usar ids del menú):
+    const VITRINA_PRIMERO = ['k_promo', 'esp_chil', 't_mac', 'esp_reyn'];
+    /* =========================================================
+       LÓGICA
+       ========================================================= */
+    const PRODUCTOS = {};
+    MENU.forEach(s => s.items.forEach(it => { PRODUCTOS[it.id] = it; }));
+
+    const $ = id => document.getElementById(id);
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const dinero = n => '$' + n.toLocaleString('es-MX');
+    const precioHTML = p => p == null ? '<span class="price pendiente">Precio por<br>confirmar</span>' : `<span class="price">${dinero(p)}</span>`;
+
+    /* ---------- Estado abierto / cerrado ---------- */
+    function actualizarEstado() {
+      const partes = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Merida', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' })
+        .formatToParts(new Date());
+      const dias = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+      const dia = dias[partes.find(p => p.type === 'weekday').value];
+      const hora = Number(partes.find(p => p.type === 'hour').value) % 24;
+      const minutos = hora * 60 + Number(partes.find(p => p.type === 'minute').value);
+      const aMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+      const abierto = !HORARIO.diasCerrado.includes(dia) && minutos >= aMin(HORARIO.abre) && minutos < aMin(HORARIO.cierra);
+      const badge = $('status-badge');
+      badge.textContent = abierto ? 'Cazo abierto' : 'Cerrado ahora';
+      badge.classList.toggle('cerrado', !abierto);
+    }
+
+    /* ---------- Pedido ---------- */
+    const pedido = {}; // { id: cantidad }
+
+    function cambiar(id, delta) {
+      pedido[id] = (pedido[id] || 0) + delta;
+      if (pedido[id] <= 0) delete pedido[id];
+      if (delta > 0) mostrarToast(`Agregado: ${PRODUCTOS[id].n}`);
+      actualizarTodo();
+    }
+
+    function controlCantidad(id) {
+      const c = pedido[id] || 0;
+      const nombre = esc(PRODUCTOS[id].n);
+      if (!c) return `<button type="button" class="btn-add" onclick="cambiar('${id}', 1)" aria-label="Agregar ${nombre}">+</button>`;
+      return `<span class="qty">
+        <button type="button" onclick="cambiar('${id}', -1)" aria-label="Quitar uno de ${nombre}">−</button>
+        <output aria-label="Cantidad">${c}</output>
+        <button type="button" onclick="cambiar('${id}', 1)" aria-label="Agregar otro ${nombre}">+</button>
+      </span>`;
+    }
+
+    function resumen() {
+      let total = 0, count = 0, pendientes = 0;
+      Object.entries(pedido).forEach(([id, c]) => {
+        count += c;
+        const p = PRODUCTOS[id].p;
+        if (p == null) pendientes += c; else total += p * c;
+      });
+      return { total, count, pendientes };
+    }
+
+    function actualizarBarra() {
+      const { total, count, pendientes } = resumen();
+      $('articulos-cant').textContent = `${count} ${count === 1 ? 'producto' : 'productos'}`;
+      $('total-cuenta').textContent = dinero(total) + (pendientes ? ' + por confirmar' : '');
+      $('barra-pedido').classList.toggle('show', count > 0);
+    }
+
+    function renderPedido() {
+      const ids = Object.keys(pedido);
+      const { total, pendientes } = resumen();
+      $('pedido-lista').innerHTML = ids.length ? ids.map(id => {
+        const it = PRODUCTOS[id], c = pedido[id];
+        return `<div class="cart-row">
+          <div style="min-width:0">
+            <div class="menu-title">${esc(it.n)}</div>
+            <div class="menu-desc">${it.p == null ? 'Precio por confirmar' : `${c} × ${dinero(it.p)} = ${dinero(it.p * c)}`}</div>
+          </div>
+          ${controlCantidad(id)}
+        </div>`;
+      }).join('') : '<p class="aviso" style="padding:16px 0">Tu pedido está vacío.</p>';
+      $('pedido-total').textContent = dinero(total);
+      $('pedido-aviso').textContent = pendientes
+        ? 'Algunos productos tienen precio por confirmar; el restaurante te dirá el total final.'
+        : 'Desechable +$10. El restaurante te confirma el total final y el costo de envío.';
+      if (!ids.length) cerrarPedido();
+    }
+
+    function actualizarTodo() {
+      actualizarBarra();
+      renderSeccion(seccionActual);
+      renderVitrinaBoton();
+      if ($('pedido').classList.contains('active')) renderPedido();
+      if ($('galeria').classList.contains('active')) renderGaleria();
+    }
+
+    let toastTimer;
+    function mostrarToast(txt) {
+      const t = $('toast');
+      t.textContent = txt;
+      t.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.classList.remove('show'), 1600);
+    }
+
+    /* ---------- Menú con pestañas ---------- */
+    let seccionActual = MENU[0].cat;
+
+    function renderTabs() {
+      $('tabs').innerHTML = MENU.map(s =>
+        `<button type="button" class="tab-chip" role="tab" aria-selected="${s.cat === seccionActual}" onclick="filtrar('${s.cat}')">${esc(s.titulo)}</button>`
+      ).join('');
+    }
+
+    function filtrar(cat) {
+      seccionActual = cat;
+      renderTabs();
+      renderSeccion(cat);
+    }
+
+    function renderSeccion(cat) {
+      const sec = MENU.find(s => s.cat === cat);
+      $('lista-platos').innerHTML =
+        (sec.nota ? `<div class="menu-note">${esc(sec.nota)}</div>` : '') +
+        sec.items.map(i => `<div class="menu-item-row">
+          <div style="min-width: 0;">
+            <div class="menu-title">${esc(i.n)}</div>
+            <div class="menu-desc">${esc(i.d)}</div>
+          </div>
+          <div class="row-right">${precioHTML(i.p)}${controlCantidad(i.id)}</div>
+        </div>`).join('');
+    }
+
+    /* ---------- Fotos ---------- */
+    const rutaFoto = f => `fotos/${f}.jpg`;
+    const FOTO_VACIA = `<div class="placeholder-view" aria-hidden="true"><svg class="placeholder-icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`;
+
+    /* ---------- Vitrina (carrusel con todo el menú) ---------- */
+    const DURACION = 4000;
+    const LISTA = [
+      ...VITRINA_PRIMERO.map(id => PRODUCTOS[id]),
+      ...Object.values(PRODUCTOS).filter(it => !VITRINA_PRIMERO.includes(it.id))
+    ];
+    const CATEGORIA = {};
+    MENU.forEach(s => s.items.forEach(it => { CATEGORIA[it.id] = s.etiqueta || s.titulo; }));
+
+    let vitrinaIndex = 0, vitrinaTimer = null;
+    const vitrinaActual = () => LISTA[vitrinaIndex];
+
+    function mover(dir) {
+      const N = LISTA.length;
+      mostrarVitrina(((vitrinaIndex + dir) % N + N) % N);
+    }
+
+    function moverManual(dir) {
+      mover(dir);
+      iniciarVitrina();
+    }
+
+    function mostrarVitrina(i) {
+      vitrinaIndex = i;
+      const it = vitrinaActual();
+      const slot = $('slot-showcase'), img = $('showcase-img');
+      slot.classList.add('has-image');
+      img.onerror = () => slot.classList.remove('has-image'); // sin foto: espacio vacío
+      img.alt = it.n;
+      img.src = rutaFoto(it.foto);
+      $('showcase-title').textContent = it.n;
+      $('showcase-desc').textContent = it.d;
+      $('showcase-price').textContent = it.p == null ? 'Por confirmar' : dinero(it.p);
+      $('showcase-counter').textContent = CATEGORIA[it.id].toUpperCase();
+      renderVitrinaBoton();
+    }
+
+    function renderVitrinaBoton() {
+      const c = pedido[vitrinaActual().id] || 0;
+      const b = $('showcase-add');
+      b.textContent = c ? c : '+';
+      b.setAttribute('aria-label', `Agregar ${vitrinaActual().n} al pedido` + (c ? ` (llevas ${c})` : ''));
+    }
+
+    function animarBarra() {
+      const fill = $('showcase-progress');
+      fill.style.transition = 'none';
+      fill.style.width = '0%';
+      void fill.offsetWidth;
+      fill.style.transition = `width ${DURACION}ms linear`;
+      fill.style.width = '100%';
+    }
+
+    function iniciarVitrina() {
+      detenerVitrina();
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      animarBarra();
+      vitrinaTimer = setInterval(() => { mover(1); animarBarra(); }, DURACION);
+    }
+
+    function detenerVitrina() {
+      clearInterval(vitrinaTimer);
+      vitrinaTimer = null;
+      const fill = $('showcase-progress');
+      fill.style.transition = 'none';
+      fill.style.width = '0%';
+    }
+
+    function sumarVitrinaActual() {
+      cambiar(vitrinaActual().id, 1);
+      iniciarVitrina(); // reinicia el tiempo para que no cambie justo después de tocar
+    }
+
+    // Pausa el carrusel mientras el cliente lo está viendo con el mouse
+    const vitrinaEl = $('showcase');
+    vitrinaEl.addEventListener('mouseenter', detenerVitrina);
+    vitrinaEl.addEventListener('mouseleave', iniciarVitrina);
+
+    // Deslizar con el dedo para cambiar de platillo
+    let toqueX = null;
+    const slotVitrina = $('slot-showcase');
+    slotVitrina.addEventListener('touchstart', e => { toqueX = e.touches[0].clientX; }, { passive: true });
+    slotVitrina.addEventListener('touchend', e => {
+      if (toqueX === null) return;
+      const dx = e.changedTouches[0].clientX - toqueX;
+      toqueX = null;
+      if (Math.abs(dx) > 40) { deslizo = true; moverManual(dx < 0 ? 1 : -1); }
+    });
+    let deslizo = false;
+    function tocarFotoVitrina() {
+      if (deslizo) { deslizo = false; return; } // un deslizamiento no abre la galería
+      abrirGaleria(vitrinaActual().foto);
+    }
+
+    /* ---------- Galería (todo el menú, por categoría) ---------- */
+    function renderGaleria() {
+      let html = '';
+      MENU.forEach(sec => {
+        const grupos = {};
+        sec.items.forEach(it => { (grupos[it.foto] = grupos[it.foto] || []).push(it); });
+        const fotosSec = Object.keys(grupos);
+        html += `<div class="gallery-cat" data-cat="${sec.cat}"><div class="mono-label">${esc(sec.titulo.toUpperCase())}</div>` +
+          fotosSec.map(f => `
+          <div class="gallery-card" id="gal-${f}">
+            <div class="img-slot has-image">
+              <img src="${esc(rutaFoto(f))}" alt="${esc(grupos[f][0].n)}" loading="lazy" onerror="this.parentNode.classList.remove('has-image')">
+              ${FOTO_VACIA}
+            </div>
+            ${grupos[f].map(it => `<div class="dish-info">
+              <div style="min-width:0">
+                <div class="menu-title">${esc(it.n)}</div>
+                <div class="menu-desc">${esc(it.d)}</div>
+              </div>
+              <div class="row-right">${precioHTML(it.p)}${controlCantidad(it.id)}</div>
+            </div>`).join('')}
+          </div>`).join('') + '</div>';
+      });
+      $('galeria-lista').innerHTML = html;
+    }
+
+
+    let ultimoFoco = null;
+    function abrirCapa(id) {
+      ultimoFoco = document.activeElement;
+      $(id).classList.add('active');
+      document.body.classList.add('no-scroll');
+      const btn = $(id).querySelector('.panel-header button');
+      if (btn) btn.focus({ preventScroll: true });
+    }
+    function cerrarCapa(id) {
+      if (!$(id).classList.contains('active')) return;
+      $(id).classList.remove('active');
+      if (!document.querySelector('.overlay.active')) document.body.classList.remove('no-scroll');
+      if (ultimoFoco) ultimoFoco.focus({ preventScroll: true });
+    }
+
+    function abrirGaleria(fotoDestacada) {
+      detenerVitrina();
+      renderGaleria();
+      abrirCapa('galeria');
+      const card = fotoDestacada && $('gal-' + fotoDestacada);
+      if (card) card.scrollIntoView({ block: 'start' });
+      else $('galeria').querySelector('.gallery-panel').scrollTop = 0;
+    }
+    function cerrarGaleria() { cerrarCapa('galeria'); iniciarVitrina(); }
+
+    /* ---------- Hoja del pedido y WhatsApp ---------- */
+    function abrirPedido() { renderPedido(); $('f-error').textContent = ''; abrirCapa('pedido'); }
+    function cerrarPedido() { cerrarCapa('pedido'); }
+
+    function toggleDireccion() {
+      const dom = document.querySelector('input[name="entrega"]:checked').value === 'domicilio';
+      $('f-direccion-wrap').hidden = !dom;
+    }
+
+    function enviarWhatsApp(ev) {
+      ev.preventDefault();
+      const nombre = $('f-nombre').value.trim();
+      const entrega = document.querySelector('input[name="entrega"]:checked').value;
+      const direccion = $('f-direccion').value.trim();
+      const notas = $('f-notas').value.trim();
+
+      if (!Object.keys(pedido).length) { $('f-error').textContent = 'Agrega al menos un producto.'; return; }
+      if (!nombre) { $('f-error').textContent = 'Escribe tu nombre.'; $('f-nombre').focus(); return; }
+      if (entrega === 'domicilio' && !direccion) { $('f-error').textContent = 'Escribe la dirección de entrega.'; $('f-direccion').focus(); return; }
+      $('f-error').textContent = '';
+
+      const { total, pendientes } = resumen();
+      const lineas = Object.entries(pedido).map(([id, c]) => {
+        const it = PRODUCTOS[id];
+        return `• ${c} × ${it.n} — ${it.p == null ? 'precio por confirmar' : dinero(it.p * c)}`;
+      });
+
+      const msg = [
+        'Hola, Carnitas El Rey. Quiero hacer un pedido:',
+        '',
+        ...lineas,
+        '',
+        `*Total estimado:* ${dinero(total)} MXN${pendientes ? ' + productos por confirmar' : ''}`,
+        '',
+        `*Nombre:* ${nombre}`,
+        entrega === 'domicilio' ? `*Entrega a domicilio:* ${direccion}` : '*Paso a recoger*',
+        notas ? `*Notas:* ${notas}` : '',
+        '',
+        '¿Me confirman el tiempo de entrega? Gracias.'
+      ].filter((l, i, a) => !(l === '' && a[i - 1] === '')).join('\n');
+
+      window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      if ($('pedido').classList.contains('active')) cerrarPedido();
+      else if ($('galeria').classList.contains('active')) cerrarGaleria();
+    });
+
+    /* ---------- Inicio ---------- */
+    actualizarEstado();
+    setInterval(actualizarEstado, 60 * 1000);
+    renderTabs();
+    renderSeccion(seccionActual);
+    mostrarVitrina(0);
+    iniciarVitrina();
+    actualizarBarra();
+  </script>
 </body>
 </html>

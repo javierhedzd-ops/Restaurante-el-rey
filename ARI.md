@@ -1,27 +1,46 @@
 # restaurante-el-rey
 
-Web de Carnitas Michoacán El Rey (Chuminópolis, Mérida). HTML, CSS y JS a mano,
-sin frameworks ni CDN. Menú, horario, carrito y pedido por WhatsApp.
+Web de Carnitas Michoacán El Rey (Chuminópolis, Mérida). Un solo `index.html`
+con su CSS y JS dentro, sin frameworks ni CDN. Menú, carrusel con galería,
+horario que dice solo si está abierto, carrito y pedido por WhatsApp.
+
+**6/11/2026: la web se reemplazó por una versión nueva** (decisión de Javi).
+La versión anterior (rediseño del cazo, `datos.js`, `admin.html`, maqueta, 52
+pruebas) sigue en el historial: commit `14ff34c`. Para verla:
+`git show 14ff34c:index.html` o `git checkout 14ff34c -- <archivo>`.
+
+## Archivos
+- `index.html` — toda la página. Arriba del `<script>` está la sección
+  **CONFIGURACIÓN**: `WHATSAPP`, `HORARIO`, `MENU` (precios) y `VITRINA_PRIMERO`.
+  Precios, platillos y horario se cambian ahí y en ningún otro sitio.
+- `logo-escudo.png` (encabezado), `logo-completo.png` (pie, con "PURO SABOR
+  MEXICANO"), `favicon.png` — recortados del logo original de los flyers.
+- `fuentes/` — Inter Tight y JetBrains Mono (woff2, solo latín) servidas desde
+  aquí: nada de Google Fonts.
+- `fotos/` — fotos propias con nombres fijos; la lista está en `fotos/LEEME.md`.
+  Si falta una, la página muestra el hueco vacío.
+- `pruebas/web.test.js` — pruebas sin dependencias.
+
+## Paleta (sale del logo)
+Mostaza `#D9942A` (escudo), negro café `#22150E` (contornos), madera `#875628`,
+rojo `#D7261E` de los flyers. Encabezado negro café con filo mostaza; tarjetas
+con contorno negro y sombra mostaza desplazada (Javi la quiso así).
 
 ## Cómo se ejecuta
 - Servir: `cd ~/restaurante-el-rey && python3 -m http.server 8092 --bind 0.0.0.0`
   (en segundo plano: `ari-bg "web" python3 -m http.server 8092 --bind 0.0.0.0`)
-- Abrir: `http://192.168.1.156:8092/` (desde el teléfono o la red local; la IP
-  cambia, comprobarla con `ifconfig`).
-  Ojo: con `--bind 127.0.0.1` no se ve desde el navegador del teléfono.
-- Maqueta (rediseño en `maqueta/`): `cd maqueta && python3 -m http.server 8097 --bind 0.0.0.0`
-  → `http://192.168.1.156:8097/`. No usar 8090-8096 ni 8082: son de Ari (8093 el
-  guardián, 8094 los ojos) y su Navegador no abre esos puertos.
+- Abrir: `http://192.168.1.156:8092/` (la IP cambia, comprobarla con `ifconfig`).
+  Con `--bind 127.0.0.1` no se ve desde el navegador del teléfono.
+  No usar 8090-8096 ni 8082: son de Ari.
 
 ## Cómo se comprueba
-- `npm test` — 52 pruebas: lógica pura (`pruebas/logica.test.js`), interfaz en
-  jsdom (`pruebas/interfaz.test.js`), CSS (`pruebas/estilos.test.js`) y
-  coherencia (`pruebas/coherencia.test.js`: los precios y teléfonos escritos en
-  `index.html` son los de `datos.js`, y existe cada foto o archivo que pide la página).
-- `~/bin/ari-web-check` — todo en uno: pruebas + que el servidor responda 200
-  en `/`, `styles.css`, `main.js`, `datos.js`, `logica.js` + que el CSS servido
-  lleve la regla `[hidden]`. Sale con código 0 si todo está bien.
-  Uso: `ari-web-check [url]` (por defecto `http://127.0.0.1:8092/`).
+- `npm test` — 7 pruebas: el JS compila, existen los archivos que pide la
+  página, no carga nada de fuera, el menú es coherente (ids únicos, foto y
+  precio válidos), el teléfono del pie es el de WhatsApp, el horario escrito
+  coincide con `HORARIO`, y está la regla `[hidden]`.
+- `~/bin/ari-web-check` **hay que actualizarlo**: comprueba `styles.css`,
+  `main.js`, `datos.js` y `logica.js`, que ya no existen. Ver "Peticiones a Ari"
+  en `PARA-CLAUDE.md`.
 
 después de editar: npm test
 
@@ -34,81 +53,20 @@ después de editar: npm test
   `break-ui`, `apple-design` y `prototype`. Copiadas tal cual el 24/10/2026.
 - `.claude/settings.json` activa el plugin oficial `figma@claude-plugins-official`
   (necesita que Javi conecte su cuenta de Figma la primera vez).
-- Los hooks de Impeccable (un programa suyo en cada edición y al terminar) **no**
-  están activados; lo decide Javi.
-- Las reglas de este proyecto mandan sobre las skills: nada de CDN (algunas
-  skills proponen GSAP o Lenis desde jsdelivr, o Google Fonts), nada de fuentes
-  externas, y DESIGN.md decide lo que choque.
+- Las reglas de este proyecto mandan sobre las skills: nada de CDN ni fuentes
+  externas.
 
-## Fotos (se pueden cambiar)
-- Decisión de Javi (24/10/2026): por ahora fotos libres de Wikimedia con su
-  crédito, preparadas para cambiarse por fotos propias cuando las haya.
-- Cada foto de la página es un hueco con nombre: `<figure data-foto="portada">`
-  y su archivo en `fotos/sitio/portada.jpg`. Sus datos (alt, pie, crédito) están
-  en `FOTOS`, en `datos.js`. Las de los platos, en `PLATOS` (campo `foto`).
-- Para cambiar una: archivo nuevo con el mismo nombre, corregir `FOTOS`, y
-  `npm run fotos` (pone src, alt, medidas reales, pies y los créditos del pie de
-  página en `index.html`). Nunca a mano en el HTML: `pruebas/fotos.test.js`
-  falla si `index.html` no está al día con `datos.js`. Guía: `fotos/LEEME.md`.
-- Nada de fotos de clientes de Google Maps sin permiso ni de otros negocios.
-
-## Maqueta y web real
-- Desde el 24/10/2026 la raíz y `maqueta/` son iguales: el rediseño del cazo ya
-  está en la web real. Un rediseño nuevo se prueba en `maqueta/` y se porta
-  copiando `index.html` y `styles.css` (y las fotos nuevas); los JS se cambian
-  primero en la raíz y se copian a la maqueta, nunca al revés.
-
-## Diseño: la skill design-taste-frontend (tasteskill v2)
-- Qué es: la skill anti-slop de diseño web, sacada del estudio de 247 webs de
-  galería (One Page Love, Awwwards), con un inspector que mide la página en un
-  Chromium de verdad. Ruta: `~/ari-skills/design-taste-frontend/` (el original
-  está en github.com/Leonxlnx/taste-skill, carpeta `skills/taste-skill`).
-- **Antes de diseñar, lee `~/ari-skills/design-taste-frontend/SKILL.md` entero**
-  y después `DESIGN.md`.
-- Comprobar: `~/bin/ari-bg "inspect" node ~/ari-skills/design-taste-frontend/scripts/inspect.mjs index.html --widths 1440,768,390 --out .taste-skill/<nombre>`
-  (con `ari-bg`: abre Chromium y en primer plano se corta). La última pasada de
-  referencia, after11, está en el historial: `git show b3285a9:maqueta/.taste-skill/after11/report.json`.
-- Criterio (pedido de Javi, 24/10/2026): `lopsided`, `small-text`,
-  `mixed-font-headline` y `statement-length` se arreglan de verdad. Antes de tocar
-  `eyebrow`, `mono`, `numbering`, `micro-label`, `gradient`, `shadow`,
-  `text-shadow`, `button-fx`, `hairline` o `palette-cream`, mira `DESIGN.md`: si
-  choca, no lo cambies y apúntalo en "Peticiones a Ari" de `PARA-CLAUDE.md` para
-  que decida Javi.
-- Lecciones del 24/10: la animación de aparición al hacer scroll empieza en
-  opacidad 0 y el inspector mide con la página arriba, así que no se le pone a la
-  foto principal de una sección (eso era el lopsided de "Arma tu kilo"). Los
-  `@media` de escritorio van **después** de las reglas base del mismo componente:
-  si van antes, las base los pisan (eso tiraba la foto de la portada debajo del texto).
-  Lo mínimo que se escribe es `var(--texto-min)` (13 px).
-
-## Qué no tocar
-- Los valores esperados de `pruebas/logica.test.js` para "hacer pasar" un
-  cambio: si un cambio los rompe, se avisa y se decide si era el correcto.
-- `node_modules/` ni `servidor.log` en el repo.
+## Fotos
+- Solo de comida o del local propio. Nada de fotos de clientes de Google Maps
+  sin permiso ni de otros negocios.
+- Reducirlas a unos 1200 px de ancho antes de subirlas.
 
 ## Costumbres
 - Textos en español, tono directo.
-- Lógica de negocio en `logica.js` (pura, testeable); DOM solo en `main.js`.
-- CSS con `@layer` (reset, base, componentes, utilidades).
 - Commits en español, en imperativo.
-- Si cambia un precio o un teléfono en `datos.js`, cámbialo también donde va
-  escrito en `index.html` (tarjeta del kilo, cierre de la carta, preguntas,
-  Visítanos): la prueba de coherencia avisa si se olvida.
-- Fotos: solo de comida o del puesto propio. Nada de fachadas o letreros de
-  otros negocios (la de "Taquería Medina" de Isla Mujeres parecía el local).
-- El mapa de Visítanos es un esquema: no se le ponen calles ni orientación que
-  no estén confirmadas.
+- No inventar datos del negocio (precios, teléfonos, horarios): los da Javi.
+  Los actuales salen de los flyers que mandó el 6/11/2026: ½ kg y kilo,
+  Promokilo $409, tacos $35 (surtidos $28), desechable +$10 (solo aviso),
+  abre 12:30 PM y cierra 11:50 PM, martes cerrado.
 - Los temporales (`ari-bg.log`, `.taste-skill/`, `.probe-*.mjs`, `_vis.html`)
   están en `.gitignore`; no se suben.
-
-## Notas de este equipo (Termux aarch64)
-- jsdom no calcula CSS: las pruebas de interfaz comprueban el atributo `hidden`
-  y el contenido, no si algo se ve. Para el CSS está `pruebas/estilos.test.js`,
-  que lee `styles.css` como texto.
-- En el arnés (`pruebas/arnes.js`) los tres archivos se ejecutan dentro de una
-  `new Function`: con `window.eval` las `const` de nivel superior no quedan como
-  propiedades de `window` y `main.js` no veía `NEGOCIO`.
-- Cada prueba cierra su ventana de jsdom en `afterEach`; si no, quedan
-  temporizadores vivos y `node --test` no termina nunca.
-- Playwright no está instalado (no hay navegador): los e2e de verdad quedan
-  pendientes para CI.

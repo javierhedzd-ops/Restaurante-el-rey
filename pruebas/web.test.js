@@ -1,0 +1,65 @@
+// Pruebas sin dependencias: npm test (node --test busca los *.test.js)
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
+
+const RAIZ = path.join(__dirname, '..');
+const html = fs.readFileSync(path.join(RAIZ, 'index.html'), 'utf8');
+const script = html.match(/<script>([\s\S]*?)<\/script>/)[1];
+
+// Lee la configuración (MENU, HORARIO, VITRINA_PRIMERO, WHATSAPP) sin tocar el DOM
+function configuracion() {
+  const inicio = script.indexOf('const WHATSAPP');
+  const fin = script.indexOf('/* ====', script.indexOf('const VITRINA_PRIMERO'));
+  const codigo = script.slice(inicio, fin) + '\n({ WHATSAPP, HORARIO, MENU, VITRINA_PRIMERO })';
+  return vm.runInNewContext(codigo);
+}
+
+test('el JavaScript de la página no tiene errores de sintaxis', () => {
+  assert.doesNotThrow(() => new vm.Script(script));
+});
+
+test('existe cada archivo local que pide la página (menos las fotos opcionales)', () => {
+  const rutas = [...html.matchAll(/(?:src|href)="([^"#:]+)"/g), ...html.matchAll(/url\('([^')]+)'\)/g)]
+    .map(m => m[1]).filter(r => !r.startsWith('fotos/') && !r.includes('${'));
+  assert.ok(rutas.length > 0);
+  for (const r of rutas) assert.ok(fs.existsSync(path.join(RAIZ, r)), `falta ${r}`);
+});
+
+test('no carga nada de otros servidores (ni CDN ni Google Fonts)', () => {
+  const externos = [...html.matchAll(/(?:src|href)="(https?:\/\/[^"]+)"/g)].map(m => m[1])
+    .filter(u => !/^https:\/\/(maps\.google\.com|wa\.me)\//.test(u));
+  assert.deepEqual(externos, []);
+  assert.ok(!/fonts\.(googleapis|gstatic)\.com/.test(html));
+});
+
+test('el menú es coherente: ids únicos, foto y precio válido en cada platillo', () => {
+  const { MENU, VITRINA_PRIMERO } = configuracion();
+  const ids = new Set();
+  for (const sec of MENU) for (const it of sec.items) {
+    assert.ok(!ids.has(it.id), `id repetido: ${it.id}`); ids.add(it.id);
+    assert.match(it.foto, /^[a-z0-9-]+$/, `foto sin nombre válido: ${it.id}`);
+    assert.ok(it.p === null || (Number.isInteger(it.p) && it.p > 0), `precio raro: ${it.id}`);
+  }
+  for (const id of VITRINA_PRIMERO) assert.ok(ids.has(id), `la vitrina pide un id que no existe: ${id}`);
+});
+
+test('el teléfono del pie es el mismo número que recibe los pedidos', () => {
+  const { WHATSAPP } = configuracion();
+  const tel = html.match(/href="tel:\+(\d+)"/)[1];
+  assert.equal(tel, WHATSAPP);
+});
+
+test('el horario escrito coincide con el que decide "abierto / cerrado"', () => {
+  const { HORARIO } = configuracion();
+  assert.deepEqual([...HORARIO.diasCerrado], [2]); // martes
+  assert.match(html, /MARTES CERRADO/);
+  const h12 = t => { const [h, m] = t.split(':').map(Number); return `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`; };
+  assert.match(html, new RegExp(`${h12(HORARIO.abre)} A ${h12(HORARIO.cierra)}`));
+});
+
+test('la página trae la regla [hidden] (si no, se ven cosas ocultas)', () => {
+  assert.match(html, /\[hidden\]\s*\{\s*display:\s*none/);
+});

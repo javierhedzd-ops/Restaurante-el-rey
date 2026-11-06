@@ -1,262 +1,34 @@
 # Encargo para Claude Code: web de Carnitas Michoacán El Rey
 
-Este archivo lo escribe Ari (la agente de Javi en Termux) para que Claude Code
-retome el trabajo de la web sin tener que reconstruir el contexto. Léelo entero
-antes de tocar nada.
+Léelo junto con `ARI.md`, que manda en lo que choque.
 
-## Qué es este proyecto
+## Estado (6 nov 2026)
 
-Web de **Carnitas Michoacán El Rey** (Chuminópolis, Mérida, Yucatán). HTML, CSS y
-JS a mano, sin frameworks ni CDN. Menú, horario, carrito y pedido por WhatsApp.
+Javi pidió reemplazar la web publicada por una versión nueva, hecha en una
+sesión de Claude Code a partir de su propio HTML y de los flyers del
+restaurante. Lo que cambió respecto a la versión del cazo:
 
-- Carpeta: `~/restaurante-el-rey`
-- Reglas del proyecto: `ARI.md` (léelo; manda sobre este archivo en lo que choque)
-- Dirección de arte: `DESIGN.md`
-- Datos del negocio (precios, horario, teléfonos, FAQ): `datos.js`
-- Lógica pura: `logica.js` · DOM: `main.js` · Estilos: `styles.css`
-- Pruebas: `pruebas/` (52 pruebas, todas en verde ahora mismo)
-
-## Acabados premium (24 oct 2026)
-
-Javi pidió "acabados premium y ningún error en los botones". Se pulsaron todos los
-botones con Playwright en 390, 768 y 1440 px (y los del admin) y se arregló:
-
-- "Preguntar" (platos sin precio) era un botón deshabilitado: ahora abre WhatsApp
-  con la pregunta (`urlPregunta` en `logica.js`).
-- Escape fuera del carrito mandaba el foco a "Mi pedido"; +/− perdían el foco al
-  repintar; el atrapafoco no contaba los `textarea`.
-- Vaciar no tenía vuelta atrás: ahora deja "Deshacer" con el foco.
-- Áreas táctiles de menos de 44 px (marca, menú, "Armar mi kilo", Google Maps,
-  redes, buscador, "Ver la web" del admin).
-- El admin no decía nada junto a los botones cuando había datos por corregir.
-- Acabados: "✓ Añadido" en el propio botón, globo que late, pulsación `scale(0.97)`,
-  hover solo con ratón, carta del teléfono con foto cuadrada a la izquierda,
-  galería sin huecos, "Nosotros" sin hueco y reservas sin campo suelto.
-- Todo en la capa `acabados` de `styles.css` y anotado en `DESIGN.md`.
-  Pruebas nuevas en `pruebas/botones.test.js`.
-
-## Estado actual (23 oct 2026)
-
-Hay **dos versiones** en el repo:
-
-1. `index.html` + `styles.css` + `main.js` en la raíz: la web "de verdad",
-   con carrito, pedido por WhatsApp, preguntas frecuentes y galería.
-2. `maqueta/`: copia de trabajo donde Ari está haciendo un rediseño de la carta
-   (carta de una columna con puntos, hero a dos columnas con la foto sangrando,
-   galería en mosaico, sección "Arma tu kilo", "Visítanos" con mapa SVG).
-
-**Cambios sin commitear** (los hizo Ari, están probados con `npm test` en verde):
-
-- `datos.js`: precios de kilos y preguntas frecuentes.
-- `index.html`, `main.js`, `logica.js`, `styles.css`: sección de preguntas
-  frecuentes con `<details>` y ajustes de la carta.
-- `pruebas/interfaz.test.js`: prueba nueva de las preguntas frecuentes.
-- `maqueta/index.html`, `maqueta/styles.css`: rediseño (carta, "Arma tu kilo",
-  "Visítanos", cierre de carta). Incluye el arreglo del detector `lopsided`
-  (la foto de `.cazo__foto` se estira con `align-self: stretch` y
-  `min-height: 22rem`; en tableta `.cazo` va a dos columnas iguales).
-- `maqueta/fotos/mapa.svg`: mapa dibujado a mano (sin CDN, sin red).
-
-Archivos temporales que **no** deben subirse: `maqueta/.probe-*.mjs`,
-`maqueta/_vis.html`, `maqueta/.taste-skill/`, `ari-bg.log`, `servidor.log`.
-
-## Lo que falta (lo que te toca)
-
-### 1. Terminar la maqueta y pasarla a la web real
-
-**Hecho por Ari (ronda 1, 23 oct 2026):**
-
-- Las **3 secciones vacías** de `maqueta/` ya tienen contenido. La maqueta tiene
-  8 secciones: `inicio`, `cazo`, `menu`, `nosotros`, `preguntas`, `galeria`,
-  `reservas`, `visitanos`.
-- Detector `lopsided` arreglado: ya cuenta la foto de `.cazo__foto`.
-- `npm test` en verde (49/49) y `ari-web-check` en verde.
-
-**Lo que te toca:**
-
-- Revisar visualmente "Visítanos" y "Nosotros" con `inspect.mjs` (ver sección 2)
-  en 390px y 1280px: que el mapa SVG y el bloque de llamada al pedido no se
-  corten ni se salgan.
-- **Portar** los cambios de `maqueta/` a la raíz (`index.html`, `styles.css`,
-  `main.js`) sin romper el carrito ni las pruebas. La raíz es la que se sirve en
-  `http://192.168.1.156:8092/`; la maqueta, en el 8097.
-- Al terminar: `npm test` y `~/bin/ari-web-check` en verde, y apuntar en
-  `ARI.md` lo que cambie de costumbres.
-
-**Hecho por Claude (24 oct 2026), rama `ari/rediseno-cazo`:**
-
-- Revisión en Chromium de "Visítanos" y "Nosotros" a 390 y 1280 px: nada se
-  corta ni se sale (sin scroll horizontal, sin piezas fuera de pantalla, sin
-  solapes, imágenes cargadas). De paso se arregló:
-  - El aviso flotante ("… añadido") se asomaba vacío al pie de la pantalla
-    (pastilla oscura de 42×22 px): ahora, escondido, también es transparente.
-  - El mapa en el teléfono tenía letras de 6 px: en pantallas de 560 px o menos
-    se recorta (5:4) hacia el pin y la etiqueta. Es un enlace a Google Maps.
-  - El mapa traía calles inventadas ("Calle 93", "Calle 95", "Calle 16"; el
-    93-F es el número, no una calle) y una flecha de norte sin confirmar: se
-    quitaron. Solo queda la Calle 14.
-  - `taqueria.jpg` es la fachada de "Taquería Medina" en Isla Mujeres y se
-    usaba en Nosotros y Reservas como si fuera el local. Ahora van
-    `carnitas-michoacan.jpg` (Nosotros) y `salsas.jpg` (Reservas).
-- Portado a la raíz: `index.html` y `styles.css` de la maqueta, y
-  `fotos/mapa.svg`. Los JS de la raíz eran más nuevos (normalizarCarrito,
-  reservas que se limpian, aviso antes de repintar) y se quedaron; se copiaron
-  a `maqueta/` para que las dos versiones sean iguales.
-- Prueba nueva `pruebas/coherencia.test.js` (precios y teléfonos del HTML contra
-  `datos.js`, y que existan todas las fotos). `npm test`: 52/52.
-- Carrito y pedido por WhatsApp probados en Chromium de verdad: se añade, el
-  aviso sale y se va, el carrito abre y el enlace de WhatsApp lleva el pedido.
-- Temporales fuera del repo (`.gitignore`). Siguen en el historial por si hacen
-  falta: `git show b3285a9:maqueta/.probe-nosotros.mjs`.
-
-**Para que confirme Javi (no se tocaron, son datos del negocio):**
-
-- El enlace de Facebook de `datos.js` es la página "EL REY Suc Canek", no la de
-  Chuminópolis: ¿es la correcta?
-- `½ kg surtido` cuesta $240 y `1 kg surtida` $238: medio kilo sale más caro que
-  el kilo. ¿Es así?
-- `puesto.jpg` ("Local Carnitas Teremar") y `mercado.jpg` ("Carnitas Doña Lulú")
-  son de otros negocios y salen en la carta. Lo ideal: fotos propias.
-- El repositorio en GitHub es público: se ven `ARI.md`, este archivo y el
-  historial. Si no hace falta para GitHub Pages, mejor privado.
-
-**Ronda de diseño de Claude (24 oct 2026, tarde), contra after11 de tasteskill v2:**
-
-`inspect.mjs` no se pudo ejecutar en el contenedor de Claude (no deja correr
-código descargado). Se midió con un script propio con las mismas reglas y
-umbrales que `scripts/lib/probe.mjs` y `rules.mjs`, a 1440, 768 y 390 px.
-**Falta la pasada oficial en el teléfono** (ver "Para Ari: comprobar" abajo).
-
-FAIL de after11 (10) y cómo quedan:
-- `small-text` (25 textos < 13 px) → **arreglado**: 0. Token `--texto-min` (13 px).
-- `mono` (precios en ui-monospace) → **arreglado**: cifras en la letra del texto
-  con números tabulares, que es lo que pide DESIGN.md ("tabular").
-- `numbering` (01, 02… en la carta) → **arreglado**: fuera (DESIGN.md no los pide).
-- `gradient` (radial de #reservas) → **arreglado**: fondo liso `--crema-oscura`.
-- `text-shadow` (crédito de la foto del hero) → **arreglado**: fondo liso detrás.
-- `button-fx` (sombra roja en los botones) → **arreglado**: DESIGN.md prohíbe
-  "sombras de colores".
-- `eyebrow` (3) → 2 de 3 arreglados: "La cosa viva" (jerga interna) fuera;
-  "Reserva tu mesa" metido en el titular ("Reserva tu mesa, ponemos el cazo").
-  **Se queda** la del hero ("Chuminópolis · Mérida · Desde 1974"): DESIGN.md la
-  nombra ("rojo… etiqueta del hero"). Petición abajo.
-- `micro-label` (40 → 39) → **se queda**: DESIGN.md define "etiquetas y
-  microtexto en mayúsculas con letter-spacing" (ahora a 13 px). Petición abajo.
-- `shadow` (sombras en reposo) → **se queda** la sombra suave de tarjetas y
-  fotos: DESIGN.md §4 la define. Las de color se quitaron. Petición abajo.
-- `hairline` (39 filetes) → **se queda**: el concepto de DESIGN.md es "filetes
-  finos en vez de cajas". Petición abajo.
-
-WARN de after11 (11):
-- `lopsided` ("Arma tu kilo", 396 px a 768) → **arreglado**. La causa: la foto
-  tenía la animación de aparición (opacidad 0 hasta entrar en pantalla) y el
-  inspector mide arriba. Ahora la foto está siempre visible. Además en el
-  teléfono "Arma tu kilo" iba a dos columnas de tres palabras por línea: ahora
-  una columna.
-- `mixed-font-headline` (cursiva en "estilo Michoacán") → **arreglado**: el
-  titular en una sola serif, dos líneas. DESIGN.md actualizado (pedido de Javi).
-- `statement-length` (cita de Nosotros, 5 líneas a 34 px) → **arreglado**: 18
-  palabras, 32 px, 3 líneas en escritorio.
-- `font-count` (3) → **arreglado**: 2 (sans del sistema y serif). También el
-  cuadro de notas de reservas salía en monoespaciada: ahora hereda la letra.
-- `body-size` (15.2 px) → **arreglado**: el texto corrido a 16 px (DESIGN.md: 1rem).
-- `grey-body`, `palette-cream`, `dashed`, `outlined-box`, `no-footage` → se
-  quedan (DESIGN.md los define: descripciones en `--tinta-suave`, `--crema`,
-  filetes punteados, borde de tarjeta, "nada que se mueva solo"). Peticiones abajo.
-- `size-count` (13 tamaños) → sin cambios; bajarlo pide rehacer la escala.
-
-Arreglado de paso (no salía en el informe, se veía en las capturas):
-- La foto de la portada caía debajo del texto en escritorio (el `@media` de
-  escritorio iba antes de las reglas base y estas lo pisaban). Ahora va a la
-  derecha, a la altura del titular, desde arriba.
-- El pie decía `fotos/CREDITOS.md` en monoespaciada: ahora es un enlace normal.
-
-**Fotos que se pueden cambiar (24 oct 2026, noche):** Javi decidió no usar
-fotos reales por ahora. Cada foto de la página tiene un hueco con nombre en
-`fotos/sitio/` y sus datos en `FOTOS` (`datos.js`); `npm run fotos` deja
-`index.html` al día (también corrigió medidas que estaban mal en la galería) y
-rehace los créditos del pie. 7 pruebas nuevas en `pruebas/fotos.test.js`
-(`npm test`: 59). Se quitó `taqueria.jpg` (otro negocio, ya sin usar).
-
-### 2. Herramientas que Ari ya usó (verificadas en este equipo)
-
-Ari trabaja en **Termux aarch64** (Android). Esto es lo que comprobó de verdad,
-con sus comandos, para que no lo busques otra vez:
-
-- **Chromium SÍ está instalado**: `/data/data/com.termux/files/usr/bin/chromium-browser`.
-  No hace falta Playwright ni `pkg install chromium`.
-- **Skill `design-taste-frontend`** (en `~/ari-skills/design-taste-frontend/`),
-  sin dependencias, habla con Chromium por CDP (`scripts/lib/cdp.mjs`, que ya
-  busca `/usr/bin/chromium-browser`):
-  - `node ~/ari-skills/design-taste-frontend/scripts/inspect.mjs index.html --widths 390,768,1280 --out .taste-skill/inspect`
-    → renderiza, mide y fotografía; sale con código 1 si hay algo FAIL.
-  - `node ~/ari-skills/design-taste-frontend/scripts/lint.mjs .` → escaneo
-    estático de lo que la skill prohíbe (sin navegador, rápido).
-  - `node ~/ari-skills/design-taste-frontend/scripts/draw.mjs --show` → la
-    dirección de arte sorteada que se guardó en `.taste-skill/direction.json`.
-  - **Lánzalos con `~/bin/ari-bg "descripción" comando...`**: abren Chromium y
-    en el teléfono tardan; en primer plano se cortan.
-- **Sondas propias** de Ari en `maqueta/.probe-*.mjs` (lopsided, menú, vacíos,
-  "nosotros"): importan `lib/cdp.mjs` y evalúan JS en la página para medir cajas
-  de texto, medios y controles. Sirven de plantilla para nuevas comprobaciones.
-- **jsdom**: ya está en `node_modules`; es lo que usan las pruebas de interfaz.
-- **`~/bin/ari-web-check`**: pruebas + que el servidor responda 200 en `/`,
-  `styles.css`, `main.js`, `datos.js`, `logica.js` + que el CSS servido lleve
-  `[hidden]`.
-- **`Captura` / `Ver`** (herramientas de Ari): foto de la página y revisión con
-  ojos de diseñador.
-- Si instalas algo nuevo, apúntalo en `ARI.md`, sección "Notas de este equipo".
-
-### 3. Datos del restaurante "en tiempo real"
-
-La web es estática y **no puede** llamar a Google Places ni a ninguna API con
-clave desde el navegador (la clave quedaría a la vista). Lo que sí se puede:
-
-- **Horario y "abierto ahora"**: ya se calculan en `logica.js` con
-  `NEGOCIO.zonaHoraria` (`America/Merida`) y `NEGOCIO.horario`. Revisar que el
-  cálculo sea correcto y que se actualice solo cada minuto.
-- **Estado del negocio en vivo** (cerrado por día festivo, se acabó la carnita,
-  tiempo de espera): un archivo `estado.json` en la misma carpeta que la web,
-  que el dueño o Ari actualicen. La web lo lee con `fetch` cada minuto y muestra
-  un aviso. Sin claves, sin servicios de fuera, funciona sin red externa.
-- **Reseñas y fotos de Google**: si Javi quiere, se hace con un script de Ari
-  (o un Zap de Zapier) que consulte Google Places **desde el servidor** y
-  escriba `resenas.json`; la web solo lee ese archivo. Nunca la clave en el
-  navegador.
-- **Datos de contacto y redes**: ya están en `datos.js` (teléfonos, dirección,
-  Google Maps, Instagram, Facebook). Si hay que verificarlos, se hace a mano
-  contra el perfil de Google del negocio; no inventar teléfonos ni horarios.
-
-### 4. Pruebas
-
-- `npm test` debe seguir en verde (52 pruebas ahora).
-- `~/bin/ari-web-check` comprueba que el servidor responde 200 en `/`,
-  `styles.css`, `main.js`, `datos.js`, `logica.js` y que el CSS servido lleva
-  la regla `[hidden]`.
-- Si añades `estado.json`, añade prueba de que la web lo lee y de que, si no
-  existe o falla, la web sigue funcionando (sin aviso).
-- **No cambies los valores esperados de las pruebas existentes** para que pasen.
+- Todo vive en `index.html` (CSS y JS dentro). Ya no existen `datos.js`,
+  `logica.js`, `main.js`, `styles.css`, `admin.*`, `editor.js`, `maqueta/` ni
+  las 52 pruebas de jsdom. Están en el commit `14ff34c` por si hacen falta.
+- Logo: PNG recortados del logo original (`logo-escudo.png`, `logo-completo.png`).
+- Paleta tomada del logo (ver `ARI.md`).
+- Carrusel con todo el menú (flechas y deslizar); al tocarlo abre la galería.
+- Pedido: botones − y +, hoja con nombre, recoger o domicilio, dirección y
+  notas; el mensaje de WhatsApp sale ordenado.
+- Ya no hay panel del dueño. Javi está enseñándole al dueño una demostración
+  (cambiar precios y fotos, guardado solo en su dispositivo). Si le gusta, se
+  hará un panel de verdad; la opción hablada fue Supabase (gratis, con fotos).
 
 ## Cómo se ejecuta
 
 ```bash
 cd ~/restaurante-el-rey
-python3 -m http.server 8092 --bind 0.0.0.0   # web real
-cd maqueta && python3 -m http.server 8097 --bind 0.0.0.0   # maqueta (8090-8096 son de Ari)
+python3 -m http.server 8092 --bind 0.0.0.0
+npm test
 ```
 
-Desde el teléfono: `http://192.168.1.156:8092/` (comprobar la IP con `ifconfig`
-antes de darla; ha cambiado más de una vez). La maqueta, en el 8097.
-
-## Costumbres
-
-- Textos en español, tono directo, sin promesas que no se puedan probar.
-- Un solo color de acento: azul hielo `#7fd4ff` en la web de Ari; en esta web
-  manda `DESIGN.md`.
-- CSS con `@layer` (reset, base, componentes, utilidades).
-- Lógica de negocio en `logica.js` (pura, testeable); DOM solo en `main.js`.
-- Commits en español, en imperativo.
-- Nada de CDN ni fuentes externas: la página tiene que cargar sin red.
+Desde el teléfono: `http://192.168.1.156:8092/` (comprobar la IP con `ifconfig`).
 
 ## Condiciones para que Ari se actualice sola (importante)
 
@@ -265,50 +37,27 @@ Ari vive en este mismo teléfono, en `~/ari-assistant/agente`, y corre con PM2
 a mano, cumple esto:
 
 1. **Deja el repo limpio y en una rama con nombre claro** (`ari/<tema>` o la que
-   use Javi). Nada de cambios sueltos sin commitear: Ari lee el árbol de trabajo
-   y un `git status` sucio le hace dudar de qué es suyo y qué es tuyo.
+   use Javi). Nada de cambios sueltos sin commitear.
 2. **Apunta lo que cambias en `ARI.md`** (costumbres y notas del equipo) y en
    `docs/ARI_ESTADO.md` si tocas algo de Ari. Ari lee esos archivos al empezar
    cada tarea: es su única forma de enterarse.
 3. **No toques `~/ari-assistant/agente` desde aquí.** Si necesitas un cambio en
-   Ari (una herramienta, un permiso, un detector), descríbelo en la sección
-   "Peticiones a Ari" de este archivo y Javi decide.
+   Ari, descríbelo en "Peticiones a Ari" y Javi decide.
 4. **Deja los comandos de comprobación funcionando tal cual**: `npm test` y
    `~/bin/ari-web-check`. Si añades uno nuevo, documéntalo con la ruta completa.
 5. **Nada de procesos en primer plano largos**: si lanzas Chromium o un servidor,
    que sea con `~/bin/ari-bg "descripción" comando...` y dejando la salida en
    `ari-bg.log`.
-6. **No inventes datos del negocio** (precios, teléfonos, horarios): salen de
-   `datos.js` y los confirma Javi.
+6. **No inventes datos del negocio** (precios, teléfonos, horarios): los
+   confirma Javi.
 
 ## Peticiones a Ari (las escribe Claude, las decide Javi)
 
-- **Comprobación de secciones en la skill de diseño.** Las sondas
-  `.probe-*.mjs` eran de usar y tirar. Propuesta: un `scripts/secciones.mjs` en
-  `design-taste-frontend` que, para cada `#id` que se le pase y cada ancho, diga
-  si hay scroll horizontal, piezas fuera de la pantalla, contenido recortado
-  (`scrollWidth > clientWidth` con overflow oculto), hijos que se pisan e
-  imágenes que no cargan, y saque una captura de la sección sin la cabecera fija
-  (si no, la tapa). Es lo que se usó el 24/10 para revisar Visítanos y Nosotros.
-- **Reglas de tasteskill que chocan con DESIGN.md (decide Javi).** Se dejaron
-  como están; si Javi elige seguir a la skill, se cambia DESIGN.md primero:
-  - `eyebrow` del hero ("Chuminópolis · Mérida · Desde 1974"): ¿se mete en el
-    texto de debajo del titular y se borra?
-  - `micro-label` (39 etiquetas en mayúsculas espaciadas: "Desde", "Sucursal",
-    "¿Cuánto?", "Más pedido"…): ¿pasan a minúscula normal a 13 px?
-  - `hairline` (filetes de la carta, del horario, de la cabecera): ¿se cambian
-    por espacio o un cambio de tono, como pide la skill?
-  - `shadow` (sombra suave de tarjetas, preguntas, fotos y formulario):
-    ¿se quitan y se separan por tono?
-  - `palette-cream` (`--crema` #fdf6ec): ¿se pasa a un hueso menos amarillo?
-  - `grey-body` (descripciones en `--tinta-suave`), `dashed` (filetes punteados),
-    `outlined-box` (borde de tarjetas) y `no-footage` (sin video: DESIGN.md dice
-    "nada de elementos que se muevan solos").
-- **Para Ari: comprobar con el inspector de verdad.** Después del `git pull`:
-  `cd ~/restaurante-el-rey && ~/bin/ari-bg "inspect" node ~/ari-skills/design-taste-frontend/scripts/inspect.mjs index.html --widths 1440,768,390 --out .taste-skill/after12`,
-  y compara `after12/report.json` con `git show b3285a9:maqueta/.taste-skill/after11/report.json`.
-  Lo esperado: FAIL solo en `eyebrow` (1, el del hero), `micro-label`, `shadow` y
-  `hairline`, los cuatro de DESIGN.md. Si sale otro, apúntalo aquí.
-- **Elementos fijos que se asoman.** Que `inspect.mjs` avise de elementos
-  `position: fixed` visibles y sin texto (así se habría visto antes la pastilla
-  vacía del aviso).
+- **Actualizar `~/bin/ari-web-check` a la web nueva.** Hoy pide `styles.css`,
+  `main.js`, `datos.js` y `logica.js` (ya no existen) y busca la regla
+  `[hidden]` en `styles.css`. Propuesta: que compruebe `npm test` y que el
+  servidor responda 200 en `/`, `/logo-escudo.png`, `/logo-completo.png`,
+  `/favicon.png`, `/fuentes/inter-tight.woff2` y `/fuentes/jetbrains-mono.woff2`
+  (la regla `[hidden]` ya la comprueba `npm test` dentro de `index.html`).
+- Las peticiones anteriores sobre `DESIGN.md` y el inspector del rediseño del
+  cazo quedan sin efecto: esa versión ya no está publicada.
