@@ -17,6 +17,8 @@ pruebas) sigue en el historial: commit `14ff34c`. Para verla:
   MEXICANO"), `favicon.png` — recortados del logo original de los flyers.
 - `fuentes/` — Inter Tight y JetBrains Mono (woff2, solo latín) servidas desde
   aquí: nada de Google Fonts.
+- `catrina-mural.jpg` — recorte del mural de la catrina del local (de la única
+  foto que hay, 7/11/2026). Va de pared arriba de la página (`.muro`).
 - `fotos/` — fotos propias con nombres fijos; la lista está en `fotos/LEEME.md`.
   Si falta una, la página muestra el hueco vacío.
 - `pruebas/web.test.js` — pruebas sin dependencias.
@@ -38,12 +40,17 @@ con contorno negro y sombra mostaza desplazada (Javi la quiso así).
 
 ### Toque de catrina (7/11/2026)
 Sale del mural del local. Regla de Javi: **integrado, no pegado**.
+- El mural de verdad (`catrina-mural.jpg`) es la pared de arriba: sale del negro
+  del encabezado (el fondo del mural también es negro) y se desvanece hacia el
+  crema; la tarjeta de portada queda encima y deja ver los ojos. En pantallas
+  anchas también se desvanece por los lados.
 - Piso de talavera en línea, tono sobre tono: muy tenue en el fondo de toda la
-  página (sigue cuando haya fotos), un poco más marcado en los huecos de foto y
-  en el pie.
+  página, un poco más marcado en los huecos de foto y en el pie.
 - Los puntitos que rodean los ojos de la catrina, en el filo del encabezado.
-- Se probaron una catrina dibujada a color y otra en línea fina: a Javi no le
-  convencieron. No volver a poner dibujos de la catrina hechos a mano en SVG.
+- Las catrinas dibujadas (SVG a mano y grafiti hecho con Blender por código) no
+  dieron el nivel del mural. No volver a ponerlas.
+- Si consiguen una foto mejor del mural (de frente, buena luz, sin sillas),
+  reemplazar `catrina-mural.jpg` con el mismo encuadre.
 
 ## Cómo se ejecuta
 - Servir: `cd ~/restaurante-el-rey && python3 -m http.server 8092 --bind 0.0.0.0`

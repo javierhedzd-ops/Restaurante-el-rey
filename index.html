@@ -326,6 +326,25 @@
       -webkit-mask-image: linear-gradient(to bottom, #000, transparent 85%);
               mask-image: linear-gradient(to bottom, #000, transparent 85%);
     }
+    /* Mural: sale del negro del encabezado y se desvanece hacia el crema;
+       la portada queda encima, como colgada en esa pared */
+    .muro {
+      height: 380px; margin-bottom: -120px;
+      background: var(--ink) url('catrina-mural.jpg') center 30% / cover no-repeat;
+      -webkit-mask-image: linear-gradient(to bottom, #000 58%, transparent 100%);
+              mask-image: linear-gradient(to bottom, #000 58%, transparent 100%);
+    }
+    .muro + main { position: relative; }
+    @media (min-width: 700px) {
+      .muro {
+        height: 470px; margin-bottom: -160px; max-width: 900px; margin-left: auto; margin-right: auto;
+        background-size: 900px auto; background-position: center 66%;
+        -webkit-mask-image: linear-gradient(to bottom, #000 58%, transparent 100%), linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
+        -webkit-mask-composite: source-in;
+                mask-image: linear-gradient(to bottom, #000 58%, transparent 100%), linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
+                mask-composite: intersect;
+      }
+    }
   </style>
 </head>
 <body>
@@ -356,6 +375,9 @@
       <span class="status-badge" id="status-badge">Horario</span>
     </div>
   </header>
+
+  <!-- El mural de la catrina del local, como la pared de arriba de la página -->
+  <div class="muro" aria-hidden="true"></div>
 
   <main class="container">
 
