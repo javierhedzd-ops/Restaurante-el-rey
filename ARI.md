@@ -64,7 +64,9 @@ con contorno negro y sombra mostaza desplazada (Javi la quiso así).
 Sale del mural del local. Regla de Javi: **integrado, no pegado**, y con acabado
 de artista profesional.
 - La catrina va dentro de un **nicho de arco** (como los nichos pintados en las
-  paredes): mismo contorno negro y sombra mostaza que las tarjetas. Así el corte
+  paredes): contorno negro y sombra mostaza como las tarjetas, franja de
+  talavera mostaza alrededor, filete interior y sombra adentro para que se
+  sienta hundido. Así el corte
   de la imagen (cabello arriba, barbilla abajo) se ve intencional y no
   recortado (Javi: "que no se vea cortada"). Aparece despacio. Se probaron
   desvanecidos en los bordes y sombreados: se veían pegados y cortados.

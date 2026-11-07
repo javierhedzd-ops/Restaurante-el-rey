@@ -341,12 +341,21 @@
     }
     /* Mural: la catrina pintada directamente en la pared (fondo transparente, bordes
        nítidos). Se presenta como obra: completa, con pared alrededor y aparece despacio. */
+    /* Nicho de arco con la catrina del mural: marco de talavera, doble filete y
+       sombra interior para que se sienta hundido en la pared */
     .muro {
-      width: min(86vw, 380px); aspect-ratio: 1 / 1; margin: 24px auto 14px;
-      background: var(--card-alt) url('catrina-nicho.webp') center 38% / cover no-repeat;
-      border: 2px solid var(--ink); border-radius: 50% 50% 18px 18px / 42% 42% 18px 18px;
+      width: min(86vw, 380px); aspect-ratio: 1 / 1; margin: 24px auto 16px; padding: 9px;
+      border: 2px solid var(--ink); border-radius: 50% 50% 20px 20px / 44% 44% 20px 20px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' fill='%23F8E9C9'/%3E%3Cg fill='none' stroke='%23C98A26' stroke-width='2.4'%3E%3Cpath d='M22 6c5 6 5 10 0 16-5-6-5-10 0-16zM22 38c5-6 5-10 0-16-5 6-5 10 0 16zM6 22c6-5 10-5 16 0-6 5-10 5-16 0zM38 22c-6-5-10-5-16 0 6 5 10 5 16 0z'/%3E%3Ccircle cx='22' cy='22' r='2.5' fill='%23D7261E' stroke='none'/%3E%3Cpath d='M0 8a8 8 0 0 0 8-8M36 0a8 8 0 0 0 8 8M44 36a8 8 0 0 0-8 8M8 44a8 8 0 0 0-8-8'/%3E%3C/g%3E%3C/svg%3E") center / 22px 22px;
       box-shadow: 5px 5px 0 var(--mustard);
       opacity: 0; animation: muro-aparece 1.8s ease-out 0.15s forwards;
+    }
+    .muro-pintura {
+      width: 100%; height: 100%;
+      border: 2px solid var(--ink); border-radius: 50% 50% 12px 12px / 45% 45% 12px 12px;
+      background: var(--card-alt) url('catrina-nicho.webp') center 38% / cover no-repeat;
+      box-shadow: inset 0 16px 22px -8px rgba(34, 21, 14, 0.55), inset 0 -8px 14px -8px rgba(34, 21, 14, 0.3),
+                  inset 10px 0 14px -10px rgba(34, 21, 14, 0.35), inset -10px 0 14px -10px rgba(34, 21, 14, 0.35);
     }
     @keyframes muro-aparece { to { opacity: 1; } }
     @media (prefers-reduced-motion: reduce) { .muro { animation: none; opacity: 1; } }
@@ -411,7 +420,7 @@
   <main class="container">
 
     <!-- El mural de la catrina, pintado en la pared -->
-    <div class="muro" aria-hidden="true"></div>
+    <div class="muro" aria-hidden="true"><div class="muro-pintura"></div></div>
 
     <section class="s-portada">
       <div class="photo-hero">
