@@ -66,9 +66,12 @@ de artista profesional.
 - La catrina va dentro de un **nicho de arco** (como los nichos pintados en las
   paredes): contorno negro y sombra mostaza como las tarjetas, franja de
   talavera mostaza alrededor, filete interior y sombra adentro para que se
-  sienta hundido. Una monarca quieta posada de lado en el filo del arco, arriba a
-  la derecha, alas levantadas (`.muro-mariposa`, `arte/mariposa.webp`). Vista
-  desde arriba parecía calcomanía (Javi). Así el corte
+  sienta hundido. Sombra interior fuerte arriba y a los lados (bóveda) y luz en
+  la repisa: profundidad. Una monarca quieta de lado, posada sobre el marco
+  derecho (cuerpo en la talavera, alas hacia afuera, sin tocar a la catrina;
+  `.muro-mariposa`, `arte/mariposa.webp`). Vista desde arriba parecía
+  calcomanía (Javi). El nicho se recorre a la izquierda (`translate`) para que
+  las alas quepan en el celular. Así el corte
   de la imagen (cabello arriba, barbilla abajo) se ve intencional y no
   recortado (Javi: "que no se vea cortada"). Aparece despacio. Se probaron
   desvanecidos en los bordes y sombreados: se veían pegados y cortados.
