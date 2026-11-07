@@ -17,9 +17,10 @@ pruebas) sigue en el historial: commit `14ff34c`. Para verla:
   MEXICANO"), `favicon.png` — recortados del logo original de los flyers.
 - `fuentes/` — Inter Tight y JetBrains Mono (woff2, solo latín) servidas desde
   aquí: nada de Google Fonts.
-- `catrina-mural.webp` — el mural de la catrina del local recortado de la única
-  foto que hay (7/11/2026), con bordes de aerosol y fondo transparente. Va
-  arriba de la página (`.muro`), pintado sobre la pared.
+- `catrina-mural.webp` — la catrina del mural del local, repintada con IA y con
+  la pared transparente. Va arriba de la página (`.muro`), pintada en la pared.
+- `arte/` — de dónde sale: `catrina-weave.jpg` (lo que pintó la IA, ya sin el
+  cable) e `integrar.py` (la vuelve `catrina-mural.webp`). Ver "Toque de catrina".
 - `fotos/` — fotos propias con nombres fijos; la lista está en `fotos/LEEME.md`.
   Si falta una, la página muestra el hueco vacío.
 - `pruebas/web.test.js` — pruebas sin dependencias.
@@ -55,18 +56,25 @@ rojo `#D7261E` de los flyers. Encabezado negro café con filo mostaza; tarjetas
 con contorno negro y sombra mostaza desplazada (Javi la quiso así).
 
 ### Toque de catrina (7/11/2026)
-Sale del mural del local. Regla de Javi: **integrado, no pegado**.
-- El fondo de la página es la pared y la catrina está pintada en ella:
-  `catrina-mural.webp` con bordes de aerosol (puntos de lata), `mix-blend-mode:
-  multiply` para que tome el tono de la pared. Nada de franjas ni rectángulos.
-  La portada queda encima y deja ver los ojos.
-- Piso de talavera en línea, tono sobre tono: muy tenue en el fondo de toda la
-  página, un poco más marcado en los huecos de foto y en el pie.
+Sale del mural del local. Regla de Javi: **integrado, no pegado**, y con acabado
+de artista profesional.
+- El fondo de la página es la pared y la catrina está pintada en ella
+  (`catrina-mural.webp`): sin franja ni rectángulo, la pintura se pierde suave en
+  la pared; la parte de arriba queda detrás del encabezado y la portada encima.
+- Cómo se hizo (para repetirlo):
+  1. Weave (Figma) con el modelo **Nano Banana Pro**, 2K, proporción 3:2, ~11
+     créditos de Weave. Imagen de referencia: el mural (URL pública de GitHub).
+     Prompt: repintar el mural como mural profesional, mismo diseño, sobre pared
+     crema lisa `#FAF5EA`, sin fondo negro, bordes que se pierden con aerógrafo.
+  2. Bajar la imagen (`s3-alpha-sig.figma.com`, ya permitido en el entorno de
+     Claude Code) y borrar el cable que copió de la foto (inpaint con OpenCV).
+     Resultado: `arte/catrina-weave.jpg`.
+  3. `python3 arte/integrar.py` → `catrina-mural.webp` (pared transparente; la
+     cara blanca se mantiene sólida con un contorno trazado a mano).
+- Talavera en línea, tono sobre tono, muy tenue en el fondo de toda la página.
 - Los puntitos que rodean los ojos de la catrina, en el filo del encabezado.
-- Las catrinas dibujadas (SVG a mano y grafiti hecho con Blender por código) no
-  dieron el nivel del mural. No volver a ponerlas.
-- Si consiguen una foto mejor del mural (de frente, buena luz, sin sillas),
-  rehacer `catrina-mural.webp` con el mismo encuadre y bordes de aerosol.
+- NO hacer catrinas dibujadas con código (SVG, Blender por script): se probaron
+  y quedaron de caricatura.
 
 ## Cómo se ejecuta
 - Servir: `cd ~/restaurante-el-rey && python3 -m http.server 8092 --bind 0.0.0.0`

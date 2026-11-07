@@ -339,17 +339,16 @@
       -webkit-mask-image: linear-gradient(to bottom, #000, transparent 85%);
               mask-image: linear-gradient(to bottom, #000, transparent 85%);
     }
-    /* Mural: la catrina del local pintada con aerosol sobre la pared (el fondo
-       de la página); multiply hace que la pintura tome el tono de la pared.
+    /* Mural: la catrina del local, repintada limpia y con la pared transparente,
+       así queda pintada directamente sobre la pared de la página.
        La portada queda encima, como colgada en esa pared. */
     .muro {
-      height: 330px; margin: 6px 0 -90px;
-      background: url('catrina-mural.webp') center top / 540px auto no-repeat;
-      mix-blend-mode: multiply;
+      height: 470px; margin: -60px 0 -150px;
+      background: url('catrina-mural.webp') center top / 640px auto no-repeat;
     }
     .muro + main { position: relative; }
     @media (min-width: 700px) {
-      .muro { height: 560px; margin: 10px 0 -150px; background-size: 860px auto; }
+      .muro { height: 660px; margin: -60px 0 -210px; background-size: 920px auto; }
     }
   </style>
 </head>
