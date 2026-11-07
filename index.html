@@ -350,12 +350,29 @@
     html { overflow-x: clip; }
     .pintura { position: absolute; z-index: 0; height: auto; pointer-events: none; user-select: none; }
     section, footer .container { position: relative; }
-    section > :not(.pintura), footer .container > :not(.pintura) { position: relative; z-index: 1; }
-    .mariposa-vuela { width: 64px; top: 4px; right: 6px; transform: rotate(14deg); }
+    section > :not(.pintura):not(.monarca), footer .container > :not(.pintura) { position: relative; z-index: 1; }
+    /* Monarca de la carta: vuela y se posa en los botones (JS: "Mariposa monarca") */
+    .monarca {
+      position: absolute; left: 0; top: 0; z-index: 3; width: 54px; height: 35px;
+      pointer-events: none; perspective: 160px; will-change: transform;
+    }
+    .monarca-giro { display: flex; width: 100%; height: 100%; transform-style: preserve-3d; }
+    .ala { width: 50%; height: 100%; display: block; will-change: transform; outline: 1px solid transparent; }
+    .ala-izq { transform-origin: right center; transform: rotateY(18deg); }
+    .ala-der { transform-origin: left center; transform: rotateY(-18deg); }
+    .monarca.volando .ala-izq { animation: aleteo-izq 0.13s ease-in-out infinite alternate; }
+    .monarca.volando .ala-der { animation: aleteo-der 0.13s ease-in-out infinite alternate; }
+    .monarca.posada .ala-izq { animation: reposo-izq 3.2s ease-in-out infinite; }
+    .monarca.posada .ala-der { animation: reposo-der 3.2s ease-in-out infinite; }
+    @keyframes aleteo-izq { from { transform: rotateY(8deg); } to { transform: rotateY(76deg); } }
+    @keyframes aleteo-der { from { transform: rotateY(-8deg); } to { transform: rotateY(-76deg); } }
+    @keyframes reposo-izq { 0%, 55%, 100% { transform: rotateY(22deg); } 70% { transform: rotateY(66deg); } 85% { transform: rotateY(30deg); } }
+    @keyframes reposo-der { 0%, 55%, 100% { transform: rotateY(-22deg); } 70% { transform: rotateY(-66deg); } 85% { transform: rotateY(-30deg); } }
+    @media (prefers-reduced-motion: reduce) { .monarca .ala { animation: none !important; } }
     .flor-asoma { width: 128px; top: 26px; right: -22px; transform: rotate(-16deg); }
     .flor-pie { width: 64px; top: -4px; left: calc(50% - 138px); transform: rotate(-24deg); }
     @media (min-width: 700px) {
-      .mariposa-vuela { width: 92px; top: -10px; right: -40px; }
+      .monarca { width: 66px; height: 43px; }
       .flor-asoma { width: 170px; top: 0; right: -96px; }
     }
     .muro + main { position: relative; }
@@ -469,7 +486,9 @@
     </section>
 
     <section id="menu">
-      <img class="pintura mariposa-vuela" src="arte/mariposa.webp" alt="" aria-hidden="true" width="372" height="485" loading="lazy">
+      <div class="monarca" id="monarca" aria-hidden="true">
+        <div class="monarca-giro"><img class="ala ala-izq" src="arte/monarca-izq.webp" alt=""><img class="ala ala-der" src="arte/monarca-der.webp" alt=""></div>
+      </div>
       <div class="mono-label" data-en="MENU &amp; PRICES">CARTA Y PRECIOS</div>
       <h2 data-en="Pick whatever you’re craving">Elige lo que se te antoje</h2>
 
@@ -1221,6 +1240,80 @@
     }
 
     window.addEventListener('hashchange', () => { if (location.hash === '#dueno') entrarDueno(); });
+
+    /* ---------- Mariposa monarca: vuela por la carta y se posa en los botones ---------- */
+    (function () {
+      const m = $('monarca'), sec = $('menu');
+      if (!m || !sec) return;
+      const quieto = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let pos = { x: 0, y: 0 }, timer = null, anim = null, visible = false, posadaEn = null, saltos = 0;
+      const ancho = () => m.offsetWidth, alto = () => m.offsetHeight;
+      const colocar = (p, giro) => { m.style.transform = `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px) rotate(${giro.toFixed(1)}deg)`; };
+
+      // En la pared, junto al título de la carta
+      function casa() {
+        const r = sec.getBoundingClientRect(), h = sec.querySelector('h2').getBoundingClientRect();
+        return { x: Math.min(r.width - ancho() - 2, h.right - r.left + 22), y: h.top - r.top - alto() * 0.55, giro: 14 };
+      }
+      // Botones de la carta que se ven en pantalla (sin taparlos con la barra del pedido)
+      function botones() {
+        const tope = 90, fondo = window.innerHeight - 110;
+        return [...sec.querySelectorAll('.tab-chip, .btn-add, .qty button')].filter(b => {
+          const r = b.getBoundingClientRect();
+          return r.width > 0 && r.top > tope && r.bottom < fondo && r.left > 0 && r.right < window.innerWidth;
+        });
+      }
+      function sobre(b) {
+        const r = b.getBoundingClientRect(), s = sec.getBoundingClientRect();
+        return { x: r.left - s.left + r.width * (0.3 + Math.random() * 0.4) - ancho() / 2, y: r.top - s.top - alto() * 0.62, giro: Math.random() * 28 - 14 };
+      }
+      function volarA(dest, alLlegar) {
+        cancelAnimationFrame(anim);
+        m.classList.remove('posada'); m.classList.add('volando');
+        const ini = { ...pos }, dx = dest.x - ini.x, dy = dest.y - ini.y, dist = Math.hypot(dx, dy);
+        const dur = Math.min(2800, 800 + dist * 3.4);
+        const c = { x: ini.x + dx / 2 + (Math.random() - 0.5) * Math.min(dist, 260) * 0.8, y: Math.min(ini.y, dest.y) - 30 - Math.random() * 70 };
+        const t0 = performance.now();
+        (function paso(t) {
+          const k = Math.min(1, (t - t0) / dur), e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2, u = 1 - e;
+          const vx = 2 * u * (c.x - ini.x) + 2 * e * (dest.x - c.x);
+          pos = {
+            x: u * u * ini.x + 2 * u * e * c.x + e * e * dest.x,
+            y: u * u * ini.y + 2 * u * e * c.y + e * e * dest.y + Math.sin(k * Math.PI * 7) * 5 * (1 - k)
+          };
+          colocar(pos, Math.max(-30, Math.min(30, vx * 0.07)) * (1 - k) + dest.giro * k);
+          if (k < 1) { anim = requestAnimationFrame(paso); return; }
+          m.classList.remove('volando'); m.classList.add('posada');
+          if (alLlegar) alLlegar();
+        })(t0);
+      }
+      function siguiente() {
+        clearTimeout(timer);
+        if (!visible || document.hidden || quieto.matches) return;
+        const opciones = botones().filter(b => b !== posadaEn);
+        if (saltos >= 3 || !opciones.length) {
+          saltos = 0; posadaEn = null;
+          volarA(casa(), () => { timer = setTimeout(siguiente, 7000 + Math.random() * 7000); });
+          return;
+        }
+        saltos++;
+        posadaEn = opciones[Math.floor(Math.random() * opciones.length)];
+        volarA(sobre(posadaEn), () => { timer = setTimeout(siguiente, 2500 + Math.random() * 3500); });
+      }
+      // Si tocan el botón donde está posada, o ese botón se vuelve a pintar, se va volando
+      sec.addEventListener('pointerdown', e => { if (posadaEn && posadaEn.contains(e.target)) { posadaEn = null; siguiente(); } });
+      new MutationObserver(() => { if (posadaEn && !posadaEn.isConnected) { posadaEn = null; siguiente(); } })
+        .observe(sec, { childList: true, subtree: true });
+      new IntersectionObserver(es => {
+        visible = es[0].isIntersecting;
+        clearTimeout(timer);
+        if (visible) timer = setTimeout(siguiente, 1800);
+      }).observe(sec);
+      document.addEventListener('visibilitychange', () => { if (!document.hidden && visible) siguiente(); });
+      function aCasa() { cancelAnimationFrame(anim); const c = casa(); pos = { x: c.x, y: c.y }; colocar(pos, c.giro); posadaEn = null; m.classList.remove('volando'); m.classList.add('posada'); }
+      aCasa();
+      window.addEventListener('resize', () => { aCasa(); siguiente(); });
+    })();
 
     /* ---------- Inicio ---------- */
     actualizarEstado();

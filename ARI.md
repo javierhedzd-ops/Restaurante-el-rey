@@ -75,8 +75,16 @@ de artista profesional.
   (Javi: cuidar limpieza y amplitud, no saturar): monarca junto al título de la
   carta, cempasúchil asomando detrás de la tarjeta del restaurante y un botón de
   cempasúchil junto al logo del pie. Clase `.pintura`; imágenes en `arte/`
-  (`mariposa.webp`, `flor-tallo.webp`, `flor-boton.webp`), recortadas de una
-  segunda imagen de Weave (mismo modelo, la catrina como referencia).
+  (`flor-tallo.webp`, `flor-boton.webp`, `monarca-izq.webp`, `monarca-der.webp`),
+  recortadas de una segunda imagen de Weave (mismo modelo, la catrina como
+  referencia).
+- La monarca de la carta vuela de verdad (`#monarca`, JS "Mariposa monarca"):
+  cada ala es una imagen que gira en 3D (aleteo), vuela en curva y se posa en
+  una pestaña o un botón + que se vea en pantalla; posada abre y cierra las alas
+  despacio; si tocan ese botón se espanta; tras unos saltos vuelve a la pared
+  junto al título. Solo se mueve con la carta en pantalla y la pestaña visible;
+  con "reducir movimiento" se queda quieta. No bloquea los toques
+  (`pointer-events: none`).
 - Talavera en línea, tono sobre tono, muy tenue en el fondo de toda la página.
 - Los puntitos que rodean los ojos de la catrina, en el filo del encabezado.
 - NO hacer catrinas dibujadas con código (SVG, Blender por script): se probaron
