@@ -57,6 +57,8 @@ Dos columnas: arriba catrina | portada; abajo vitrina y restaurante | carta
   dueño puede escribir: lo revisa el servidor (RLS, `supabase/instalar.sql`).
   La página llama a la API con `fetch`, sin librerías ni CDN.
 - Pasos para montarlo y usarlo: `PANEL-DUENO.md`.
+- Proyecto de Supabase de Javi: `https://nnaecikpyqhhmvuxtlhz.supabase.co`
+  (ya en `NUBE.url`). Falta la llave y los pasos 2-3; avance en `PANEL-DUENO.md`.
 - Probado con un Supabase simulado (login, contraseña mala, precio, foto, otro
   usuario rechazado, cliente ve lo nuevo); falta probarlo con el proyecto real.
 

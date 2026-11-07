@@ -13,9 +13,20 @@ más; no ve la base de datos ni puede borrarla.
 
 ## Montarlo (Javi, una sola vez, unos 15 minutos)
 
+**Avance (7/11/2026):**
+- [x] Paso 1: proyecto creado → `https://nnaecikpyqhhmvuxtlhz.supabase.co`
+  (ya puesto en `index.html`, `NUBE.url`).
+- [ ] Paso 2: correr `supabase/instalar.sql` con el correo del dueño.
+- [ ] Paso 3: crear el usuario del dueño y apagar el registro.
+- [ ] Paso 4: poner la Publishable key en `NUBE.llave`. Mientras esté vacía, el
+  modo dueño sigue siendo solo demostración y nada se rompe.
+
+Desde el celular, todo lo de Supabase está en el menú **☰** de arriba a la
+derecha (SQL Editor, Authentication, Project Settings).
+
 ### 1. Crear el proyecto
 1. Entra a https://supabase.com y crea una cuenta (con la de Google sirve).
-2. **New project**. Nombre: `carnitas-el-rey`. Región: la más cercana a México
+2. **New project**. Nombre: `Carnitas-el-rey`. Región: la más cercana a México
    (por ejemplo *East US*). Pon una contraseña de base de datos y guárdala (casi
    no se usa). Espera a que termine de crearse.
 
@@ -23,8 +34,8 @@ más; no ve la base de datos ni puede borrarla.
 1. Abre `supabase/instalar.sql` de este repositorio.
 2. Cambia `CORREO-DEL-DUENO@ejemplo.com` por el correo con el que va a entrar el
    dueño (aparece una sola vez).
-3. En Supabase: **SQL Editor** → pega todo el archivo → **Run**. Debe decir
-   *Success*.
+3. En Supabase: **☰ → SQL Editor → New query** → pega todo el archivo →
+   **Run**. Debe decir *Success. No rows returned*.
 
 ### 3. Crear la cuenta del dueño y cerrar el registro
 1. **Authentication → Users → Add user → Create new user**: el mismo correo del
@@ -38,10 +49,11 @@ más; no ve la base de datos ni puede borrarla.
    **Nunca** uses la *secret key* en la página.
 2. **Project Settings → Data API**: copia la **Project URL**
    (`https://xxxx.supabase.co`).
-3. En `index.html`, sección CONFIGURACIÓN, llena:
+3. En `index.html`, sección CONFIGURACIÓN, llena la llave (la URL ya está):
    ```js
-   const NUBE = { url: 'https://xxxx.supabase.co', llave: 'sb_publishable_...' };
+   const NUBE = { url: 'https://nnaecikpyqhhmvuxtlhz.supabase.co', llave: 'sb_publishable_...' };
    ```
+   O mándasela a Claude o a Ari y ellos la ponen.
 4. Sube el cambio a GitHub (Claude o Ari lo hacen) y espera 1–2 minutos.
 
 ## Darle el acceso al dueño
