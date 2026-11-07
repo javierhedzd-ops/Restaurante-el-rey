@@ -17,13 +17,18 @@ pruebas) sigue en el historial: commit `14ff34c`. Para verla:
   MEXICANO"), `favicon.png` — recortados del logo original de los flyers.
 - `fuentes/` — Inter Tight y JetBrains Mono (woff2, solo latín) servidas desde
   aquí: nada de Google Fonts.
-- `catrina-mural.webp` — la catrina del mural del local, repintada con IA y con
-  la pared transparente. Va arriba de la página (`.muro`), pintada en la pared.
-- `arte/` — de dónde sale: `catrina-weave.jpg` (lo que pintó la IA, ya sin el
-  cable) e `integrar.py` (la vuelve `catrina-mural.webp`). Ver "Toque de catrina".
+- `catrina-mural.webp` — la catrina pintada en la pared (fondo transparente,
+  bordes nítidos). Va en `.muro`, dentro de `main`.
+- `arte/` — de dónde sale: `catrina-figma.jpg` (generada con Figma IA) e
+  `integrar.py` (la vuelve `catrina-mural.webp`). Ver "Toque de catrina".
 - `fotos/` — fotos propias con nombres fijos; la lista está en `fotos/LEEME.md`.
   Si falta una, la página muestra el hueco vacío.
 - `pruebas/web.test.js` — pruebas sin dependencias.
+
+## Computadora (pantallas de 1000 px o más)
+Dos columnas: arriba catrina | portada; abajo vitrina y restaurante | carta
+(`grid-template-areas` en `main.container`, clases `.s-portada`, `.s-vitrina`,
+`.s-carta`, `.s-resto`). En celular y tableta, una sola columna.
 
 ## Idiomas (español e inglés)
 - Botón ES/EN en el encabezado. Abre en inglés si el teléfono está en inglés,
@@ -58,19 +63,21 @@ con contorno negro y sombra mostaza desplazada (Javi la quiso así).
 ### Toque de catrina (7/11/2026)
 Sale del mural del local. Regla de Javi: **integrado, no pegado**, y con acabado
 de artista profesional.
-- El fondo de la página es la pared y la catrina está pintada en ella
-  (`catrina-mural.webp`): sin franja ni rectángulo, la pintura se pierde suave en
-  la pared; la parte de arriba queda detrás del encabezado y la portada encima.
-- Cómo se hizo (para repetirlo):
-  1. Weave (Figma) con el modelo **Nano Banana Pro**, 2K, proporción 3:2, ~11
-     créditos de Weave. Imagen de referencia: el mural (URL pública de GitHub).
-     Prompt: repintar el mural como mural profesional, mismo diseño, sobre pared
-     crema lisa `#FAF5EA`, sin fondo negro, bordes que se pierden con aerógrafo.
-  2. Bajar la imagen (`s3-alpha-sig.figma.com`, ya permitido en el entorno de
-     Claude Code) y borrar el cable que copió de la foto (inpaint con OpenCV).
-     Resultado: `arte/catrina-weave.jpg`.
-  3. `python3 arte/integrar.py` → `catrina-mural.webp` (pared transparente; la
-     cara blanca se mantiene sólida con un contorno trazado a mano).
+- La catrina está pintada en la pared de la página y se presenta como obra:
+  completa (cabeza, cabello, cuello y flores), con pared alrededor, bordes
+  nítidos y aparece despacio. Nada de acercamientos a la cara que asusten al
+  entrar ni sombreados o desvanecidos en los bordes (se ven pegados).
+- Cómo se hizo la actual (7/11/2026):
+  1. Figma IA (`generate_image`, modelo gpt-image-2.5-flare, 1600x1200) en el
+     archivo de Figma "Catrina mural - Carnitas El Rey". Solo texto: describe el
+     mural (catrina con antifaces negros con festón naranja y verde, corazón rosa,
+     cempasúchiles, hojas, monarcas) y pide la cabeza completa dentro del cuadro,
+     pared crema lisa alrededor y bordes nítidos sin halo ni sombra.
+  2. Bajar la imagen (`www.figma.com`, ya permitido en el entorno de Claude
+     Code) → `arte/catrina-figma.jpg`.
+  3. `python3 arte/integrar.py` → `catrina-mural.webp`.
+  Antes se usó Weave (Nano Banana Pro) con la foto del mural como referencia;
+  las 2 corridas gratis ya se gastaron y pide plan de pago.
 - El mural sigue por la pared, con pocas piezas y siempre detrás del contenido
   (Javi: cuidar limpieza y amplitud, no saturar): monarca junto al título de la
   carta, cempasúchil grande asomando arriba de la tarjeta del restaurante;

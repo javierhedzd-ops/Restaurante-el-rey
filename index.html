@@ -339,13 +339,11 @@
       -webkit-mask-image: linear-gradient(to bottom, #000, transparent 85%);
               mask-image: linear-gradient(to bottom, #000, transparent 85%);
     }
-    /* Mural: la catrina del local, repintada limpia y con la pared transparente,
-       así queda pintada directamente sobre la pared de la página.
-       Se presenta como obra: completa, con pared alrededor y apareciendo despacio
-       (nada de un acercamiento a la cara que asuste al entrar). */
+    /* Mural: la catrina pintada directamente en la pared (fondo transparente, bordes
+       nítidos). Se presenta como obra: completa, con pared alrededor y aparece despacio. */
     .muro {
-      height: calc((100vw - 32px) / 1.49); margin: 20px auto 6px; max-width: 760px;
-      background: url('catrina-mural.webp') center top / calc(100vw - 32px) auto no-repeat;
+      width: min(84vw, 380px); aspect-ratio: 974 / 836; margin: 22px auto 10px;
+      background: url('catrina-mural.webp') center / contain no-repeat;
       opacity: 0; animation: muro-aparece 1.8s ease-out 0.15s forwards;
     }
     @keyframes muro-aparece { to { opacity: 1; } }
@@ -371,9 +369,20 @@
       .monarca { width: 66px; height: 43px; }
       .flor-asoma { width: 210px; top: -56px; right: -120px; }
     }
-    .muro + main { position: relative; }
-    @media (min-width: 700px) {
-      .muro { height: 510px; margin: 32px auto 10px; background-size: 760px auto; }
+    /* Computadora: dos columnas para aprovechar el ancho
+       (arriba catrina | portada; abajo vitrina y restaurante | carta) */
+    @media (min-width: 1000px) {
+      .container { max-width: 1160px; padding: 0 32px; }
+      main.container {
+        display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 56px;
+        grid-template-areas: "muro portada" "vitrina carta" "resto carta"; align-items: start;
+      }
+      .muro { grid-area: muro; width: 100%; margin: 26px 0 0; align-self: center; }
+      .s-portada { grid-area: portada; align-self: center; }
+      .s-vitrina { grid-area: vitrina; }
+      .s-carta { grid-area: carta; }
+      .s-resto { grid-area: resto; }
+      .flor-asoma { right: -46px; }
     }
   </style>
 </head>
@@ -409,12 +418,12 @@
     </div>
   </header>
 
-  <!-- El mural de la catrina del local, como la pared de arriba de la página -->
-  <div class="muro" aria-hidden="true"></div>
-
   <main class="container">
 
-    <section>
+    <!-- El mural de la catrina, pintado en la pared -->
+    <div class="muro" aria-hidden="true"></div>
+
+    <section class="s-portada">
       <div class="photo-hero">
         <div class="img-slot has-image" id="slot-portada">
           <img id="img-portada" src="fotos/portada.jpg" alt="Carnitas recién salidas del cazo" data-en-alt="Carnitas fresh from the copper pot" onerror="this.parentNode.classList.remove('has-image')">
@@ -443,7 +452,7 @@
       </div>
     </section>
 
-    <section>
+    <section class="s-vitrina">
       <div class="mono-label" data-en="DISH SHOWCASE">VITRINA DE PLATILLOS</div>
       <h2 data-en="House specialties">Especialidades de la casa</h2>
 
@@ -481,7 +490,7 @@
       </div>
     </section>
 
-    <section id="menu">
+    <section id="menu" class="s-carta">
       <div class="mono-label" data-en="MENU &amp; PRICES">CARTA Y PRECIOS</div>
       <h2 data-en="Pick whatever you’re craving">Elige lo que se te antoje</h2>
 
@@ -489,7 +498,7 @@
       <div class="card-list" id="lista-platos" role="tabpanel"></div>
     </section>
 
-    <section>
+    <section class="s-resto">
       <img class="pintura flor-asoma" src="arte/flor-tallo.webp" alt="" aria-hidden="true" width="570" height="603" loading="lazy">
       <div class="mono-label" data-en="CHUMINÓPOLIS LOCATION">SUCURSAL CHUMINÓPOLIS</div>
       <h2 data-en="Come eat with us">Pasa a comer al restaurante</h2>
@@ -1263,7 +1272,14 @@
       let t = 0, ultimo = 0, corriendo = false, visibles = 0, timer = null, saltos = 0;
 
       const puntoDe = a => { const r = a.el.getBoundingClientRect(), d = doc(r); return { x: d.x + r.width * a.fx, y: d.y + r.height * a.fy }; };
-      function anclaCasa() { return { el: sec.querySelector('h2'), fx: 1.12, fy: -0.15, giro: 14 }; }
+      // junto al final del texto del título (el h2 ocupa todo el ancho; se mide solo el texto)
+      function anclaCasa() {
+        const h2 = sec.querySelector('h2'), r = h2.getBoundingClientRect();
+        const rango = document.createRange(); rango.selectNodeContents(h2);
+        const texto = rango.getBoundingClientRect().width;
+        const fx = Math.min((texto + 34) / r.width, (r.width - 30) / r.width);
+        return { el: h2, fx, fy: -0.15, giro: 14 };
+      }
       function anclaBoton(b) { return { el: b, fx: azar(0.35, 0.65), fy: -0.05, giro: azar(-18, 18) }; }
       function anclaFlor() { return { el: flor, fx: azar(0.42, 0.55), fy: azar(0.2, 0.3), giro: azar(-30, -8) }; }
 
