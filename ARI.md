@@ -75,8 +75,8 @@ de artista profesional.
   `python3 arte/integrar.py` → `catrina-mural.webp`. Weave ya pide plan de pago
   (las 2 corridas gratis se usaron).
 - El mural sigue por la pared, con pocas piezas y siempre detrás del contenido
-  (Javi: cuidar limpieza y amplitud, no saturar): monarca junto al título de la
-  carta, cempasúchil grande asomando arriba de la tarjeta del restaurante;
+  (Javi: cuidar limpieza y amplitud, no saturar): un cempasúchil grande
+  asomando arriba de la tarjeta del restaurante;
   ya no hay flor en el pie (Javi). Clase `.pintura`; imágenes en `arte/`
   (`flor-tallo.webp`),
   recortadas de una segunda imagen de Weave (mismo modelo, la catrina como
