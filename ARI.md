@@ -24,6 +24,7 @@ pruebas) sigue en el historial: commit `14ff34c`. Para verla:
 - `fotos/` — fotos propias con nombres fijos; la lista está en `fotos/LEEME.md`.
   Si falta una, la página muestra el hueco vacío.
 - `pruebas/web.test.js` — pruebas sin dependencias.
+- `PANEL-DUENO.md` y `supabase/instalar.sql` — panel del dueño.
 
 ## Computadora (pantallas de 1000 px o más)
 Dos columnas: arriba catrina | portada; abajo vitrina y restaurante | carta
@@ -45,15 +46,19 @@ Dos columnas: arriba catrina | portada; abajo vitrina y restaurante | carta
   cliente usó inglés, el mensaje lo avisa.
 - El modo dueño solo está en español.
 
-## Modo dueño (demostración)
-- Se abre añadiendo `#dueno` a la dirección: `…/Restaurante-el-rey/#dueno`.
-  Los clientes no ven ningún botón.
-- Permite cambiar precios (en la carta y la galería) y poner fotos (portada,
-  carrusel, restaurante y galería). Se guarda **solo en el navegador de quien lo
-  usa** (`localStorage`: `rey_demo_precios`, `rey_demo_fotos`); los clientes
-  siguen viendo los precios de `MENU` y las fotos de `fotos/`.
-- Es para que el dueño lo pruebe. Si le gusta, el panel de verdad (que todos
-  vean los cambios) necesita un servicio con base de datos; se habló de Supabase.
+## Panel del dueño (precios y fotos desde su teléfono)
+- Se abre con `#dueno` al final de la dirección. Los clientes no ven nada.
+- Con `NUBE` vacío (CONFIGURACIÓN de `index.html`) es solo demostración: guarda
+  en el teléfono de quien lo usa (`localStorage`: `rey_demo_precios`,
+  `rey_demo_fotos`) y tiene "Restablecer".
+- Con `NUBE = { url, llave }` lleno usa **Supabase**: el dueño entra con correo y
+  contraseña (sesión en `rey_sesion`), y precios y fotos se guardan para todos
+  (tablas `precios` y `fotos`, carpeta de Storage `fotos`). Solo el correo del
+  dueño puede escribir: lo revisa el servidor (RLS, `supabase/instalar.sql`).
+  La página llama a la API con `fetch`, sin librerías ni CDN.
+- Pasos para montarlo y usarlo: `PANEL-DUENO.md`.
+- Probado con un Supabase simulado (login, contraseña mala, precio, foto, otro
+  usuario rechazado, cliente ve lo nuevo); falta probarlo con el proyecto real.
 
 ## Paleta (sale del logo)
 Mostaza `#D9942A` (escudo), negro café `#22150E` (contornos), madera `#875628`,

@@ -277,12 +277,20 @@
 
     /* ---------- Modo dueño (demostración): se abre con #dueno en la dirección ---------- */
     .owner-bar { display: none; background: var(--ink); color: #F3E3C8; border-bottom: 3px solid var(--mustard); padding: 10px 16px; }
-    body.modo-dueno .owner-bar { display: block; }
+    body.panel-dueno .owner-bar { display: block; }
     .owner-inner { max-width: 620px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
     .owner-inner strong { color: var(--mustard); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; display: block; }
     .owner-inner small { font-size: 12px; color: #CFC6B8; }
     .owner-actions { display: flex; gap: 6px; }
     .owner-actions .btn { min-height: 34px; padding: 0 12px; font-size: 12px; }
+    .owner-login { display: flex; flex-wrap: wrap; gap: 6px; width: 100%; }
+    .owner-login input {
+      flex: 1 1 150px; min-width: 0; min-height: 40px; padding: 0 12px; border-radius: 10px;
+      border: 1px solid #6B5A48; background: #2E2016; color: #FFF6E4; font: 14px var(--font-body);
+    }
+    .owner-login input:focus { outline: 2px solid var(--mustard); border-color: var(--mustard); }
+    .owner-login .btn { min-height: 40px; }
+    .owner-error { width: 100%; color: #FF8A80; font-size: 12px; min-height: 0; }
     .btn-ghost-dark { background: transparent; color: #F3E3C8; border-color: #6B5A48; }
     .btn-ghost-dark:hover { background: #3A2A1E; border-color: var(--mustard); color: #fff; }
     .btn-foto {
@@ -401,13 +409,20 @@
   <div class="owner-bar" role="region" aria-label="Modo dueño">
     <div class="owner-inner">
       <div>
-        <strong>MODO DUEÑO · DEMOSTRACIÓN</strong>
-        <small>Toca un precio o "Cambiar foto". Se guarda solo en este dispositivo.</small>
+        <strong id="dueno-titulo">MODO DUEÑO · DEMOSTRACIÓN</strong>
+        <small id="dueno-texto">Toca un precio o "Cambiar foto". Se guarda solo en este dispositivo.</small>
       </div>
       <div class="owner-actions">
         <button type="button" class="btn btn-ghost-dark" id="btn-restablecer" onclick="restablecerDemo()">Restablecer</button>
+        <button type="button" class="btn btn-ghost-dark" id="btn-cerrar-sesion" onclick="cerrarSesion()" hidden>Cerrar sesión</button>
         <button type="button" class="btn btn-primary" onclick="salirDueno()">Salir</button>
       </div>
+      <form class="owner-login" id="dueno-login" onsubmit="entrarConCuenta(event)" hidden>
+        <input type="email" id="dueno-correo" autocomplete="username" placeholder="Correo del dueño" required>
+        <input type="password" id="dueno-clave" autocomplete="current-password" placeholder="Contraseña" required>
+        <button type="submit" class="btn btn-primary" id="dueno-entrar">Entrar</button>
+        <div class="owner-error" id="dueno-error" role="alert"></div>
+      </form>
     </div>
   </div>
   <input type="file" id="selector-foto" accept="image/*" hidden>
@@ -724,6 +739,12 @@
 
     // El carrusel recorre TODO el menú. Estos platillos salen primero (usar ids del menú):
     const VITRINA_PRIMERO = ['k_promo', 'esp_chil', 't_mac', 'esp_reyn'];
+
+    // Panel del dueño (Supabase). Con estos dos datos vacíos, #dueno es solo una
+    // demostración que guarda en el teléfono de quien lo usa. Con ellos llenos, el
+    // dueño entra con su correo y contraseña y lo que cambia lo ven todos.
+    // Cómo llenarlos: PANEL-DUENO.md. La llave "publishable" es pública, no es secreta.
+    const NUBE = { url: '', llave: '' };
     /* =========================================================
        LÓGICA
        ========================================================= */
@@ -734,8 +755,10 @@
     const PRECIOS_ORIGINALES = Object.fromEntries(Object.values(PRODUCTOS).map(it => [it.id, it.p]));
     const leerLS = k => { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (e) { return {}; } };
     const guardarLS = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } };
-    let preciosDemo = leerLS('rey_demo_precios');
-    let fotosDemo = leerLS('rey_demo_fotos');
+    const enNube = () => !!(NUBE.url && NUBE.llave);
+    let preciosDemo = enNube() ? {} : leerLS('rey_demo_precios');
+    let fotosDemo = enNube() ? {} : leerLS('rey_demo_fotos');
+    let fotosNube = {};   // fotos que subió el dueño: { clave: url }
     Object.entries(preciosDemo).forEach(([id, p]) => { if (PRODUCTOS[id]) PRODUCTOS[id].p = p; });
     let modoDueno = false;
 
@@ -942,7 +965,7 @@
     }
 
     /* ---------- Fotos ---------- */
-    const rutaFoto = f => fotosDemo[f] || `fotos/${f}.jpg`;
+    const rutaFoto = f => fotosNube[f] || fotosDemo[f] || `fotos/${f}.jpg`;
     const FOTO_VACIA = `<div class="placeholder-view" aria-hidden="true"><svg class="placeholder-icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>`;
 
     /* ---------- Vitrina (carrusel con todo el menú) ---------- */
@@ -1152,24 +1175,38 @@
         onchange="cambiarPrecio('${it.id}', this.value)"></label>`;
     }
 
-    function cambiarPrecio(id, valor) {
+    async function cambiarPrecio(id, valor) {
       const n = valor === '' ? null : Math.max(0, Math.round(Number(valor)));
       if (valor !== '' && !Number.isFinite(n)) return;
+      const antes = PRODUCTOS[id].p;
+      if (enNube()) {
+        try {
+          await nube('/rest/v1/precios', { method: 'POST', headers: { 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' },
+            body: JSON.stringify([{ id, precio: n }]) }, true);
+        } catch (err) {
+          document.querySelectorAll(`#precio-${id}`).forEach(inp => { inp.value = antes ?? ''; });
+          mostrarToast(err.sesion ? 'Tu sesión se cerró. Vuelve a entrar.' : 'No se guardó el precio. Revisa el internet e intenta otra vez.');
+          if (err.sesion) pedirLogin();
+          return;
+        }
+      } else {
+        if (n === PRECIOS_ORIGINALES[id]) delete preciosDemo[id]; else preciosDemo[id] = n;
+        guardarLS('rey_demo_precios', preciosDemo);
+      }
       PRODUCTOS[id].p = n;
-      if (n === PRECIOS_ORIGINALES[id]) delete preciosDemo[id]; else preciosDemo[id] = n;
-      guardarLS('rey_demo_precios', preciosDemo);
       document.querySelectorAll(`#precio-${id}`).forEach(inp => { if (inp !== document.activeElement) inp.value = n ?? ''; });
       if (vitrinaActual().id === id) $('showcase-price').textContent = n == null ? 'Por confirmar' : dinero(n);
       actualizarBarra();
       if ($('pedido').classList.contains('active')) renderPedido();
-      mostrarToast(`Precio guardado: ${PRODUCTOS[id].n} · ${n == null ? 'por confirmar' : dinero(n)}`);
+      mostrarToast(`${enNube() ? 'Precio publicado' : 'Precio guardado'}: ${PRODUCTOS[id].n} · ${n == null ? 'por confirmar' : dinero(n)}`);
     }
 
     let claveFoto = null;
     function elegirFoto(clave) { claveFoto = clave; $('selector-foto').click(); }
 
-    // Reduce la foto (máx. 900 px) para que quepa en el almacenamiento del navegador
-    function reducirFoto(archivo) {
+    // Reduce la foto antes de guardarla: 1400 px y archivo (Blob) para subirla;
+    // 900 px en texto para la demostración, que cabe en el almacenamiento del navegador
+    function reducirFoto(archivo, comoArchivo) {
       return new Promise((ok, mal) => {
         const lector = new FileReader();
         lector.onerror = mal;
@@ -1177,11 +1214,12 @@
           const img = new Image();
           img.onerror = mal;
           img.onload = () => {
-            const k = Math.min(1, 900 / Math.max(img.width, img.height));
+            const k = Math.min(1, (comoArchivo ? 1400 : 900) / Math.max(img.width, img.height));
             const c = document.createElement('canvas');
             c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
             c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-            ok(c.toDataURL('image/jpeg', 0.8));
+            if (comoArchivo) c.toBlob(b => b ? ok(b) : mal(new Error('foto')), 'image/jpeg', 0.82);
+            else ok(c.toDataURL('image/jpeg', 0.8));
           };
           img.src = lector.result;
         };
@@ -1193,6 +1231,7 @@
       const archivo = e.target.files && e.target.files[0];
       e.target.value = '';
       if (!archivo || !claveFoto) return;
+      if (enNube()) { subirFoto(claveFoto, archivo); return; }
       let url;
       try { url = await reducirFoto(archivo); }
       catch (err) { mostrarToast('No se pudo leer esa imagen. Prueba con otra foto.'); return; }
@@ -1205,15 +1244,24 @@
     function aplicarFotos() {
       [['portada', 'fotos/portada.jpg'], ['restaurante', 'fotos/restaurante.jpg']].forEach(([clave, original]) => {
         $('slot-' + clave).classList.add('has-image');
-        $('img-' + clave).src = fotosDemo[clave] || original;
+        $('img-' + clave).src = fotosNube[clave] || fotosDemo[clave] || original;
       });
       mostrarVitrina(vitrinaIndex);
       if ($('galeria').classList.contains('active')) renderGaleria();
     }
 
     function entrarDueno() {
+      document.body.classList.add('panel-dueno');
+      if (enNube() && !sesion) { pedirLogin(); window.scrollTo({ top: 0 }); return; }
       if (modoDueno) return;
       modoDueno = true;
+      $('dueno-login').hidden = true;
+      if (enNube()) {
+        $('dueno-titulo').textContent = 'MODO DUEÑO';
+        $('dueno-texto').textContent = 'Toca un precio o "Cambiar foto". Lo que cambies lo ven todos al momento.';
+        $('btn-restablecer').hidden = true;
+        $('btn-cerrar-sesion').hidden = false;
+      }
       document.body.classList.add('modo-dueno');
       detenerVitrina();
       renderSeccion(seccionActual);
@@ -1223,7 +1271,7 @@
 
     function salirDueno() {
       modoDueno = false;
-      document.body.classList.remove('modo-dueno');
+      document.body.classList.remove('modo-dueno', 'panel-dueno');
       if (location.hash === '#dueno') history.replaceState(null, '', location.pathname + location.search);
       renderSeccion(seccionActual);
       if ($('galeria').classList.contains('active')) renderGaleria();
@@ -1248,6 +1296,106 @@
       mostrarToast('Precios y fotos originales restablecidos');
     }
 
+    /* ---------- Panel del dueño en la nube (Supabase, sin librerías) ---------- */
+    let sesion = null;
+    if (enNube()) { try { sesion = JSON.parse(localStorage.getItem('rey_sesion')); } catch (e) { sesion = null; } }
+    const guardarSesion = s => { sesion = s; try { s ? localStorage.setItem('rey_sesion', JSON.stringify(s)) : localStorage.removeItem('rey_sesion'); } catch (e) {} };
+    const baseNube = () => NUBE.url.replace(/\/+$/, '');
+
+    async function pedirToken(tipo, cuerpo) {
+      const r = await fetch(`${baseNube()}/auth/v1/token?grant_type=${tipo}`, {
+        method: 'POST', headers: { apikey: NUBE.llave, 'Content-Type': 'application/json' }, body: JSON.stringify(cuerpo)
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.access_token) { const e = new Error(d.error_description || d.msg || 'login'); e.estado = r.status; throw e; }
+      return { access_token: d.access_token, refresh_token: d.refresh_token, expira: Date.now() + (d.expires_in || 3600) * 1000 };
+    }
+    async function sesionVigente() {
+      if (!sesion) { const e = new Error('sin sesión'); e.sesion = true; throw e; }
+      if (Date.now() > sesion.expira - 60000) {
+        try { guardarSesion(await pedirToken('refresh_token', { refresh_token: sesion.refresh_token })); }
+        catch (err) { guardarSesion(null); const e = new Error('sesión vencida'); e.sesion = true; throw e; }
+      }
+      return sesion.access_token;
+    }
+    async function nube(ruta, opciones = {}, conSesion = false) {
+      const headers = { apikey: NUBE.llave, ...(opciones.headers || {}) };
+      if (conSesion) headers.Authorization = 'Bearer ' + await sesionVigente();
+      const r = await fetch(baseNube() + ruta, { ...opciones, headers });
+      if (r.status === 401 || r.status === 403) { if (conSesion) guardarSesion(null); const e = new Error('permiso'); e.sesion = conSesion; throw e; }
+      if (!r.ok) throw new Error(`${r.status}`);
+      const texto = await r.text();
+      return texto ? JSON.parse(texto) : null;
+    }
+
+    // Lo que publicó el dueño: precios y fotos. Si falla, se queda lo de la configuración.
+    async function cargarNube() {
+      try {
+        const [precios, fotos] = await Promise.all([
+          nube('/rest/v1/precios?select=id,precio'), nube('/rest/v1/fotos?select=clave,url')
+        ]);
+        (precios || []).forEach(r => { if (PRODUCTOS[r.id]) PRODUCTOS[r.id].p = r.precio; });
+        fotosNube = Object.fromEntries((fotos || []).map(r => [r.clave, r.url]));
+        renderSeccion(seccionActual);
+        aplicarFotos();
+        actualizarBarra();
+        if ($('pedido').classList.contains('active')) renderPedido();
+      } catch (e) { /* sin internet o sin configurar: se ve lo de la configuración */ }
+    }
+
+    function pedirLogin() {
+      modoDueno = false;
+      document.body.classList.remove('modo-dueno');
+      document.body.classList.add('panel-dueno');
+      renderSeccion(seccionActual);
+      $('dueno-titulo').textContent = 'MODO DUEÑO';
+      $('dueno-texto').textContent = 'Entra con tu correo y contraseña para cambiar precios y fotos.';
+      $('btn-restablecer').hidden = true;
+      $('btn-cerrar-sesion').hidden = true;
+      $('dueno-login').hidden = false;
+      $('dueno-error').textContent = '';
+    }
+
+    async function entrarConCuenta(ev) {
+      ev.preventDefault();
+      const b = $('dueno-entrar');
+      b.disabled = true; b.textContent = 'Entrando…';
+      try {
+        guardarSesion(await pedirToken('password', { email: $('dueno-correo').value.trim(), password: $('dueno-clave').value }));
+        $('dueno-clave').value = '';
+        entrarDueno();
+        mostrarToast('Listo, ya puedes editar');
+      } catch (err) {
+        $('dueno-error').textContent = err.estado === 400 ? 'Correo o contraseña incorrectos.' : 'No hay conexión. Revisa el internet e intenta otra vez.';
+      }
+      b.disabled = false; b.textContent = 'Entrar';
+    }
+
+    function cerrarSesion() {
+      const token = sesion && sesion.access_token;
+      guardarSesion(null);
+      if (token) fetch(`${baseNube()}/auth/v1/logout`, { method: 'POST', headers: { apikey: NUBE.llave, Authorization: 'Bearer ' + token } }).catch(() => {});
+      salirDueno();
+      mostrarToast('Sesión cerrada');
+    }
+
+    async function subirFoto(clave, archivo) {
+      mostrarToast('Subiendo foto…');
+      try {
+        const foto = await reducirFoto(archivo, true);
+        await nube(`/storage/v1/object/fotos/${clave}.jpg`, { method: 'POST', headers: { 'Content-Type': 'image/jpeg', 'x-upsert': 'true' }, body: foto }, true);
+        const url = `${baseNube()}/storage/v1/object/public/fotos/${clave}.jpg?v=${Date.now()}`;
+        await nube('/rest/v1/fotos', { method: 'POST', headers: { 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' },
+          body: JSON.stringify([{ clave, url }]) }, true);
+        fotosNube[clave] = url;
+        aplicarFotos();
+        mostrarToast('Foto publicada');
+      } catch (err) {
+        mostrarToast(err.sesion ? 'Tu sesión se cerró. Vuelve a entrar.' : 'No se subió la foto. Revisa el internet e intenta otra vez.');
+        if (err.sesion) pedirLogin();
+      }
+    }
+
     window.addEventListener('hashchange', () => { if (location.hash === '#dueno') entrarDueno(); });
 
     /* ---------- Inicio ---------- */
@@ -1261,6 +1409,7 @@
     actualizarBarra();
     if (location.hash === '#dueno') entrarDueno();
     aplicarIdioma(idiomaInicial());
+    if (enNube()) cargarNube();
   </script>
 </body>
 </html>
