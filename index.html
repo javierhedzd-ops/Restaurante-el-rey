@@ -346,6 +346,18 @@
       height: 470px; margin: -60px 0 -150px;
       background: url('catrina-mural.webp') center top / 640px auto no-repeat;
     }
+    /* Más del mural en la misma pared: pocas piezas, siempre detrás del contenido */
+    html { overflow-x: clip; }
+    .pintura { position: absolute; z-index: 0; height: auto; pointer-events: none; user-select: none; }
+    section, footer .container { position: relative; }
+    section > :not(.pintura), footer .container > :not(.pintura) { position: relative; z-index: 1; }
+    .mariposa-vuela { width: 64px; top: 4px; right: 6px; transform: rotate(14deg); }
+    .flor-asoma { width: 128px; top: 26px; right: -22px; transform: rotate(-16deg); }
+    .flor-pie { width: 64px; top: -4px; left: calc(50% - 138px); transform: rotate(-24deg); }
+    @media (min-width: 700px) {
+      .mariposa-vuela { width: 92px; top: -10px; right: -40px; }
+      .flor-asoma { width: 170px; top: 0; right: -96px; }
+    }
     .muro + main { position: relative; }
     @media (min-width: 700px) {
       .muro { height: 660px; margin: -60px 0 -210px; background-size: 920px auto; }
@@ -457,6 +469,7 @@
     </section>
 
     <section id="menu">
+      <img class="pintura mariposa-vuela" src="arte/mariposa.webp" alt="" aria-hidden="true" width="372" height="485" loading="lazy">
       <div class="mono-label" data-en="MENU &amp; PRICES">CARTA Y PRECIOS</div>
       <h2 data-en="Pick whatever you’re craving">Elige lo que se te antoje</h2>
 
@@ -465,6 +478,7 @@
     </section>
 
     <section>
+      <img class="pintura flor-asoma" src="arte/flor-tallo.webp" alt="" aria-hidden="true" width="570" height="603" loading="lazy">
       <div class="mono-label" data-en="CHUMINÓPOLIS LOCATION">SUCURSAL CHUMINÓPOLIS</div>
       <h2 data-en="Come eat with us">Pasa a comer al restaurante</h2>
 
@@ -494,6 +508,7 @@
 
   <footer>
     <div class="container">
+      <img class="pintura flor-pie" src="arte/flor-boton.webp" alt="" aria-hidden="true" width="374" height="397" loading="lazy">
       <img class="logo-footer" src="logo-completo.png" alt="El Rey Carnitas · Puro sabor mexicano" data-en-alt="El Rey Carnitas · Pure Mexican flavor" width="200" height="88">
       <p class="mono-label" style="color: var(--text-muted);">CARNITAS MICHOACÁN EL REY · MÉRIDA · 2026</p>
       <p style="font-size: 13px; color: var(--text-sec); margin-top: 4px;">

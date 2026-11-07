@@ -71,6 +71,12 @@ de artista profesional.
      Resultado: `arte/catrina-weave.jpg`.
   3. `python3 arte/integrar.py` → `catrina-mural.webp` (pared transparente; la
      cara blanca se mantiene sólida con un contorno trazado a mano).
+- El mural sigue por la pared, con pocas piezas y siempre detrás del contenido
+  (Javi: cuidar limpieza y amplitud, no saturar): monarca junto al título de la
+  carta, cempasúchil asomando detrás de la tarjeta del restaurante y un botón de
+  cempasúchil junto al logo del pie. Clase `.pintura`; imágenes en `arte/`
+  (`mariposa.webp`, `flor-tallo.webp`, `flor-boton.webp`), recortadas de una
+  segunda imagen de Weave (mismo modelo, la catrina como referencia).
 - Talavera en línea, tono sobre tono, muy tenue en el fondo de toda la página.
 - Los puntitos que rodean los ojos de la catrina, en el filo del encabezado.
 - NO hacer catrinas dibujadas con código (SVG, Blender por script): se probaron
