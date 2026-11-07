@@ -377,15 +377,8 @@
     }
     @keyframes muro-aparece { to { opacity: 1; } }
     @media (prefers-reduced-motion: reduce) { .muro { animation: none; opacity: 1; } }
-    /* Más del mural en la misma pared: pocas piezas, siempre detrás del contenido */
     html { overflow-x: clip; }
-    .pintura { position: absolute; z-index: 0; height: auto; pointer-events: none; user-select: none; }
     section, footer .container { position: relative; }
-    section > :not(.pintura), footer .container > :not(.pintura) { position: relative; z-index: 1; }
-    .flor-asoma { width: 150px; top: -40px; right: -16px; transform: rotate(-14deg); }
-    @media (min-width: 700px) {
-      .flor-asoma { width: 210px; top: -56px; right: -120px; }
-    }
     /* Computadora: dos columnas para aprovechar el ancho
        (arriba catrina | portada; abajo vitrina y restaurante | carta) */
     @media (min-width: 1000px) {
@@ -399,7 +392,6 @@
       .s-vitrina { grid-area: vitrina; }
       .s-carta { grid-area: carta; }
       .s-resto { grid-area: resto; }
-      .flor-asoma { right: -46px; }
     }
   </style>
 </head>
@@ -516,7 +508,6 @@
     </section>
 
     <section class="s-resto">
-      <img class="pintura flor-asoma" src="arte/flor-tallo.webp" alt="" aria-hidden="true" width="570" height="603" loading="lazy">
       <div class="mono-label" data-en="CHUMINÓPOLIS LOCATION">SUCURSAL CHUMINÓPOLIS</div>
       <h2 data-en="Come eat with us">Pasa a comer al restaurante</h2>
 

@@ -81,13 +81,8 @@ de artista profesional.
   mural como referencia; se borró el cable con OpenCV → `arte/catrina-weave.jpg`;
   `python3 arte/integrar.py` → `catrina-nicho.webp`. Weave ya pide plan de pago
   (las 2 corridas gratis se usaron).
-- El mural sigue por la pared, con pocas piezas y siempre detrás del contenido
-  (Javi: cuidar limpieza y amplitud, no saturar): un cempasúchil grande
-  asomando arriba de la tarjeta del restaurante;
-  ya no hay flor en el pie (Javi). Clase `.pintura`; imágenes en `arte/`
-  (`flor-tallo.webp`),
-  recortadas de una segunda imagen de Weave (mismo modelo, la catrina como
-  referencia).
+- Fuera de la catrina no hay más adornos del mural (Javi: con la catrina y la
+  mariposa basta). Se quitaron el cempasúchil del restaurante y la flor del pie.
 - Se probó una monarca que volaba por la carta y se posaba en los botones; se
   quitó: en una taquería distrae del pedido. No poner animaciones decorativas.
 - Talavera en línea, tono sobre tono, muy tenue en el fondo de toda la página.
