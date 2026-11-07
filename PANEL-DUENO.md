@@ -13,13 +13,16 @@ más; no ve la base de datos ni puede borrarla.
 
 ## Montarlo (Javi, una sola vez, unos 15 minutos)
 
-**Avance (7/11/2026):**
-- [x] Paso 1: proyecto creado → `https://nnaecikpyqhhmvuxtlhz.supabase.co`
-  (ya puesto en `index.html`, `NUBE.url`).
-- [ ] Paso 2: correr `supabase/instalar.sql` con el correo del dueño.
-- [ ] Paso 3: crear el usuario del dueño y apagar el registro.
-- [ ] Paso 4: poner la Publishable key en `NUBE.llave`. Mientras esté vacía, el
-  modo dueño sigue siendo solo demostración y nada se rompe.
+**Avance (7/11/2026): todo montado por Claude con el token de Javi.**
+- [x] Proyecto `Carnitas-el-rey` (`nnaecikpyqhhmvuxtlhz`).
+- [x] `instalar.sql` corrido: tablas, carpeta de fotos, reglas.
+- [x] Registro de cuentas nuevas apagado.
+- [x] Editor creado: javierhedzd@gmail.com.
+- [x] Página conectada (`NUBE.url` y `NUBE.llave`) y probada de verdad.
+- [ ] Agregar al dueño cuando haya correo:
+      `node supabase/panel.mjs editor-agregar correo@del-dueno.com` (Ari o Claude).
+
+Los pasos de abajo quedan como referencia por si hay que montarlo de nuevo.
 
 Desde el celular, todo lo de Supabase está en el menú **☰** de arriba a la
 derecha (SQL Editor, Authentication, Project Settings).

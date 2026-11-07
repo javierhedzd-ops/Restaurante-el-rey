@@ -57,10 +57,33 @@ Dos columnas: arriba catrina | portada; abajo vitrina y restaurante | carta
   dueño puede escribir: lo revisa el servidor (RLS, `supabase/instalar.sql`).
   La página llama a la API con `fetch`, sin librerías ni CDN.
 - Pasos para montarlo y usarlo: `PANEL-DUENO.md`.
-- Proyecto de Supabase de Javi: `https://nnaecikpyqhhmvuxtlhz.supabase.co`
-  (ya en `NUBE.url`). Falta la llave y los pasos 2-3; avance en `PANEL-DUENO.md`.
-- Probado con un Supabase simulado (login, contraseña mala, precio, foto, otro
-  usuario rechazado, cliente ve lo nuevo); falta probarlo con el proyecto real.
+- Proyecto de Supabase de Javi: **Carnitas-el-rey**, `nnaecikpyqhhmvuxtlhz`
+  (`https://nnaecikpyqhhmvuxtlhz.supabase.co`). Ya conectado en `NUBE` y
+  funcionando (probado de verdad el 7/11/2026: login, precio, foto, cliente lo ve).
+- Editores (quién puede entrar a `#dueno`): tabla `editores`. Hoy: Javi. Falta el
+  correo del dueño del restaurante.
+
+### Cómo maneja Ari el panel (`supabase/panel.mjs`)
+Necesita el token personal de Supabase de Javi (`sbp_...`, se crea en
+https://supabase.com/dashboard/account/tokens) en la variable
+`SUPABASE_ACCESS_TOKEN`. Guardarlo fuera del repositorio (por ejemplo en el
+`~/.bashrc` de Ari o en su archivo de secretos), nunca en git ni en el chat.
+
+    node supabase/panel.mjs estado                      # cómo está todo
+    node supabase/panel.mjs editor-agregar correo@x.com # da acceso; imprime la contraseña
+    node supabase/panel.mjs contrasena correo@x.com     # contraseña nueva si la olvidó
+    node supabase/panel.mjs editor-quitar correo@x.com  # quita el acceso y borra su usuario
+    node supabase/panel.mjs precios | fotos             # qué cambió el dueño
+    node supabase/panel.mjs precio-borrar e_guac        # deshace un precio
+    node supabase/panel.mjs foto-borrar taco-maciza     # deshace una foto
+    node supabase/panel.mjs instalar                    # vuelve a correr instalar.sql
+
+- Sin dependencias, Node 18+. Detrás de un proxy, Node necesita
+  `NODE_USE_ENV_PROXY=1` (Node 22.21+).
+- La contraseña que imprime `editor-agregar` se le pasa a la persona por
+  WhatsApp; conviene que la cambie después (`contrasena`).
+- Si se cambia un platillo de `id` en `MENU`, su precio guardado en la tabla
+  `precios` deja de aplicarse: revisar con `precios`.
 
 ## Paleta (sale del logo)
 Mostaza `#D9942A` (escudo), negro café `#22150E` (contornos), madera `#875628`,
