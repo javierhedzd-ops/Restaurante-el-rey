@@ -66,7 +66,8 @@ de artista profesional.
 - La catrina va dentro de un **nicho de arco** (como los nichos pintados en las
   paredes): contorno negro y sombra mostaza como las tarjetas, franja de
   talavera mostaza alrededor, filete interior y sombra adentro para que se
-  sienta hundido. Así el corte
+  sienta hundido. Una monarca quieta posada en el filo del arco, arriba a la
+  derecha (`.muro-mariposa`, alas `arte/monarca-izq.webp` y `-der.webp`). Así el corte
   de la imagen (cabello arriba, barbilla abajo) se ve intencional y no
   recortado (Javi: "que no se vea cortada"). Aparece despacio. Se probaron
   desvanecidos en los bordes y sombreados: se veían pegados y cortados.
