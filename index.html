@@ -50,6 +50,13 @@
       --fire: #D7261E;
       --good: #2F8F5B;
 
+      /* Toque de catrina: colores del mural del restaurante */
+      --cempasuchil: #F28C1B;
+      --hoja: #2E7D46;
+      --rosa: #D9476A;
+      --talavera: #2F5D9E;
+      --talavera-papel: #F4EBDA;
+
       --font-body: 'Inter Tight', -apple-system, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
@@ -301,10 +308,97 @@
     footer a { color: var(--accent); font-weight: 600; text-decoration: none; }
 
     button:focus-visible, a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* ---------- Toque de catrina (sale del mural del restaurante) ----------
+       Cempasúchil, mariposas monarca, la catrina y el piso de talavera.
+       Dibujos en SVG dentro de la página (símbolos al inicio del <body>). */
+    .orna { position: absolute; pointer-events: none; z-index: 2; filter: drop-shadow(0 2px 3px rgba(34, 21, 14, 0.25)); }
+    .photo-hero, .showcase-card { position: relative; }
+    .flor-izq { width: 92px; height: 92px; top: -26px; left: -26px; }
+    .flor-der { width: 74px; height: 74px; top: -20px; right: -18px; }
+    .mariposa-hero { width: 40px; height: 32px; top: 46px; right: 40px; transform: rotate(14deg); }
+    .kicker { display: flex; align-items: center; gap: 6px; }
+    .flor-mini { width: 14px; height: 14px; flex-shrink: 0; }
+    .photo-content { position: relative; }
+    .catrina-medalla {
+      position: absolute; top: -50px; right: 14px; width: 96px; height: 96px; z-index: 4;
+      border-radius: 50%; border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--mustard); background: var(--wood);
+    }
+    .catrina-medalla svg { width: 100%; height: 100%; display: block; }
+    .con-medalla .menu-title, .con-medalla > p { padding-right: 104px; }
+    .tira-talavera {
+      height: 18px; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink);
+      background: var(--talavera-papel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' fill='%23F4EBDA'/%3E%3Cpath d='M14 3c3 4 3 7 0 11-3-4-3-7 0-11zM14 25c3-4 3-7 0-11-3 4-3 7 0 11zM3 14c4-3 7-3 11 0-4 3-7 3-11 0zM25 14c-4-3-7-3-11 0 4 3 7 3 11 0z' fill='%232F5D9E'/%3E%3Ccircle cx='14' cy='14' r='2.4' fill='%23F28C1B'/%3E%3Cpath d='M0 0h5L0 5zM28 0h-5l5 5zM0 28h5l-5-5zM28 28h-5l5-5z' fill='%23D7261E'/%3E%3C/svg%3E") repeat-x center / 14px 14px;
+    }
+    footer { position: relative; }
+    footer .tira-talavera { position: absolute; top: -1px; left: 0; right: 0; }
+    footer .container { padding-top: 18px; }
+    .pie-logo { display: flex; align-items: flex-start; justify-content: center; gap: 6px; }
+    .pie-logo .logo-footer { margin: 0 0 14px; }
+    .mariposa-pie { width: 32px; height: 26px; flex-shrink: 0; margin-top: 4px; }
+    .mariposa-pie.izq { transform: rotate(-12deg); }
+    .mariposa-pie.der { transform: rotate(12deg) scaleX(-1); }
+    @media (prefers-reduced-motion: no-preference) {
+      .mariposa-hero { animation: aleteo 3.2s ease-in-out infinite; transform-origin: center; }
+      @keyframes aleteo { 0%, 100% { transform: rotate(14deg) scaleX(1); } 50% { transform: rotate(10deg) translateY(-3px) scaleX(0.82); } }
+    }
   </style>
 </head>
 <body>
 
+  <!-- Dibujos de la catrina, el cempasúchil y la mariposa monarca (inspirados en el mural del local) -->
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="flor" viewBox="-50 -50 100 100">
+        <circle r="47" fill="#C9541A"/>
+        <g stroke="#B8471A" stroke-width="1.2">
+          <circle cx="34" cy="0" r="13" fill="#E0661A"/><circle cx="30.6" cy="14.8" r="13" fill="#E0661A"/><circle cx="21.2" cy="26.6" r="13" fill="#E0661A"/><circle cx="7.6" cy="33.1" r="13" fill="#E0661A"/><circle cx="-7.6" cy="33.1" r="13" fill="#E0661A"/><circle cx="-21.2" cy="26.6" r="13" fill="#E0661A"/><circle cx="-30.6" cy="14.8" r="13" fill="#E0661A"/><circle cx="-34" cy="0" r="13" fill="#E0661A"/><circle cx="-30.6" cy="-14.8" r="13" fill="#E0661A"/><circle cx="-21.2" cy="-26.6" r="13" fill="#E0661A"/><circle cx="-7.6" cy="-33.1" r="13" fill="#E0661A"/><circle cx="7.6" cy="-33.1" r="13" fill="#E0661A"/><circle cx="21.2" cy="-26.6" r="13" fill="#E0661A"/><circle cx="30.6" cy="-14.8" r="13" fill="#E0661A"/>
+          <circle cx="25.1" cy="6.7" r="12" fill="#F28C1B"/><circle cx="18.4" cy="18.4" r="12" fill="#F28C1B"/><circle cx="6.8" cy="25.1" r="12" fill="#F28C1B"/><circle cx="-6.7" cy="25.1" r="12" fill="#F28C1B"/><circle cx="-18.4" cy="18.4" r="12" fill="#F28C1B"/><circle cx="-25.1" cy="6.8" r="12" fill="#F28C1B"/><circle cx="-25.1" cy="-6.7" r="12" fill="#F28C1B"/><circle cx="-18.4" cy="-18.4" r="12" fill="#F28C1B"/><circle cx="-6.8" cy="-25.1" r="12" fill="#F28C1B"/><circle cx="6.7" cy="-25.1" r="12" fill="#F28C1B"/><circle cx="18.4" cy="-18.4" r="12" fill="#F28C1B"/><circle cx="25.1" cy="-6.8" r="12" fill="#F28C1B"/>
+          <circle cx="16.9" cy="1.7" r="10" fill="#F7A531"/><circle cx="12.7" cy="11.3" r="10" fill="#F7A531"/><circle cx="3.6" cy="16.6" r="10" fill="#F7A531"/><circle cx="-6.8" cy="15.6" r="10" fill="#F7A531"/><circle cx="-14.7" cy="8.6" r="10" fill="#F7A531"/><circle cx="-16.9" cy="-1.7" r="10" fill="#F7A531"/><circle cx="-12.7" cy="-11.3" r="10" fill="#F7A531"/><circle cx="-3.6" cy="-16.6" r="10" fill="#F7A531"/><circle cx="6.8" cy="-15.6" r="10" fill="#F7A531"/><circle cx="14.7" cy="-8.6" r="10" fill="#F7A531"/>
+          <circle cx="7.4" cy="3.1" r="8" fill="#FBBF45"/><circle cx="2.2" cy="7.7" r="8" fill="#FBBF45"/><circle cx="-4.7" cy="6.5" r="8" fill="#FBBF45"/><circle cx="-8" cy="0.4" r="8" fill="#FBBF45"/><circle cx="-5.3" cy="-6" r="8" fill="#FBBF45"/><circle cx="1.4" cy="-7.9" r="8" fill="#FBBF45"/><circle cx="7" cy="-3.8" r="8" fill="#FBBF45"/>
+        </g>
+        <circle r="5" fill="#E0661A"/>
+      </symbol>
+      <symbol id="mariposa" viewBox="-50 -40 100 80">
+        <g stroke="#22150E" stroke-width="3" stroke-linejoin="round" fill="#F28C1B">
+          <path d="M2-4C10-30 40-36 45-24 47-12 30 0 2 2Z"/><path d="M-2-4C-10-30-40-36-45-24-47-12-30 0-2 2Z"/>
+          <path d="M2 2C20 4 34 12 29 26 23 34 8 24 2 6Z"/><path d="M-2 2C-20 4-34 12-29 26-23 34-8 24-2 6Z"/>
+        </g>
+        <g stroke="#22150E" stroke-width="1.8" fill="none">
+          <path d="M3-2 30-24M3 0 38-14M3 4 24 18M-3-2-30-24M-3 0-38-14M-3 4-24 18"/>
+        </g>
+        <g fill="#FFF6E4"><circle cx="40" cy="-25" r="1.6"/><circle cx="42" cy="-17" r="1.6"/><circle cx="-40" cy="-25" r="1.6"/><circle cx="-42" cy="-17" r="1.6"/><circle cx="26" cy="25" r="1.4"/><circle cx="-26" cy="25" r="1.4"/></g>
+        <ellipse rx="3" ry="15" cy="2" fill="#22150E"/>
+        <path d="M-1-12-8-22M1-12 8-22" stroke="#22150E" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="catrina" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="60" fill="#875628"/>
+        <ellipse cx="22" cy="44" rx="12" ry="6" fill="#2E7D46" transform="rotate(-35 22 44)"/>
+        <ellipse cx="98" cy="44" rx="12" ry="6" fill="#2E7D46" transform="rotate(35 98 44)"/>
+        <ellipse cx="60" cy="68" rx="29" ry="35" fill="#FBF4EA"/>
+        <path d="M31 60c-2-22 12-34 29-34s31 12 29 34c-6-14-16-20-29-20s-23 6-29 20z" fill="#22150E"/>
+        <g fill="#F28C1B"><circle cx="52" cy="47" r="2.4"/><circle cx="56" cy="44" r="2.4"/><circle cx="64" cy="44" r="2.4"/><circle cx="68" cy="47" r="2.4"/></g>
+        <path d="M60 52c-3-4-8-1-5 3l5 4 5-4c3-4-2-7-5-3z" fill="#D9476A"/>
+        <g fill="none" stroke-width="2.4">
+          <circle cx="47" cy="66" r="12" stroke="#F28C1B" stroke-dasharray="3 2.6"/>
+          <circle cx="73" cy="66" r="12" stroke="#F28C1B" stroke-dasharray="3 2.6"/>
+          <circle cx="47" cy="66" r="15" stroke="#2E7D46" stroke-width="1.6" stroke-dasharray="1.5 4"/>
+          <circle cx="73" cy="66" r="15" stroke="#2E7D46" stroke-width="1.6" stroke-dasharray="1.5 4"/>
+        </g>
+        <ellipse cx="47" cy="66" rx="9" ry="8" fill="#22150E"/><ellipse cx="73" cy="66" rx="9" ry="8" fill="#22150E"/>
+        <circle cx="48" cy="67" r="4.2" fill="#B5651D"/><circle cx="72" cy="67" r="4.2" fill="#B5651D"/>
+        <circle cx="48" cy="67" r="1.9" fill="#22150E"/><circle cx="72" cy="67" r="1.9" fill="#22150E"/>
+        <circle cx="49.3" cy="65.6" r="1" fill="#fff"/><circle cx="73.3" cy="65.6" r="1" fill="#fff"/>
+        <path d="M60 85c-2-3-6-5-6-8s3-3 6 0c3-3 6-3 6 0s-4 5-6 8z" fill="#22150E"/>
+        <path d="M50 92c4-3 7-2 10-1 3-1 6-2 10 1-4 4-16 4-20 0z" fill="#C2455B"/>
+        <path d="M47 92h26M51 89v6M55 89v6M60 89v6M65 89v6M69 89v6" stroke="#22150E" stroke-width="1.1"/>
+        <g fill="#2E7D46"><circle cx="60" cy="99" r="1.6"/><circle cx="55" cy="98" r="1.2"/><circle cx="65" cy="98" r="1.2"/></g>
+        <use href="#flor" x="10" y="16" width="34" height="34"/>
+        <use href="#flor" x="78" y="18" width="30" height="30"/>
+        <use href="#mariposa" x="80" y="80" width="26" height="21" transform="rotate(-15 93 90)"/>
+      </symbol>
+    </defs>
+  </svg>
 
   <div class="owner-bar" role="region" aria-label="Modo dueño">
     <div class="owner-inner">
@@ -337,6 +431,9 @@
     <section>
       <div class="photo-hero">
         <div class="img-slot has-image" id="slot-portada">
+          <svg class="orna flor-izq" aria-hidden="true"><use href="#flor"/></svg>
+          <svg class="orna flor-der" aria-hidden="true"><use href="#flor"/></svg>
+          <svg class="orna mariposa-hero" aria-hidden="true"><use href="#mariposa"/></svg>
           <img id="img-portada" src="fotos/portada.jpg" alt="Carnitas recién salidas del cazo" onerror="this.parentNode.classList.remove('has-image')">
           <button type="button" class="btn-foto" onclick="event.stopPropagation(); elegirFoto('portada')"><svg class="icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Cambiar foto</button>
           <div class="placeholder-view" aria-hidden="true">
@@ -364,7 +461,7 @@
     </section>
 
     <section>
-      <div class="mono-label">VITRINA DE PLATILLOS</div>
+      <div class="mono-label kicker"><svg class="flor-mini" aria-hidden="true"><use href="#flor"/></svg>VITRINA DE PLATILLOS</div>
       <h2>Especialidades de la casa</h2>
 
       <div class="showcase-card" id="showcase" aria-roledescription="carrusel">
@@ -402,7 +499,7 @@
     </section>
 
     <section id="menu">
-      <div class="mono-label">CARTA Y PRECIOS</div>
+      <div class="mono-label kicker"><svg class="flor-mini" aria-hidden="true"><use href="#flor"/></svg>CARTA Y PRECIOS</div>
       <h2>Elige lo que se te antoje</h2>
 
       <div class="tabs-bar" role="tablist" id="tabs"></div>
@@ -410,7 +507,7 @@
     </section>
 
     <section>
-      <div class="mono-label">SUCURSAL CHUMINÓPOLIS</div>
+      <div class="mono-label kicker"><svg class="flor-mini" aria-hidden="true"><use href="#flor"/></svg>SUCURSAL CHUMINÓPOLIS</div>
       <h2>Pasa a comer al restaurante</h2>
 
       <div class="photo-hero">
@@ -422,7 +519,8 @@
             <span>Te esperamos en Chuminópolis</span>
           </div>
         </div>
-        <div class="photo-content">
+        <div class="photo-content con-medalla">
+          <div class="catrina-medalla" aria-hidden="true"><svg><use href="#catrina"/></svg></div>
           <div class="menu-title">Calle 14 #93-F x 13 y 15, Chuminópolis</div>
           <p style="color: var(--text-sec); font-size: 13px; margin-top: 4px;">
             Ambiente familiar, mesas de madera y servicio para comer en el lugar o llevar empacado.
@@ -438,8 +536,13 @@
   </main>
 
   <footer>
+    <div class="tira-talavera" aria-hidden="true"></div>
     <div class="container">
-      <img class="logo-footer" src="logo-completo.png" alt="El Rey Carnitas · Puro sabor mexicano" width="200" height="88">
+      <div class="pie-logo">
+        <svg class="mariposa-pie izq" aria-hidden="true"><use href="#mariposa"/></svg>
+        <img class="logo-footer" src="logo-completo.png" alt="El Rey Carnitas · Puro sabor mexicano" width="200" height="88">
+        <svg class="mariposa-pie der" aria-hidden="true"><use href="#mariposa"/></svg>
+      </div>
       <p class="mono-label" style="color: var(--text-muted);">CARNITAS MICHOACÁN EL REY · MÉRIDA · 2026</p>
       <p style="font-size: 13px; color: var(--text-sec); margin-top: 4px;">
         Servicio a domicilio: <a href="tel:+529991190662">999 119 0662</a>
