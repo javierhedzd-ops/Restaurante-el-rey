@@ -19,7 +19,7 @@ pruebas) sigue en el historial: commit `14ff34c`. Para verla:
   aquí: nada de Google Fonts.
 - `catrina-mural.webp` — la catrina pintada en la pared (fondo transparente,
   bordes nítidos). Va en `.muro`, dentro de `main`.
-- `arte/` — de dónde sale: `catrina-figma.jpg` (generada con Figma IA) e
+- `arte/` — de dónde sale: `catrina-weave.jpg` (su mural repintado con Weave) e
   `integrar.py` (la vuelve `catrina-mural.webp`). Ver "Toque de catrina".
 - `fotos/` — fotos propias con nombres fijos; la lista está en `fotos/LEEME.md`.
   Si falta una, la página muestra el hueco vacío.
@@ -67,33 +67,22 @@ de artista profesional.
   completa (cabeza, cabello, cuello y flores), con pared alrededor, bordes
   nítidos y aparece despacio. Nada de acercamientos a la cara que asusten al
   entrar ni sombreados o desvanecidos en los bordes (se ven pegados).
-- Cómo se hizo la actual (7/11/2026):
-  1. Figma IA (`generate_image`, modelo gpt-image-2.5-flare, 1600x1200) en el
-     archivo de Figma "Catrina mural - Carnitas El Rey". Solo texto: describe el
-     mural (catrina con antifaces negros con festón naranja y verde, corazón rosa,
-     cempasúchiles, hojas, monarcas) y pide la cabeza completa dentro del cuadro,
-     pared crema lisa alrededor y bordes nítidos sin halo ni sombra.
-  2. Bajar la imagen (`www.figma.com`, ya permitido en el entorno de Claude
-     Code) → `arte/catrina-figma.jpg`.
-  3. `python3 arte/integrar.py` → `catrina-mural.webp`.
-  Antes se usó Weave (Nano Banana Pro) con la foto del mural como referencia;
-  las 2 corridas gratis ya se gastaron y pide plan de pago.
+- La actual es la de Weave (su mismo mural repintado), a tamaño completo y
+  más chica (Javi: "esa sí se veía bien"). Se probó una generada con Figma IA
+  (solo texto) y no le gustó: se veía genérica, no era su catrina.
+- Cómo se hizo: Weave (Figma) con el modelo Nano Banana Pro, 2K, 3:2, foto del
+  mural como referencia; se borró el cable con OpenCV → `arte/catrina-weave.jpg`;
+  `python3 arte/integrar.py` → `catrina-mural.webp`. Weave ya pide plan de pago
+  (las 2 corridas gratis se usaron).
 - El mural sigue por la pared, con pocas piezas y siempre detrás del contenido
   (Javi: cuidar limpieza y amplitud, no saturar): monarca junto al título de la
   carta, cempasúchil grande asomando arriba de la tarjeta del restaurante;
   ya no hay flor en el pie (Javi). Clase `.pintura`; imágenes en `arte/`
-  (`flor-tallo.webp`, `flor-boton.webp`, `monarca-izq.webp`, `monarca-der.webp`),
+  (`flor-tallo.webp`),
   recortadas de una segunda imagen de Weave (mismo modelo, la catrina como
   referencia).
-- La monarca vuela de verdad (`#monarca`, JS "Mariposa monarca", a nivel de
-  página): empieza en la pared junto al título de la carta, revolotea a 2-3
-  botones que se vean y baja a posarse en el cempasúchil del restaurante, donde
-  descansa 30-50 s y vuelve a empezar. Vuelo calculado cuadro por cuadro para que
-  no sea robótico: rumbo que titubea, el cuerpo sube con cada aleteo, ritmo de
-  aleteo variable, planeos cortos, gira hacia donde va, frena y revolotea antes
-  de posarse; posada abre y cierra las alas despacio y sin ritmo fijo. Si tocan
-  el botón donde está, se espanta. Solo se mueve con la carta o la flor en
-  pantalla; con "reducir movimiento" se queda quieta.
+- Se probó una monarca que volaba por la carta y se posaba en los botones; se
+  quitó: en una taquería distrae del pedido. No poner animaciones decorativas.
 - Talavera en línea, tono sobre tono, muy tenue en el fondo de toda la página.
 - Los puntitos que rodean los ojos de la catrina, en el filo del encabezado.
 - NO hacer catrinas dibujadas con código (SVG, Blender por script): se probaron
