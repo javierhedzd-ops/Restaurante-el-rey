@@ -342,8 +342,10 @@
     /* Mural: la catrina pintada directamente en la pared (fondo transparente, bordes
        nítidos). Se presenta como obra: completa, con pared alrededor y aparece despacio. */
     .muro {
-      width: min(92vw, 460px); aspect-ratio: 1800 / 1208; margin: 22px auto 12px;
-      background: url('catrina-mural.webp') center / contain no-repeat;
+      width: min(86vw, 380px); aspect-ratio: 1 / 1; margin: 24px auto 14px;
+      background: var(--card-alt) url('catrina-nicho.webp') center 38% / cover no-repeat;
+      border: 2px solid var(--ink); border-radius: 50% 50% 18px 18px / 42% 42% 18px 18px;
+      box-shadow: 5px 5px 0 var(--mustard);
       opacity: 0; animation: muro-aparece 1.8s ease-out 0.15s forwards;
     }
     @keyframes muro-aparece { to { opacity: 1; } }
@@ -365,7 +367,7 @@
         display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 56px;
         grid-template-areas: "muro portada" "vitrina carta" "resto carta"; align-items: start;
       }
-      .muro { grid-area: muro; width: 100%; margin: 26px 0 0; align-self: center; }
+      .muro { grid-area: muro; width: min(100%, 470px); aspect-ratio: 1 / 1; margin: 30px auto 18px; align-self: center; }
       .s-portada { grid-area: portada; align-self: center; }
       .s-vitrina { grid-area: vitrina; }
       .s-carta { grid-area: carta; }

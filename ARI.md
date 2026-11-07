@@ -17,10 +17,10 @@ pruebas) sigue en el historial: commit `14ff34c`. Para verla:
   MEXICANO"), `favicon.png` — recortados del logo original de los flyers.
 - `fuentes/` — Inter Tight y JetBrains Mono (woff2, solo latín) servidas desde
   aquí: nada de Google Fonts.
-- `catrina-mural.webp` — la catrina pintada en la pared (fondo transparente,
-  bordes nítidos). Va en `.muro`, dentro de `main`.
+- `catrina-nicho.webp` — la catrina del mural del local, dentro del nicho de
+  arco de la portada (`.muro`, dentro de `main`).
 - `arte/` — de dónde sale: `catrina-weave.jpg` (su mural repintado con Weave) e
-  `integrar.py` (la vuelve `catrina-mural.webp`). Ver "Toque de catrina".
+  `integrar.py` (la exporta a `catrina-nicho.webp`). Ver "Toque de catrina".
 - `fotos/` — fotos propias con nombres fijos; la lista está en `fotos/LEEME.md`.
   Si falta una, la página muestra el hueco vacío.
 - `pruebas/web.test.js` — pruebas sin dependencias.
@@ -63,16 +63,17 @@ con contorno negro y sombra mostaza desplazada (Javi la quiso así).
 ### Toque de catrina (7/11/2026)
 Sale del mural del local. Regla de Javi: **integrado, no pegado**, y con acabado
 de artista profesional.
-- La catrina está pintada en la pared de la página y se presenta como obra:
-  completa (cabeza, cabello, cuello y flores), con pared alrededor, bordes
-  nítidos y aparece despacio. Nada de acercamientos a la cara que asusten al
-  entrar ni sombreados o desvanecidos en los bordes (se ven pegados).
+- La catrina va dentro de un **nicho de arco** (como los nichos pintados en las
+  paredes): mismo contorno negro y sombra mostaza que las tarjetas. Así el corte
+  de la imagen (cabello arriba, barbilla abajo) se ve intencional y no
+  recortado (Javi: "que no se vea cortada"). Aparece despacio. Se probaron
+  desvanecidos en los bordes y sombreados: se veían pegados y cortados.
 - La actual es la de Weave (su mismo mural repintado), a tamaño completo y
   más chica (Javi: "esa sí se veía bien"). Se probó una generada con Figma IA
   (solo texto) y no le gustó: se veía genérica, no era su catrina.
 - Cómo se hizo: Weave (Figma) con el modelo Nano Banana Pro, 2K, 3:2, foto del
   mural como referencia; se borró el cable con OpenCV → `arte/catrina-weave.jpg`;
-  `python3 arte/integrar.py` → `catrina-mural.webp`. Weave ya pide plan de pago
+  `python3 arte/integrar.py` → `catrina-nicho.webp`. Weave ya pide plan de pago
   (las 2 corridas gratis se usaron).
 - El mural sigue por la pared, con pocas piezas y siempre detrás del contenido
   (Javi: cuidar limpieza y amplitud, no saturar): un cempasúchil grande
