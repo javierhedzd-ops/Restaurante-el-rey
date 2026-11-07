@@ -344,8 +344,7 @@
     /* Nicho de arco con la catrina del mural: marco de talavera, doble filete y
        sombra interior para que se sienta hundido en la pared */
     .muro {
-      width: min(76vw, 360px); aspect-ratio: 1 / 1; margin: 24px auto 16px; padding: 9px;
-      translate: -14px 0;   /* deja lugar a las alas de la monarca a la derecha */
+      width: 100%; aspect-ratio: 1 / 1; margin: 46px 0 16px; padding: 9px;   /* mismo ancho que las tarjetas */
       border: 2px solid var(--ink); border-radius: 50% 50% 20px 20px / 44% 44% 20px 20px;
       background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' fill='%23F8E9C9'/%3E%3Cg fill='none' stroke='%23C98A26' stroke-width='2.4'%3E%3Cpath d='M22 6c5 6 5 10 0 16-5-6-5-10 0-16zM22 38c5-6 5-10 0-16-5 6-5 10 0 16zM6 22c6-5 10-5 16 0-6 5-10 5-16 0zM38 22c-6-5-10-5-16 0 6 5 10 5 16 0z'/%3E%3Ccircle cx='22' cy='22' r='2.5' fill='%23D7261E' stroke='none'/%3E%3Cpath d='M0 8a8 8 0 0 0 8-8M36 0a8 8 0 0 0 8 8M44 36a8 8 0 0 0-8 8M8 44a8 8 0 0 0-8-8'/%3E%3C/g%3E%3C/svg%3E") center / 22px 22px;
       box-shadow: 5px 5px 0 var(--mustard), inset 0 2px 0 rgba(255, 250, 238, 0.7), inset 0 -3px 5px rgba(34, 21, 14, 0.18);
@@ -362,13 +361,19 @@
         inset 0 -3px 0 rgba(255, 238, 205, 0.55),          /* luz en la repisa */
         inset 0 -14px 18px -12px rgba(20, 12, 8, 0.35);
     }
-    /* Monarca posada en el marco derecho del nicho: cuerpo sobre la talavera,
-       alas hacia afuera (no toca a la catrina), sombra sobre el marco */
+    /* Monarca posada en el arco, arriba a la derecha: el cuerpo sigue la curva del
+       marco (sobre la talavera) y las alas salen hacia afuera, sin tocar a la catrina */
     .muro { position: relative; }
     .muro-mariposa {
-      position: absolute; width: 21%; height: auto; right: -17.5%; top: 31%;
-      transform: rotate(45deg); pointer-events: none;
-      filter: drop-shadow(-3px 4px 3px rgba(34, 21, 14, 0.35));
+      position: absolute; width: 17%; left: 80.5%; top: -5.5%; pointer-events: none;
+    }
+    .muro-mariposa img { width: 100%; height: auto; display: block; position: relative;
+      filter: drop-shadow(-1px 2px 1.5px rgba(34, 21, 14, 0.35)); }
+    /* sombra de contacto: donde las patas tocan el marco */
+    .muro-mariposa::before {
+      content: ''; position: absolute; left: 14%; top: 66%; width: 46%; height: 13%;
+      background: radial-gradient(closest-side, rgba(34, 21, 14, 0.55), transparent);
+      transform: rotate(45deg); filter: blur(1.5px);
     }
     @keyframes muro-aparece { to { opacity: 1; } }
     @media (prefers-reduced-motion: reduce) { .muro { animation: none; opacity: 1; } }
@@ -389,7 +394,7 @@
         display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 56px;
         grid-template-areas: "muro portada" "vitrina carta" "resto carta"; align-items: start;
       }
-      .muro { grid-area: muro; width: min(100%, 460px); aspect-ratio: 1 / 1; margin: 30px auto 18px; align-self: center; translate: -20px 0; }
+      .muro { grid-area: muro; width: 100%; aspect-ratio: 1 / 1; margin: 56px 0 18px; align-self: start; }
       .s-portada { grid-area: portada; align-self: center; }
       .s-vitrina { grid-area: vitrina; }
       .s-carta { grid-area: carta; }
@@ -433,7 +438,7 @@
   <main class="container">
 
     <!-- El mural de la catrina, pintado en la pared -->
-    <div class="muro" aria-hidden="true"><div class="muro-pintura"></div><img class="muro-mariposa" src="arte/mariposa.webp" alt="" width="372" height="485"></div>
+    <div class="muro" aria-hidden="true"><div class="muro-pintura"></div><span class="muro-mariposa"><img src="arte/mariposa.webp" alt="" width="372" height="485"></span></div>
 
     <section class="s-portada">
       <div class="photo-hero">

@@ -67,11 +67,10 @@ de artista profesional.
   paredes): contorno negro y sombra mostaza como las tarjetas, franja de
   talavera mostaza alrededor, filete interior y sombra adentro para que se
   sienta hundido. Sombra interior fuerte arriba y a los lados (bóveda) y luz en
-  la repisa: profundidad. Una monarca quieta de lado, posada sobre el marco
-  derecho (cuerpo en la talavera, alas hacia afuera, sin tocar a la catrina;
-  `.muro-mariposa`, `arte/mariposa.webp`). Vista desde arriba parecía
-  calcomanía (Javi). El nicho se recorre a la izquierda (`translate`) para que
-  las alas quepan en el celular. Así el corte
+  la repisa: profundidad. Una monarca quieta de lado, posada en el arco arriba a la
+  derecha: cuerpo sobre la franja de talavera, sombra de contacto de las patas
+  en el marco, alas hacia afuera sin tocar la pintura (`.muro-mariposa`,
+  `arte/mariposa.webp`). El nicho mide lo mismo que las tarjetas. Así el corte
   de la imagen (cabello arriba, barbilla abajo) se ve intencional y no
   recortado (Javi: "que no se vea cortada"). Aparece despacio. Se probaron
   desvanecidos en los bordes y sombreados: se veían pegados y cortados.
