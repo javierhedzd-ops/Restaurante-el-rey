@@ -37,14 +37,13 @@ rojo `#D7261E` de los flyers. Encabezado negro café con filo mostaza; tarjetas
 con contorno negro y sombra mostaza desplazada (Javi la quiso así).
 
 ### Toque de catrina (7/11/2026)
-Sale del mural del local (catrina, cempasúchil, piso de talavera). Regla de
-Javi: **integrado, no pegado**. Nada de estampas a color encima de las tarjetas;
-el mural se mete en lo que la página ya tiene, en los mismos tonos:
-- Talavera en línea, tono sobre tono, de fondo en los huecos de foto y en el
-  pie (se desvanece hacia abajo).
+Sale del mural del local. Regla de Javi: **integrado, no pegado**.
+- Piso de talavera en línea, tono sobre tono: muy tenue en el fondo de toda la
+  página (sigue cuando haya fotos), un poco más marcado en los huecos de foto y
+  en el pie.
 - Los puntitos que rodean los ojos de la catrina, en el filo del encabezado.
-- La catrina en línea fina (mostaza y naranja `--cempasuchil` `#E0661A`, 32 %
-  de opacidad), asomando en la esquina de la tarjeta del restaurante.
+- Se probaron una catrina dibujada a color y otra en línea fina: a Javi no le
+  convencieron. No volver a poner dibujos de la catrina hechos a mano en SVG.
 
 ## Cómo se ejecuta
 - Servir: `cd ~/restaurante-el-rey && python3 -m http.server 8092 --bind 0.0.0.0`
