@@ -63,3 +63,19 @@ test('el horario escrito coincide con el que decide "abierto / cerrado"', () => 
 test('la página trae la regla [hidden] (si no, se ven cosas ocultas)', () => {
   assert.match(html, /\[hidden\]\s*\{\s*display:\s*none/);
 });
+
+test('cada platillo y cada sección tienen su traducción al inglés', () => {
+  const { MENU } = configuracion();
+  for (const sec of MENU) {
+    assert.ok(sec.titulo_en, `falta titulo_en en ${sec.cat}`);
+    if (sec.nota) assert.ok(sec.nota_en, `falta nota_en en ${sec.cat}`);
+    if (sec.etiqueta) assert.ok(sec.etiqueta_en, `falta etiqueta_en en ${sec.cat}`);
+    for (const it of sec.items) assert.ok(it.n_en && it.d_en, `falta n_en o d_en en ${it.id}`);
+  }
+});
+
+test('los textos de la página en español e inglés tienen las mismas claves', () => {
+  const bloque = script.slice(script.indexOf('const TXT = {'), script.indexOf('let idioma'));
+  const TXT = vm.runInNewContext('(' + bloque.replace('const TXT =', '').trim().replace(/;$/, '') + ')');
+  assert.deepEqual(Object.keys(TXT.en).sort(), Object.keys(TXT.es).sort());
+});

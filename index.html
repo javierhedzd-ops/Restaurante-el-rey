@@ -91,6 +91,19 @@
     .brand-title { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
     header .brand-title { color: #FFF6E4; }
 
+    .nav-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .lang-btn {
+      min-width: 44px; min-height: 32px; padding: 0 10px; border-radius: 999px; cursor: pointer;
+      background: transparent; border: 1px solid rgba(217, 148, 42, 0.55); color: var(--mustard);
+      font: 700 11px var(--font-mono); letter-spacing: 0.06em; transition: background 0.2s, color 0.2s;
+    }
+    .lang-btn:hover { background: var(--mustard); color: var(--ink); }
+    @media (max-width: 420px) {
+      .brand-logo-area { gap: 8px; }
+      .logo-escudo img { width: 64px; height: 40px; }
+      .brand-title { font-size: 13px; line-height: 1.25; }
+      .nav-right { gap: 6px; }
+    }
     .status-badge {
       display: inline-flex; align-items: center; gap: 6px;
       font-family: var(--font-mono); font-size: 11px; white-space: nowrap;
@@ -359,13 +372,16 @@
 
   <header>
     <div class="container nav-inner">
-      <a class="brand-logo-area" href="#" aria-label="Carnitas Michoacán El Rey, inicio">
+      <a class="brand-logo-area" href="#" aria-label="Carnitas Michoacán El Rey, inicio" data-en-aria-label="Carnitas Michoacán El Rey, home">
         <div class="logo-escudo" aria-hidden="true">
           <img src="logo-escudo.png" alt="" width="88" height="55">
         </div>
         <div class="brand-title">Carnitas Michoacán El Rey</div>
       </a>
-      <span class="status-badge" id="status-badge">Horario</span>
+      <div class="nav-right">
+        <span class="status-badge" id="status-badge">Horario</span>
+        <button type="button" class="lang-btn" id="btn-idioma" onclick="cambiarIdioma()" lang="en" aria-label="Read in English">EN</button>
+      </div>
     </div>
   </header>
 
@@ -377,26 +393,26 @@
     <section>
       <div class="photo-hero">
         <div class="img-slot has-image" id="slot-portada">
-          <img id="img-portada" src="fotos/portada.jpg" alt="Carnitas recién salidas del cazo" onerror="this.parentNode.classList.remove('has-image')">
+          <img id="img-portada" src="fotos/portada.jpg" alt="Carnitas recién salidas del cazo" data-en-alt="Carnitas fresh from the copper pot" onerror="this.parentNode.classList.remove('has-image')">
           <button type="button" class="btn-foto" onclick="event.stopPropagation(); elegirFoto('portada')"><svg class="icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Cambiar foto</button>
           <div class="placeholder-view" aria-hidden="true">
             <svg class="placeholder-icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            <span>Carnitas de cazo</span>
+            <span data-en="Copper-pot carnitas">Carnitas de cazo</span>
           </div>
         </div>
         <div class="photo-content">
-          <div class="fire-label">"PURO SABOR MEXICANO"</div>
+          <div class="fire-label" data-en="&quot;PURE MEXICAN FLAVOR&quot;">"PURO SABOR MEXICANO"</div>
           <h1 style="margin-top: 4px;">Carnitas Michoacán El Rey</h1>
-          <p style="color: var(--text-sec); font-size: 14px; margin-top: 4px;">
+          <p style="color: var(--text-sec); font-size: 14px; margin-top: 4px;" data-en="Maciza, rib, mixed and shank, slow-cooked in the traditional copper pot (cazo). Handmade tortillas and molcajete salsas.">
             Maciza, costilla, surtida y chamorro cocidos despacio en su cazo tradicional. Tortillas de mano y salsas de molcajete.
           </p>
           <div class="btn-group">
             <a href="#menu" class="btn btn-fire">
-              <span>Ver menú completo</span>
+              <span data-en="See full menu">Ver menú completo</span>
               <svg class="icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
             </a>
             <a href="https://maps.google.com/?q=Carnitas+Michoacan+El+Rey+Chuminopolis+Merida" target="_blank" rel="noopener" class="btn">
-              <span>Ubicación</span>
+              <span data-en="Location">Ubicación</span>
             </a>
           </div>
         </div>
@@ -404,15 +420,15 @@
     </section>
 
     <section>
-      <div class="mono-label">VITRINA DE PLATILLOS</div>
-      <h2>Especialidades de la casa</h2>
+      <div class="mono-label" data-en="DISH SHOWCASE">VITRINA DE PLATILLOS</div>
+      <h2 data-en="House specialties">Especialidades de la casa</h2>
 
       <div class="showcase-card" id="showcase" aria-roledescription="carrusel">
         <div class="showcase-header">
           <span class="mono-label" id="showcase-counter"></span>
           <button type="button" class="showcase-tap-badge" onclick="abrirGaleria()">
             <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            <span>Ver galería completa</span>
+            <span data-en="See full gallery">Ver galería completa</span>
           </button>
         </div>
 
@@ -424,8 +440,8 @@
             <svg class="placeholder-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
           </div>
           <button type="button" class="btn-foto" onclick="event.stopPropagation(); elegirFoto(vitrinaActual().foto)"><svg class="icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Cambiar foto</button>
-          <button type="button" class="nav-arrow prev" onclick="event.stopPropagation(); moverManual(-1)" aria-label="Platillo anterior">‹</button>
-          <button type="button" class="nav-arrow next" onclick="event.stopPropagation(); moverManual(1)" aria-label="Platillo siguiente">›</button>
+          <button type="button" class="nav-arrow prev" onclick="event.stopPropagation(); moverManual(-1)" aria-label="Platillo anterior" data-en-aria-label="Previous dish">‹</button>
+          <button type="button" class="nav-arrow next" onclick="event.stopPropagation(); moverManual(1)" aria-label="Platillo siguiente" data-en-aria-label="Next dish">›</button>
         </div>
 
         <div class="dish-info">
@@ -442,34 +458,34 @@
     </section>
 
     <section id="menu">
-      <div class="mono-label">CARTA Y PRECIOS</div>
-      <h2>Elige lo que se te antoje</h2>
+      <div class="mono-label" data-en="MENU &amp; PRICES">CARTA Y PRECIOS</div>
+      <h2 data-en="Pick whatever you’re craving">Elige lo que se te antoje</h2>
 
       <div class="tabs-bar" role="tablist" id="tabs"></div>
       <div class="card-list" id="lista-platos" role="tabpanel"></div>
     </section>
 
     <section>
-      <div class="mono-label">SUCURSAL CHUMINÓPOLIS</div>
-      <h2>Pasa a comer al restaurante</h2>
+      <div class="mono-label" data-en="CHUMINÓPOLIS LOCATION">SUCURSAL CHUMINÓPOLIS</div>
+      <h2 data-en="Come eat with us">Pasa a comer al restaurante</h2>
 
       <div class="photo-hero">
         <div class="img-slot has-image" id="slot-restaurante">
-          <img id="img-restaurante" src="fotos/restaurante.jpg" alt="Salón del restaurante" onerror="this.parentNode.classList.remove('has-image')">
+          <img id="img-restaurante" src="fotos/restaurante.jpg" alt="Salón del restaurante" data-en-alt="Restaurant dining room" onerror="this.parentNode.classList.remove('has-image')">
           <button type="button" class="btn-foto" onclick="event.stopPropagation(); elegirFoto('restaurante')"><svg class="icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Cambiar foto</button>
           <div class="placeholder-view" aria-hidden="true">
             <svg class="placeholder-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            <span>Te esperamos en Chuminópolis</span>
+            <span data-en="See you in Chuminópolis">Te esperamos en Chuminópolis</span>
           </div>
         </div>
         <div class="photo-content">
           <div class="menu-title">Calle 14 #93-F x 13 y 15, Chuminópolis</div>
-          <p style="color: var(--text-sec); font-size: 13px; margin-top: 4px;">
+          <p style="color: var(--text-sec); font-size: 13px; margin-top: 4px;" data-en="Family atmosphere, wooden tables, dine in or take out.">
             Ambiente familiar, mesas de madera y servicio para comer en el lugar o llevar empacado.
           </p>
           <div class="hours mono-label">
-            <span>MIÉ A LUN · 12:30 PM A 11:50 PM</span>
-            <span style="color: var(--fire);">MARTES CERRADO</span>
+            <span data-en="WED TO MON · 12:30 PM TO 11:50 PM">MIÉ A LUN · 12:30 PM A 11:50 PM</span>
+            <span style="color: var(--fire);" data-en="CLOSED ON TUESDAYS">MARTES CERRADO</span>
           </div>
         </div>
       </div>
@@ -479,10 +495,10 @@
 
   <footer>
     <div class="container">
-      <img class="logo-footer" src="logo-completo.png" alt="El Rey Carnitas · Puro sabor mexicano" width="200" height="88">
+      <img class="logo-footer" src="logo-completo.png" alt="El Rey Carnitas · Puro sabor mexicano" data-en-alt="El Rey Carnitas · Pure Mexican flavor" width="200" height="88">
       <p class="mono-label" style="color: var(--text-muted);">CARNITAS MICHOACÁN EL REY · MÉRIDA · 2026</p>
       <p style="font-size: 13px; color: var(--text-sec); margin-top: 4px;">
-        Servicio a domicilio: <a href="tel:+529991190662">999 119 0662</a>
+        <span data-en="Delivery:">Servicio a domicilio:</span> <a href="tel:+529991190662">999 119 0662</a>
       </p>
     </div>
   </footer>
@@ -494,7 +510,7 @@
       <div class="price" id="total-cuenta">$0</div>
     </div>
     <button type="button" class="btn btn-primary" onclick="abrirPedido()">
-      <span>Ver pedido</span>
+      <span data-en="View order">Ver pedido</span>
       <svg class="icon" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
     </button>
   </div>
@@ -507,10 +523,10 @@
       <div class="gallery-inner">
         <div class="panel-header">
           <div>
-            <div class="brand-title" id="galeria-titulo">Galería de platillos</div>
-            <div class="mono-label">Toca + para agregar a tu pedido</div>
+            <div class="brand-title" id="galeria-titulo" data-en="Dish gallery">Galería de platillos</div>
+            <div class="mono-label" data-en="Tap + to add to your order">Toca + para agregar a tu pedido</div>
           </div>
-          <button type="button" class="btn" style="min-height: 36px; padding: 0 12px;" onclick="cerrarGaleria()">Cerrar ✕</button>
+          <button type="button" class="btn" style="min-height: 36px; padding: 0 12px;" onclick="cerrarGaleria()" data-en="Close ✕">Cerrar ✕</button>
         </div>
         <div id="galeria-lista"></div>
       </div>
@@ -521,34 +537,34 @@
   <div class="overlay" id="pedido" role="dialog" aria-modal="true" aria-labelledby="pedido-titulo" onclick="if (event.target === this) cerrarPedido()">
     <div class="sheet">
       <div class="panel-header">
-        <div class="brand-title" id="pedido-titulo">Tu pedido</div>
-        <button type="button" class="btn" style="min-height: 36px; padding: 0 12px;" onclick="cerrarPedido()">Cerrar ✕</button>
+        <div class="brand-title" id="pedido-titulo" data-en="Your order">Tu pedido</div>
+        <button type="button" class="btn" style="min-height: 36px; padding: 0 12px;" onclick="cerrarPedido()" data-en="Close ✕">Cerrar ✕</button>
       </div>
 
       <div id="pedido-lista"></div>
-      <div class="cart-total"><span>Total estimado</span><span class="price" id="pedido-total">$0</span></div>
+      <div class="cart-total"><span data-en="Estimated total">Total estimado</span><span class="price" id="pedido-total">$0</span></div>
       <p class="aviso" id="pedido-aviso"></p>
 
       <form class="form" id="pedido-form" onsubmit="enviarWhatsApp(event)" novalidate>
-        <label>Tu nombre
+        <label><span data-en="Your name">Tu nombre</span>
           <input type="text" id="f-nombre" autocomplete="name" required>
         </label>
         <div>
-          <div style="font-size: 13px; color: var(--text-sec); font-weight: 500; margin-bottom: 4px;">¿Cómo lo quieres?</div>
+          <div style="font-size: 13px; color: var(--text-sec); font-weight: 500; margin-bottom: 4px;" data-en="How would you like it?">¿Cómo lo quieres?</div>
           <div class="seg">
-            <label><input type="radio" name="entrega" value="recoger" checked onchange="toggleDireccion()"> Paso a recoger</label>
-            <label><input type="radio" name="entrega" value="domicilio" onchange="toggleDireccion()"> A domicilio</label>
+            <label><input type="radio" name="entrega" value="recoger" checked onchange="toggleDireccion()"> <span data-en="Pick up">Paso a recoger</span></label>
+            <label><input type="radio" name="entrega" value="domicilio" onchange="toggleDireccion()"> <span data-en="Delivery">A domicilio</span></label>
           </div>
         </div>
-        <label id="f-direccion-wrap" hidden>Dirección de entrega
-          <input type="text" id="f-direccion" autocomplete="street-address" placeholder="Calle, número, cruzamientos y colonia">
+        <label id="f-direccion-wrap" hidden><span data-en="Delivery address">Dirección de entrega</span>
+          <input type="text" id="f-direccion" autocomplete="street-address" placeholder="Calle, número, cruzamientos y colonia" data-en-placeholder="Street, number, cross streets and neighborhood">
         </label>
-        <label>Notas (opcional)
-          <textarea id="f-notas" placeholder="Ej. sin cebolla, salsa aparte…"></textarea>
+        <label><span data-en="Notes (optional)">Notas (opcional)</span>
+          <textarea id="f-notas" placeholder="Ej. sin cebolla, salsa aparte…" data-en-placeholder="E.g. no onion, salsa on the side…"></textarea>
         </label>
         <div class="error" id="f-error" role="alert"></div>
         <button type="submit" class="btn btn-primary btn-block">
-          <span>Enviar pedido por WhatsApp</span>
+          <span data-en="Send order via WhatsApp">Enviar pedido por WhatsApp</span>
           <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         </button>
       </form>
@@ -565,60 +581,102 @@
     // abre / cierra en formato de 24 horas, "HH:MM"
     const HORARIO = { diasCerrado: [2], abre: '12:30', cierra: '23:50' };
 
+    // n / d: nombre y descripción en español. n_en / d_en: lo mismo en inglés
+    //   (botón EN de la página). Los nombres típicos se dejan en español.
     // p: precio en pesos. p: null = "precio por confirmar" (se puede pedir igual).
     // foto: nombre de la foto en la carpeta "fotos", sin ".jpg".
     //   Ej. foto: 'taco-lengua'  →  fotos/taco-lengua.jpg
     //   Si la foto todavía no está subida, se ve el espacio vacío.
     const MENU = [
-      { cat: 'entradas', titulo: 'Entradas', items: [
-        { id: 'e_guac',  n: 'Guacamole',  d: 'Con aguacate fresco y totopos', p: 95, foto: 'guacamole' },
-        { id: 'e_chich', n: 'Chicharrón', d: 'Crujiente recién dorado', p: 105, foto: 'chicharron' },
-        { id: 'e_yuc',   n: 'Yucateco',   d: 'Especialidad de la casa con habanero', p: 125, foto: 'yucateco' },
-        { id: 'e_rey',   n: 'El Rey',     d: 'Entrada especial surtida', p: 185, foto: 'el-rey' }
+      { cat: 'entradas', titulo: 'Entradas', titulo_en: 'Starters', items: [
+        { id: 'e_guac',  n: 'Guacamole',  d: 'Con aguacate fresco y totopos', p: 95, foto: 'guacamole',
+          n_en: 'Guacamole', d_en: 'With fresh avocado and tortilla chips' },
+        { id: 'e_chich', n: 'Chicharrón', d: 'Crujiente recién dorado', p: 105, foto: 'chicharron',
+          n_en: 'Chicharrón', d_en: 'Crispy pork rinds, freshly fried' },
+        { id: 'e_yuc',   n: 'Yucateco',   d: 'Especialidad de la casa con habanero', p: 125, foto: 'yucateco',
+          n_en: 'Yucateco', d_en: 'House specialty with habanero' },
+        { id: 'e_rey',   n: 'El Rey',     d: 'Entrada especial surtida', p: 185, foto: 'el-rey',
+          n_en: 'El Rey', d_en: 'Special mixed starter' }
       ]},
-      { cat: 'kilos', titulo: '½ kg y kilo', etiqueta: 'Kilos', nota: 'Incluyen salsas, tortillas, limones y cebolla con cilantro. Extras $20 c/u. Pedido mínimo $200.', items: [
-        { id: 'k_promo',       n: 'Promokilo',       d: '½ kg de maciza + ½ kg de surtido, con tortillas, salsas, cebolla con cilantro y limones', p: 409, foto: 'promokilo' },
-        { id: 'k_surt_medio',  n: 'Surtido · ½ kg',  d: 'Combinación de todas nuestras carnitas, ya listo e incluye hígado', p: 210, foto: 'surtido' },
-        { id: 'k_surt_kilo',   n: 'Surtido · 1 kg',  d: 'Combinación de todas nuestras carnitas, ya listo e incluye hígado', p: 399, foto: 'surtido' },
-        { id: 'k_mac_medio',   n: 'Maciza · ½ kg',   d: 'La pura carnita blanca', p: 240, foto: 'maciza' },
-        { id: 'k_mac_kilo',    n: 'Maciza · 1 kg',   d: 'La pura carnita blanca', p: 460, foto: 'maciza' },
-        { id: 'k_gusto_medio', n: 'Al gusto · ½ kg', d: 'Solas o combinadas: costilla, buche, oreja, nana, cuero, chamorro, lengua, trompa, hígado y corazón', p: 240, foto: 'al-gusto' },
-        { id: 'k_gusto_kilo',  n: 'Al gusto · 1 kg', d: 'Solas o combinadas: costilla, buche, oreja, nana, cuero, chamorro, lengua, trompa, hígado y corazón', p: 460, foto: 'al-gusto' }
+      { cat: 'kilos', titulo: '½ kg y kilo', etiqueta: 'Kilos', nota: 'Incluyen salsas, tortillas, limones y cebolla con cilantro. Extras $20 c/u. Pedido mínimo $200.',
+        titulo_en: '½ kg & 1 kg', etiqueta_en: 'By the kilo', nota_en: 'Served with salsas, tortillas, limes and onion with cilantro. Extras $20 each. Minimum order $200.', items: [
+        { id: 'k_promo',       n: 'Promokilo',       d: '½ kg de maciza + ½ kg de surtido, con tortillas, salsas, cebolla con cilantro y limones', p: 409, foto: 'promokilo',
+          n_en: 'Promokilo', d_en: '½ kg of maciza + ½ kg of surtido, with tortillas, salsas, onion with cilantro and limes' },
+        { id: 'k_surt_medio',  n: 'Surtido · ½ kg',  d: 'Combinación de todas nuestras carnitas, ya listo e incluye hígado', p: 210, foto: 'surtido',
+          n_en: 'Surtido (mixed) · ½ kg', d_en: 'Ready-made mix of all our carnitas, liver included' },
+        { id: 'k_surt_kilo',   n: 'Surtido · 1 kg',  d: 'Combinación de todas nuestras carnitas, ya listo e incluye hígado', p: 399, foto: 'surtido',
+          n_en: 'Surtido (mixed) · 1 kg', d_en: 'Ready-made mix of all our carnitas, liver included' },
+        { id: 'k_mac_medio',   n: 'Maciza · ½ kg',   d: 'La pura carnita blanca', p: 240, foto: 'maciza',
+          n_en: 'Maciza (lean) · ½ kg', d_en: 'Just the lean white meat' },
+        { id: 'k_mac_kilo',    n: 'Maciza · 1 kg',   d: 'La pura carnita blanca', p: 460, foto: 'maciza',
+          n_en: 'Maciza (lean) · 1 kg', d_en: 'Just the lean white meat' },
+        { id: 'k_gusto_medio', n: 'Al gusto · ½ kg', d: 'Solas o combinadas: costilla, buche, oreja, nana, cuero, chamorro, lengua, trompa, hígado y corazón', p: 240, foto: 'al-gusto',
+          n_en: 'Your choice · ½ kg', d_en: 'On their own or combined: rib, buche (stomach), ear, nana, skin, shank, tongue, snout, liver and heart' },
+        { id: 'k_gusto_kilo',  n: 'Al gusto · 1 kg', d: 'Solas o combinadas: costilla, buche, oreja, nana, cuero, chamorro, lengua, trompa, hígado y corazón', p: 460, foto: 'al-gusto',
+          n_en: 'Your choice · 1 kg', d_en: 'On their own or combined: rib, buche (stomach), ear, nana, skin, shank, tongue, snout, liver and heart' }
       ]},
-      { cat: 'tacos', titulo: 'Tacos', nota: 'Tacos de $35 c/u. Surtidos a $28.', items: [
-        { id: 't_mac',  n: 'Taco de maciza',   d: 'La pura carnita blanca', p: 35, foto: 'taco-maciza' },
-        { id: 't_cos',  n: 'Taco de costilla', d: 'Carne jugosa al hueso', p: 35, foto: 'taco-costilla' },
-        { id: 't_buch', n: 'Taco de buche',    d: 'Suave y bien sazonado', p: 35, foto: 'taco-buche' },
-        { id: 't_or',   n: 'Taco de oreja',    d: 'Doradito con buen sazón', p: 35, foto: 'taco-oreja' },
-        { id: 't_nan',  n: 'Taco de nana',     d: 'Tradicional del cazo', p: 35, foto: 'taco-nana' },
-        { id: 't_cham', n: 'Taco de chamorro', d: 'Suave y deshebrado', p: 35, foto: 'taco-chamorro' },
-        { id: 't_cuer', n: 'Taco de cuero',    d: 'Con textura gelatinosa perfecta', p: 35, foto: 'taco-cuero' },
-        { id: 't_leng', n: 'Taco de lengua',   d: 'Corte fino especial', p: 35, foto: 'taco-lengua' },
-        { id: 't_hig',  n: 'Taco de hígado',   d: 'Preparado al estilo de la casa', p: 35, foto: 'taco-higado' },
-        { id: 't_cor',  n: 'Taco de corazón',  d: 'Firme y bien sazonado', p: 35, foto: 'taco-corazon' },
-        { id: 't_surt_promo', n: 'Taco surtido', d: 'Precio especial', p: 28, foto: 'taco-surtido' }
+      { cat: 'tacos', titulo: 'Tacos', nota: 'Tacos de $35 c/u. Surtidos a $28.', titulo_en: 'Tacos', nota_en: 'Tacos $35 each. Mixed tacos $28.', items: [
+        { id: 't_mac',  n: 'Taco de maciza',   d: 'La pura carnita blanca', p: 35, foto: 'taco-maciza',
+          n_en: 'Maciza taco', d_en: 'Lean white meat' },
+        { id: 't_cos',  n: 'Taco de costilla', d: 'Carne jugosa al hueso', p: 35, foto: 'taco-costilla',
+          n_en: 'Rib taco', d_en: 'Juicy meat on the bone' },
+        { id: 't_buch', n: 'Taco de buche',    d: 'Suave y bien sazonado', p: 35, foto: 'taco-buche',
+          n_en: 'Buche taco (stomach)', d_en: 'Tender and well seasoned' },
+        { id: 't_or',   n: 'Taco de oreja',    d: 'Doradito con buen sazón', p: 35, foto: 'taco-oreja',
+          n_en: 'Ear taco', d_en: 'Golden and full of flavor' },
+        { id: 't_nan',  n: 'Taco de nana',     d: 'Tradicional del cazo', p: 35, foto: 'taco-nana',
+          n_en: 'Nana taco', d_en: 'A copper-pot classic' },
+        { id: 't_cham', n: 'Taco de chamorro', d: 'Suave y deshebrado', p: 35, foto: 'taco-chamorro',
+          n_en: 'Shank taco', d_en: 'Tender and shredded' },
+        { id: 't_cuer', n: 'Taco de cuero',    d: 'Con textura gelatinosa perfecta', p: 35, foto: 'taco-cuero',
+          n_en: 'Pork skin taco', d_en: 'Soft, gelatinous texture' },
+        { id: 't_leng', n: 'Taco de lengua',   d: 'Corte fino especial', p: 35, foto: 'taco-lengua',
+          n_en: 'Tongue taco', d_en: 'A fine, special cut' },
+        { id: 't_hig',  n: 'Taco de hígado',   d: 'Preparado al estilo de la casa', p: 35, foto: 'taco-higado',
+          n_en: 'Liver taco', d_en: 'Prepared house style' },
+        { id: 't_cor',  n: 'Taco de corazón',  d: 'Firme y bien sazonado', p: 35, foto: 'taco-corazon',
+          n_en: 'Heart taco', d_en: 'Firm and well seasoned' },
+        { id: 't_surt_promo', n: 'Taco surtido', d: 'Precio especial', p: 28, foto: 'taco-surtido',
+          n_en: 'Mixed taco', d_en: 'Special price' }
       ]},
-      { cat: 'especiales', titulo: 'Especialidades', nota: 'Pueden llevar verdura no mencionada. Cualquier extra o cambio $20.', items: [
-        { id: 'esp_chil',  n: 'Chilaquiles', d: 'Totopos bañados en salsa de chipotle, carnita a tu elección, crema y queso artesanal', p: 145, foto: 'chilaquiles' },
-        { id: 'esp_reyn',  n: 'Reyna (1 pza)',       d: '3/4 de barra de pan de horno de leña rellena de carnita a tu elección', p: 75, foto: 'reyna' },
-        { id: 'esp_reyn_surt', n: 'Reyna surtida (1 pza)', d: 'Pan de horno de leña relleno de carnita surtida', p: 65, foto: 'reyna-surtida' },
-        { id: 'esp_quek',  n: 'Quekarnita (1 pza)',  d: 'Tortilla artesanal, queso Oaxaca original y carnita a elegir', p: 55, foto: 'quekarnita' },
-        { id: 'esp_sopes', n: 'Sope (1 pza)',        d: 'Tortilla hecha a mano, carnita, crema y queso artesanal', p: 55, foto: 'sope' },
-        { id: 'esp_tost',  n: 'Tostada (1 pza)',     d: 'Tostada con frijolito, pierna, crema y queso fresco', p: 75, foto: 'tostada' },
-        { id: 'esp_burro', n: 'Megaburro',           d: 'Tortillón con frijol, carnita, queso y guacamole', p: 165, foto: 'megaburro' },
-        { id: 'esp_gord',  n: 'Gordita (1 pza)',     d: 'Hecha a mano, rellena de carnitas con crema y queso fresco', p: 45, foto: 'gordita' },
-        { id: 'esp_frij',  n: 'Frijoles puercos',    d: 'Receta tradicional espesa', p: 95, foto: 'frijoles-puercos' }
+      { cat: 'especiales', titulo: 'Especialidades', nota: 'Pueden llevar verdura no mencionada. Cualquier extra o cambio $20.',
+        titulo_en: 'Specialties', nota_en: 'May include vegetables not listed. Any extra or change $20.', items: [
+        { id: 'esp_chil',  n: 'Chilaquiles', d: 'Totopos bañados en salsa de chipotle, carnita a tu elección, crema y queso artesanal', p: 145, foto: 'chilaquiles',
+          n_en: 'Chilaquiles', d_en: 'Tortilla chips in chipotle salsa with carnitas of your choice, cream and artisan cheese' },
+        { id: 'esp_reyn',  n: 'Reyna (1 pza)',       d: '3/4 de barra de pan de horno de leña rellena de carnita a tu elección', p: 75, foto: 'reyna',
+          n_en: 'Reyna (1 pc)', d_en: '3/4 of a wood-fired bread loaf filled with carnitas of your choice' },
+        { id: 'esp_reyn_surt', n: 'Reyna surtida (1 pza)', d: 'Pan de horno de leña relleno de carnita surtida', p: 65, foto: 'reyna-surtida',
+          n_en: 'Mixed Reyna (1 pc)', d_en: 'Wood-fired bread filled with mixed carnitas' },
+        { id: 'esp_quek',  n: 'Quekarnita (1 pza)',  d: 'Tortilla artesanal, queso Oaxaca original y carnita a elegir', p: 55, foto: 'quekarnita',
+          n_en: 'Quekarnita (1 pc)', d_en: 'Artisan tortilla, real Oaxaca cheese and carnitas of your choice' },
+        { id: 'esp_sopes', n: 'Sope (1 pza)',        d: 'Tortilla hecha a mano, carnita, crema y queso artesanal', p: 55, foto: 'sope',
+          n_en: 'Sope (1 pc)', d_en: 'Handmade tortilla with carnitas, cream and artisan cheese' },
+        { id: 'esp_tost',  n: 'Tostada (1 pza)',     d: 'Tostada con frijolito, pierna, crema y queso fresco', p: 75, foto: 'tostada',
+          n_en: 'Tostada (1 pc)', d_en: 'Tostada with beans, pork leg, cream and fresh cheese' },
+        { id: 'esp_burro', n: 'Megaburro',           d: 'Tortillón con frijol, carnita, queso y guacamole', p: 165, foto: 'megaburro',
+          n_en: 'Megaburro', d_en: 'Big tortilla with beans, carnitas, cheese and guacamole' },
+        { id: 'esp_gord',  n: 'Gordita (1 pza)',     d: 'Hecha a mano, rellena de carnitas con crema y queso fresco', p: 45, foto: 'gordita',
+          n_en: 'Gordita (1 pc)', d_en: 'Handmade, stuffed with carnitas, cream and fresh cheese' },
+        { id: 'esp_frij',  n: 'Frijoles puercos',    d: 'Receta tradicional espesa', p: 95, foto: 'frijoles-puercos',
+          n_en: 'Frijoles puercos', d_en: 'Thick, traditional pork-and-bean recipe' }
       ]},
-      { cat: 'bebidas', titulo: 'Bebidas', items: [
-        { id: 'b_ref',   n: 'Refresco',        d: 'Frío, en botella o lata', p: 35, foto: 'refresco' },
-        { id: 'b_nat',   n: 'Natural',         d: 'Agua fresca de fruta natural', p: 55, foto: 'natural' },
-        { id: 'b_aguas', n: 'Agua de sabor',   d: 'Horchata, jamaica o limón', p: 45, foto: 'agua-de-sabor' }
+      { cat: 'bebidas', titulo: 'Bebidas', titulo_en: 'Drinks', items: [
+        { id: 'b_ref',   n: 'Refresco',        d: 'Frío, en botella o lata', p: 35, foto: 'refresco',
+          n_en: 'Soda', d_en: 'Cold, bottle or can' },
+        { id: 'b_nat',   n: 'Natural',         d: 'Agua fresca de fruta natural', p: 55, foto: 'natural',
+          n_en: 'Fresh fruit drink', d_en: 'Agua fresca made with real fruit' },
+        { id: 'b_aguas', n: 'Agua de sabor',   d: 'Horchata, jamaica o limón', p: 45, foto: 'agua-de-sabor',
+          n_en: 'Agua fresca', d_en: 'Horchata, hibiscus or lime' }
       ]},
-      { cat: 'postres', titulo: 'Postres', items: [
-        { id: 'p_qbol', n: 'Queso de bola napolitano', d: 'Con el toque clásico yucateco', p: 95, foto: 'queso-de-bola' },
-        { id: 'p_qnap', n: 'Queso napolitano',  d: 'Flan clásico tradicional casero', p: 85, foto: 'queso-napolitano' },
-        { id: 'p_sanp', n: 'Helado San Patricio', d: 'Crema con licores y espresso', p: 119, foto: 'helado-san-patricio' },
-        { id: 'p_temp', n: 'Postre de temporada', d: 'Pregunta por el dulce del día', p: 119, foto: 'postre-temporada' }
+      { cat: 'postres', titulo: 'Postres', titulo_en: 'Desserts', items: [
+        { id: 'p_qbol', n: 'Queso de bola napolitano', d: 'Con el toque clásico yucateco', p: 95, foto: 'queso-de-bola',
+          n_en: 'Queso de bola flan', d_en: 'With the classic Yucatecan touch' },
+        { id: 'p_qnap', n: 'Queso napolitano',  d: 'Flan clásico tradicional casero', p: 85, foto: 'queso-napolitano',
+          n_en: 'Queso napolitano (flan)', d_en: 'Classic homemade flan' },
+        { id: 'p_sanp', n: 'Helado San Patricio', d: 'Crema con licores y espresso', p: 119, foto: 'helado-san-patricio',
+          n_en: 'San Patricio ice cream', d_en: 'Cream with liqueurs and espresso' },
+        { id: 'p_temp', n: 'Postre de temporada', d: 'Pregunta por el dulce del día', p: 119, foto: 'postre-temporada',
+          n_en: 'Seasonal dessert', d_en: 'Ask for today’s dessert' }
       ]}
     ];
 
@@ -642,7 +700,88 @@
     const $ = id => document.getElementById(id);
     const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const dinero = n => '$' + n.toLocaleString('es-MX');
-    const precioHTML = p => p == null ? '<span class="price pendiente">Precio por<br>confirmar</span>' : `<span class="price">${dinero(p)}</span>`;
+    const precioHTML = p => p == null ? `<span class="price pendiente">${t('pendienteHTML')}</span>` : `<span class="price">${dinero(p)}</span>`;
+
+    /* ---------- Idioma: español (por defecto) e inglés ---------- */
+    const TXT = {
+      es: {
+        titulo: 'Carnitas Michoacán El Rey · Mérida',
+        abierto: 'Cazo abierto', cerrado: 'Cerrado ahora',
+        agregado: 'Agregado', agregar: 'Agregar', quitarUno: 'Quitar uno de', agregarOtro: 'Agregar otro', cantidad: 'Cantidad',
+        alPedido: 'al pedido', llevas: 'llevas',
+        producto: 'producto', productos: 'productos', masPorConfirmar: ' + por confirmar',
+        pendienteHTML: 'Precio por<br>confirmar', porConfirmar: 'Por confirmar', precioPorConfirmar: 'Precio por confirmar',
+        vacio: 'Tu pedido está vacío.',
+        avisoPendiente: 'Algunos productos tienen precio por confirmar; el restaurante te dirá el total final.',
+        avisoNormal: 'Desechable +$10. El restaurante te confirma el total final y el costo de envío.',
+        errVacio: 'Agrega al menos un producto.', errNombre: 'Escribe tu nombre.', errDireccion: 'Escribe la dirección de entrega.',
+        otroIdioma: 'EN', otroIdiomaLabel: 'Read in English', otroIdiomaLang: 'en'
+      },
+      en: {
+        titulo: 'Carnitas Michoacán El Rey · Mérida, Mexico',
+        abierto: 'Open now', cerrado: 'Closed now',
+        agregado: 'Added', agregar: 'Add', quitarUno: 'Remove one', agregarOtro: 'Add another', cantidad: 'Quantity',
+        alPedido: 'to order', llevas: 'in your order',
+        producto: 'item', productos: 'items', masPorConfirmar: ' + to be confirmed',
+        pendienteHTML: 'Price to<br>be confirmed', porConfirmar: 'To be confirmed', precioPorConfirmar: 'Price to be confirmed',
+        vacio: 'Your order is empty.',
+        avisoPendiente: 'Some items have a price to be confirmed; the restaurant will tell you the final total.',
+        avisoNormal: 'To-go container +$10. The restaurant will confirm the final total and delivery fee.',
+        errVacio: 'Add at least one item.', errNombre: 'Please enter your name.', errDireccion: 'Please enter the delivery address.',
+        otroIdioma: 'ES', otroIdiomaLabel: 'Ver en español', otroIdiomaLang: 'es'
+      }
+    };
+    let idioma = 'es';
+    const t = k => TXT[idioma][k];
+    const enIngles = () => idioma === 'en';
+    const nom = it => enIngles() && it.n_en ? it.n_en : it.n;
+    const desc = it => enIngles() && it.d_en ? it.d_en : it.d;
+    const tituloSec = sec => enIngles() && sec.titulo_en ? sec.titulo_en : sec.titulo;
+    const notaSec = sec => enIngles() && sec.nota_en ? sec.nota_en : sec.nota;
+    const etiquetaSec = sec => enIngles() ? (sec.etiqueta_en || sec.titulo_en || sec.titulo) : (sec.etiqueta || sec.titulo);
+
+    // Cambia todos los textos fijos (data-en) y vuelve a pintar lo que sale del menú
+    function aplicarIdioma(nuevo) {
+      idioma = nuevo === 'en' ? 'en' : 'es';
+      document.documentElement.lang = idioma;
+      document.title = t('titulo');
+      document.querySelectorAll('[data-en]').forEach(el => {
+        if (el.dataset.es === undefined) el.dataset.es = el.innerHTML;
+        el.innerHTML = enIngles() ? el.dataset.en : el.dataset.es;
+      });
+      ['aria-label', 'placeholder', 'alt'].forEach(attr => {
+        const enAttr = 'data-en-' + attr, esAttr = 'data-es-' + attr;
+        document.querySelectorAll(`[${enAttr}]`).forEach(el => {
+          if (!el.hasAttribute(esAttr)) el.setAttribute(esAttr, el.getAttribute(attr) || '');
+          el.setAttribute(attr, el.getAttribute(enIngles() ? enAttr : esAttr));
+        });
+      });
+      const b = $('btn-idioma');
+      b.textContent = t('otroIdioma');
+      b.setAttribute('aria-label', t('otroIdiomaLabel'));
+      b.lang = t('otroIdiomaLang');
+      actualizarEstado();
+      renderTabs();
+      renderSeccion(seccionActual);
+      mostrarVitrina(vitrinaIndex);
+      actualizarBarra();
+      if ($('pedido').classList.contains('active')) renderPedido();
+      if ($('galeria').classList.contains('active')) renderGaleria();
+    }
+
+    function cambiarIdioma() {
+      aplicarIdioma(enIngles() ? 'es' : 'en');
+      try { localStorage.setItem('rey_idioma', idioma); } catch (e) {}
+    }
+
+    // ?lang=en en la dirección, o lo que eligió antes, o el idioma del teléfono
+    function idiomaInicial() {
+      const param = new URLSearchParams(location.search).get('lang');
+      if (param === 'en' || param === 'es') return param;
+      try { const g = localStorage.getItem('rey_idioma'); if (g === 'en' || g === 'es') return g; } catch (e) {}
+      const nav = ((navigator.languages && navigator.languages[0]) || navigator.language || 'es').toLowerCase();
+      return nav.startsWith('en') ? 'en' : 'es';
+    }
 
     /* ---------- Estado abierto / cerrado ---------- */
     function actualizarEstado() {
@@ -655,7 +794,7 @@
       const aMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
       const abierto = !HORARIO.diasCerrado.includes(dia) && minutos >= aMin(HORARIO.abre) && minutos < aMin(HORARIO.cierra);
       const badge = $('status-badge');
-      badge.textContent = abierto ? 'Cazo abierto' : 'Cerrado ahora';
+      badge.textContent = abierto ? t('abierto') : t('cerrado');
       badge.classList.toggle('cerrado', !abierto);
     }
 
@@ -665,18 +804,18 @@
     function cambiar(id, delta) {
       pedido[id] = (pedido[id] || 0) + delta;
       if (pedido[id] <= 0) delete pedido[id];
-      if (delta > 0) mostrarToast(`Agregado: ${PRODUCTOS[id].n}`);
+      if (delta > 0) mostrarToast(`${t('agregado')}: ${nom(PRODUCTOS[id])}`);
       actualizarTodo();
     }
 
     function controlCantidad(id) {
       const c = pedido[id] || 0;
-      const nombre = esc(PRODUCTOS[id].n);
-      if (!c) return `<button type="button" class="btn-add" onclick="cambiar('${id}', 1)" aria-label="Agregar ${nombre}">+</button>`;
+      const nombre = esc(nom(PRODUCTOS[id]));
+      if (!c) return `<button type="button" class="btn-add" onclick="cambiar('${id}', 1)" aria-label="${t('agregar')} ${nombre}">+</button>`;
       return `<span class="qty">
-        <button type="button" onclick="cambiar('${id}', -1)" aria-label="Quitar uno de ${nombre}">−</button>
-        <output aria-label="Cantidad">${c}</output>
-        <button type="button" onclick="cambiar('${id}', 1)" aria-label="Agregar otro ${nombre}">+</button>
+        <button type="button" onclick="cambiar('${id}', -1)" aria-label="${t('quitarUno')} ${nombre}">−</button>
+        <output aria-label="${t('cantidad')}">${c}</output>
+        <button type="button" onclick="cambiar('${id}', 1)" aria-label="${t('agregarOtro')} ${nombre}">+</button>
       </span>`;
     }
 
@@ -692,8 +831,8 @@
 
     function actualizarBarra() {
       const { total, count, pendientes } = resumen();
-      $('articulos-cant').textContent = `${count} ${count === 1 ? 'producto' : 'productos'}`;
-      $('total-cuenta').textContent = dinero(total) + (pendientes ? ' + por confirmar' : '');
+      $('articulos-cant').textContent = `${count} ${count === 1 ? t('producto') : t('productos')}`;
+      $('total-cuenta').textContent = dinero(total) + (pendientes ? t('masPorConfirmar') : '');
       $('barra-pedido').classList.toggle('show', count > 0);
     }
 
@@ -704,16 +843,14 @@
         const it = PRODUCTOS[id], c = pedido[id];
         return `<div class="cart-row">
           <div style="min-width:0">
-            <div class="menu-title">${esc(it.n)}</div>
-            <div class="menu-desc">${it.p == null ? 'Precio por confirmar' : `${c} × ${dinero(it.p)} = ${dinero(it.p * c)}`}</div>
+            <div class="menu-title">${esc(nom(it))}</div>
+            <div class="menu-desc">${it.p == null ? t('precioPorConfirmar') : `${c} × ${dinero(it.p)} = ${dinero(it.p * c)}`}</div>
           </div>
           ${controlCantidad(id)}
         </div>`;
-      }).join('') : '<p class="aviso" style="padding:16px 0">Tu pedido está vacío.</p>';
+      }).join('') : `<p class="aviso" style="padding:16px 0">${t('vacio')}</p>`;
       $('pedido-total').textContent = dinero(total);
-      $('pedido-aviso').textContent = pendientes
-        ? 'Algunos productos tienen precio por confirmar; el restaurante te dirá el total final.'
-        : 'Desechable +$10. El restaurante te confirma el total final y el costo de envío.';
+      $('pedido-aviso').textContent = pendientes ? t('avisoPendiente') : t('avisoNormal');
       if (!ids.length) cerrarPedido();
     }
 
@@ -739,7 +876,7 @@
 
     function renderTabs() {
       $('tabs').innerHTML = MENU.map(s =>
-        `<button type="button" class="tab-chip" role="tab" aria-selected="${s.cat === seccionActual}" onclick="filtrar('${s.cat}')">${esc(s.titulo)}</button>`
+        `<button type="button" class="tab-chip" role="tab" aria-selected="${s.cat === seccionActual}" onclick="filtrar('${s.cat}')">${esc(tituloSec(s))}</button>`
       ).join('');
     }
 
@@ -752,11 +889,11 @@
     function renderSeccion(cat) {
       const sec = MENU.find(s => s.cat === cat);
       $('lista-platos').innerHTML =
-        (sec.nota ? `<div class="menu-note">${esc(sec.nota)}</div>` : '') +
+        (sec.nota ? `<div class="menu-note">${esc(notaSec(sec))}</div>` : '') +
         sec.items.map(i => `<div class="menu-item-row">
           <div style="min-width: 0;">
-            <div class="menu-title">${esc(i.n)}</div>
-            <div class="menu-desc">${esc(i.d)}</div>
+            <div class="menu-title">${esc(nom(i))}</div>
+            <div class="menu-desc">${esc(desc(i))}</div>
           </div>
           <div class="row-right">${precioCampo(i)}${controlCantidad(i.id)}</div>
         </div>`).join('');
@@ -773,7 +910,7 @@
       ...Object.values(PRODUCTOS).filter(it => !VITRINA_PRIMERO.includes(it.id))
     ];
     const CATEGORIA = {};
-    MENU.forEach(s => s.items.forEach(it => { CATEGORIA[it.id] = s.etiqueta || s.titulo; }));
+    MENU.forEach(s => s.items.forEach(it => { CATEGORIA[it.id] = s; }));
 
     let vitrinaIndex = 0, vitrinaTimer = null;
     const vitrinaActual = () => LISTA[vitrinaIndex];
@@ -794,12 +931,12 @@
       const slot = $('slot-showcase'), img = $('showcase-img');
       slot.classList.add('has-image');
       img.onerror = () => slot.classList.remove('has-image'); // sin foto: espacio vacío
-      img.alt = it.n;
+      img.alt = nom(it);
       img.src = rutaFoto(it.foto);
-      $('showcase-title').textContent = it.n;
-      $('showcase-desc').textContent = it.d;
-      $('showcase-price').textContent = it.p == null ? 'Por confirmar' : dinero(it.p);
-      $('showcase-counter').textContent = CATEGORIA[it.id].toUpperCase();
+      $('showcase-title').textContent = nom(it);
+      $('showcase-desc').textContent = desc(it);
+      $('showcase-price').textContent = it.p == null ? t('porConfirmar') : dinero(it.p);
+      $('showcase-counter').textContent = etiquetaSec(CATEGORIA[it.id]).toUpperCase();
       renderVitrinaBoton();
     }
 
@@ -807,7 +944,7 @@
       const c = pedido[vitrinaActual().id] || 0;
       const b = $('showcase-add');
       b.textContent = c ? c : '+';
-      b.setAttribute('aria-label', `Agregar ${vitrinaActual().n} al pedido` + (c ? ` (llevas ${c})` : ''));
+      b.setAttribute('aria-label', `${t('agregar')} ${nom(vitrinaActual())} ${t('alPedido')}` + (c ? ` (${t('llevas')}: ${c})` : ''));
     }
 
     function animarBarra() {
@@ -868,18 +1005,18 @@
         const grupos = {};
         sec.items.forEach(it => { (grupos[it.foto] = grupos[it.foto] || []).push(it); });
         const fotosSec = Object.keys(grupos);
-        html += `<div class="gallery-cat" data-cat="${sec.cat}"><div class="mono-label">${esc(sec.titulo.toUpperCase())}</div>` +
+        html += `<div class="gallery-cat" data-cat="${sec.cat}"><div class="mono-label">${esc(tituloSec(sec).toUpperCase())}</div>` +
           fotosSec.map(f => `
           <div class="gallery-card" id="gal-${f}">
             <div class="img-slot has-image">
-              <img src="${esc(rutaFoto(f))}" alt="${esc(grupos[f][0].n)}" loading="lazy" onerror="this.parentNode.classList.remove('has-image')">
+              <img src="${esc(rutaFoto(f))}" alt="${esc(nom(grupos[f][0]))}" loading="lazy" onerror="this.parentNode.classList.remove('has-image')">
               <button type="button" class="btn-foto" onclick="event.stopPropagation(); elegirFoto('${f}')"><svg class="icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Cambiar foto</button>
               ${FOTO_VACIA}
             </div>
             ${grupos[f].map(it => `<div class="dish-info">
               <div style="min-width:0">
-                <div class="menu-title">${esc(it.n)}</div>
-                <div class="menu-desc">${esc(it.d)}</div>
+                <div class="menu-title">${esc(nom(it))}</div>
+                <div class="menu-desc">${esc(desc(it))}</div>
               </div>
               <div class="row-right">${precioCampo(it)}${controlCantidad(it.id)}</div>
             </div>`).join('')}
@@ -930,9 +1067,9 @@
       const direccion = $('f-direccion').value.trim();
       const notas = $('f-notas').value.trim();
 
-      if (!Object.keys(pedido).length) { $('f-error').textContent = 'Agrega al menos un producto.'; return; }
-      if (!nombre) { $('f-error').textContent = 'Escribe tu nombre.'; $('f-nombre').focus(); return; }
-      if (entrega === 'domicilio' && !direccion) { $('f-error').textContent = 'Escribe la dirección de entrega.'; $('f-direccion').focus(); return; }
+      if (!Object.keys(pedido).length) { $('f-error').textContent = t('errVacio'); return; }
+      if (!nombre) { $('f-error').textContent = t('errNombre'); $('f-nombre').focus(); return; }
+      if (entrega === 'domicilio' && !direccion) { $('f-error').textContent = t('errDireccion'); $('f-direccion').focus(); return; }
       $('f-error').textContent = '';
 
       const { total, pendientes } = resumen();
@@ -951,6 +1088,7 @@
         `*Nombre:* ${nombre}`,
         entrega === 'domicilio' ? `*Entrega a domicilio:* ${direccion}` : '*Paso a recoger*',
         notas ? `*Notas:* ${notas}` : '',
+        enIngles() ? '*Idioma:* el cliente pidió en inglés' : '',
         '',
         '¿Me confirman el tiempo de entrega? Gracias.'
       ].filter((l, i, a) => !(l === '' && a[i - 1] === '')).join('\n');
@@ -1080,6 +1218,7 @@
     iniciarVitrina();
     actualizarBarra();
     if (location.hash === '#dueno') entrarDueno();
+    aplicarIdioma(idiomaInicial());
   </script>
 </body>
 </html>

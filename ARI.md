@@ -24,6 +24,21 @@ pruebas) sigue en el historial: commit `14ff34c`. Para verla:
   Si falta una, la página muestra el hueco vacío.
 - `pruebas/web.test.js` — pruebas sin dependencias.
 
+## Idiomas (español e inglés)
+- Botón ES/EN en el encabezado. Abre en inglés si el teléfono está en inglés,
+  recuerda lo que elige cada quien (`localStorage`: `rey_idioma`) y se puede
+  forzar con `?lang=en` o `?lang=es`.
+- Textos fijos: atributo `data-en` (y `data-en-alt`, `data-en-placeholder`,
+  `data-en-aria-label`) junto al texto en español.
+- Textos que arma el código: objeto `TXT` (mismas claves en `es` y `en`).
+- Carta: `n_en` / `d_en` en cada platillo y `titulo_en` / `nota_en` /
+  `etiqueta_en` en cada sección, dentro de `MENU`. Si se agrega un platillo hay
+  que ponerle su inglés (lo revisa `npm test`). Los nombres típicos (maciza,
+  Reyna, chilaquiles, buche...) se dejan en español.
+- El mensaje de WhatsApp siempre va en español (lo lee el restaurante); si el
+  cliente usó inglés, el mensaje lo avisa.
+- El modo dueño solo está en español.
+
 ## Modo dueño (demostración)
 - Se abre añadiendo `#dueno` a la dirección: `…/Restaurante-el-rey/#dueno`.
   Los clientes no ven ningún botón.
@@ -61,10 +76,11 @@ Sale del mural del local. Regla de Javi: **integrado, no pegado**.
   No usar 8090-8096 ni 8082: son de Ari.
 
 ## Cómo se comprueba
-- `npm test` — 7 pruebas: el JS compila, existen los archivos que pide la
+- `npm test` — 9 pruebas: el JS compila, existen los archivos que pide la
   página, no carga nada de fuera, el menú es coherente (ids únicos, foto y
   precio válidos), el teléfono del pie es el de WhatsApp, el horario escrito
-  coincide con `HORARIO`, y está la regla `[hidden]`.
+  coincide con `HORARIO`, está la regla `[hidden]`, cada platillo tiene su inglés y `TXT` tiene las
+  mismas claves en los dos idiomas.
 - `~/bin/ari-web-check` **hay que actualizarlo**: comprueba `styles.css`,
   `main.js`, `datos.js` y `logica.js`, que ya no existen. Ver "Peticiones a Ari"
   en `PARA-CLAUDE.md`.
