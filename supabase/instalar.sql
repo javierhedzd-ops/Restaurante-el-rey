@@ -1,13 +1,21 @@
 -- Panel del dueño de Carnitas El Rey: precios y fotos que edita el dueño.
 -- Se pega completo en Supabase → SQL Editor → Run. Se puede correr más de una vez.
 --
--- ANTES DE CORRERLO: cambia CORREO-DEL-DUENO@ejemplo.com (abajo, una sola vez)
--- por el correo con el que el dueño va a entrar.
+-- Quién puede editar: los correos de la tabla `editores` (abajo). Para agregar
+-- a alguien: insert into public.editores (email) values ('correo@ejemplo.com');
+-- y crearle su usuario en Authentication → Users. Para quitarlo: delete ... where email = '...'.
 
--- Quién es el dueño. Solo ese correo puede escribir; todos pueden leer.
+create table if not exists public.editores (
+  email text primary key check (email = lower(email))
+);
+alter table public.editores enable row level security;   -- sin políticas: nadie la lee desde la página
+
+insert into public.editores (email) values ('javierhedzd@gmail.com') on conflict do nothing;
+
+-- ¿El usuario que hace la petición es editor? (security definer: puede leer `editores`)
 create or replace function public.es_dueno() returns boolean
-language sql stable as $$
-  select coalesce(auth.jwt() ->> 'email', '') = lower('CORREO-DEL-DUENO@ejemplo.com')
+language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.editores where email = lower(coalesce(auth.jwt() ->> 'email', '')))
 $$;
 
 -- Precios que cambió el dueño (id = id del platillo en MENU de index.html).
