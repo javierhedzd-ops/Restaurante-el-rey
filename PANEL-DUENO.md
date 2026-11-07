@@ -6,7 +6,12 @@ Nadie más puede cambiar nada: la regla la revisa el servidor, no la página.
 
 Los precios y las fotos se guardan en **Supabase** (gratis para este tamaño).
 
-## Montarlo (una sola vez, unos 15 minutos)
+**Quién tiene qué:** Javi es dueño del proyecto de Supabase (lo crea y lo
+administra). El dueño del restaurante **no** entra a Supabase: solo recibe un
+correo y contraseña para la página. Con eso puede cambiar precios y fotos y nada
+más; no ve la base de datos ni puede borrarla.
+
+## Montarlo (Javi, una sola vez, unos 15 minutos)
 
 ### 1. Crear el proyecto
 1. Entra a https://supabase.com y crea una cuenta (con la de Google sirve).
@@ -38,6 +43,10 @@ Los precios y las fotos se guardan en **Supabase** (gratis para este tamaño).
    const NUBE = { url: 'https://xxxx.supabase.co', llave: 'sb_publishable_...' };
    ```
 4. Sube el cambio a GitHub (Claude o Ari lo hacen) y espera 1–2 minutos.
+
+## Darle el acceso al dueño
+Mándale la dirección `…/Restaurante-el-rey/#dueno`, su correo y la contraseña
+que le creaste en el paso 3. Si la olvida, la cambias en Authentication → Users.
 
 ## Usarlo desde el teléfono del dueño
 1. Abrir https://javierhedzd-ops.github.io/Restaurante-el-rey/#dueno
