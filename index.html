@@ -341,43 +341,39 @@
     }
     /* Mural: la catrina del local, repintada limpia y con la pared transparente,
        así queda pintada directamente sobre la pared de la página.
-       La portada queda encima, como colgada en esa pared. */
+       Se presenta como obra: completa, con pared alrededor y apareciendo despacio
+       (nada de un acercamiento a la cara que asuste al entrar). */
     .muro {
-      height: 470px; margin: -60px 0 -150px;
-      background: url('catrina-mural.webp') center top / 640px auto no-repeat;
+      height: calc((100vw - 32px) / 1.49); margin: 20px auto 6px; max-width: 760px;
+      background: url('catrina-mural.webp') center top / calc(100vw - 32px) auto no-repeat;
+      opacity: 0; animation: muro-aparece 1.8s ease-out 0.15s forwards;
     }
+    @keyframes muro-aparece { to { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { .muro { animation: none; opacity: 1; } }
     /* Más del mural en la misma pared: pocas piezas, siempre detrás del contenido */
     html { overflow-x: clip; }
     .pintura { position: absolute; z-index: 0; height: auto; pointer-events: none; user-select: none; }
     section, footer .container { position: relative; }
-    section > :not(.pintura):not(.monarca), footer .container > :not(.pintura) { position: relative; z-index: 1; }
-    /* Monarca de la carta: vuela y se posa en los botones (JS: "Mariposa monarca") */
+    section > :not(.pintura), footer .container > :not(.pintura) { position: relative; z-index: 1; }
+    /* Monarca: vuela por la carta, se posa en botones y baja al cempasúchil.
+       El aleteo y el vuelo los calcula el JS cuadro por cuadro ("Mariposa monarca"). */
     .monarca {
-      position: absolute; left: 0; top: 0; z-index: 3; width: 54px; height: 35px;
-      pointer-events: none; perspective: 160px; will-change: transform;
+      position: absolute; left: 0; top: 0; z-index: 20; width: 54px; height: 35px;
+      pointer-events: none; perspective: 160px; will-change: transform; visibility: hidden;
     }
+    .monarca.lista { visibility: visible; }
     .monarca-giro { display: flex; width: 100%; height: 100%; transform-style: preserve-3d; }
     .ala { width: 50%; height: 100%; display: block; will-change: transform; outline: 1px solid transparent; }
-    .ala-izq { transform-origin: right center; transform: rotateY(18deg); }
-    .ala-der { transform-origin: left center; transform: rotateY(-18deg); }
-    .monarca.volando .ala-izq { animation: aleteo-izq 0.13s ease-in-out infinite alternate; }
-    .monarca.volando .ala-der { animation: aleteo-der 0.13s ease-in-out infinite alternate; }
-    .monarca.posada .ala-izq { animation: reposo-izq 3.2s ease-in-out infinite; }
-    .monarca.posada .ala-der { animation: reposo-der 3.2s ease-in-out infinite; }
-    @keyframes aleteo-izq { from { transform: rotateY(8deg); } to { transform: rotateY(76deg); } }
-    @keyframes aleteo-der { from { transform: rotateY(-8deg); } to { transform: rotateY(-76deg); } }
-    @keyframes reposo-izq { 0%, 55%, 100% { transform: rotateY(22deg); } 70% { transform: rotateY(66deg); } 85% { transform: rotateY(30deg); } }
-    @keyframes reposo-der { 0%, 55%, 100% { transform: rotateY(-22deg); } 70% { transform: rotateY(-66deg); } 85% { transform: rotateY(-30deg); } }
-    @media (prefers-reduced-motion: reduce) { .monarca .ala { animation: none !important; } }
-    .flor-asoma { width: 128px; top: 26px; right: -22px; transform: rotate(-16deg); }
-    .flor-pie { width: 64px; top: -4px; left: calc(50% - 138px); transform: rotate(-24deg); }
+    .ala-izq { transform-origin: right center; transform: rotateY(30deg); }
+    .ala-der { transform-origin: left center; transform: rotateY(-30deg); }
+    .flor-asoma { width: 150px; top: -40px; right: -16px; transform: rotate(-14deg); }
     @media (min-width: 700px) {
       .monarca { width: 66px; height: 43px; }
-      .flor-asoma { width: 170px; top: 0; right: -96px; }
+      .flor-asoma { width: 210px; top: -56px; right: -120px; }
     }
     .muro + main { position: relative; }
     @media (min-width: 700px) {
-      .muro { height: 660px; margin: -60px 0 -210px; background-size: 920px auto; }
+      .muro { height: 510px; margin: 32px auto 10px; background-size: 760px auto; }
     }
   </style>
 </head>
@@ -486,9 +482,6 @@
     </section>
 
     <section id="menu">
-      <div class="monarca" id="monarca" aria-hidden="true">
-        <div class="monarca-giro"><img class="ala ala-izq" src="arte/monarca-izq.webp" alt=""><img class="ala ala-der" src="arte/monarca-der.webp" alt=""></div>
-      </div>
       <div class="mono-label" data-en="MENU &amp; PRICES">CARTA Y PRECIOS</div>
       <h2 data-en="Pick whatever you’re craving">Elige lo que se te antoje</h2>
 
@@ -527,7 +520,6 @@
 
   <footer>
     <div class="container">
-      <img class="pintura flor-pie" src="arte/flor-boton.webp" alt="" aria-hidden="true" width="374" height="397" loading="lazy">
       <img class="logo-footer" src="logo-completo.png" alt="El Rey Carnitas · Puro sabor mexicano" data-en-alt="El Rey Carnitas · Pure Mexican flavor" width="200" height="88">
       <p class="mono-label" style="color: var(--text-muted);">CARNITAS MICHOACÁN EL REY · MÉRIDA · 2026</p>
       <p style="font-size: 13px; color: var(--text-sec); margin-top: 4px;">
@@ -535,6 +527,11 @@
       </p>
     </div>
   </footer>
+
+  <!-- Mariposa monarca: vuela por la carta y baja al cempasúchil (JS: "Mariposa monarca") -->
+  <div class="monarca" id="monarca" aria-hidden="true">
+    <div class="monarca-giro"><img class="ala ala-izq" src="arte/monarca-izq.webp" alt=""><img class="ala ala-der" src="arte/monarca-der.webp" alt=""></div>
+  </div>
 
   <!-- Barra del pedido -->
   <div class="order-bar" id="barra-pedido" aria-live="polite">
@@ -1241,78 +1238,156 @@
 
     window.addEventListener('hashchange', () => { if (location.hash === '#dueno') entrarDueno(); });
 
-    /* ---------- Mariposa monarca: vuela por la carta y se posa en los botones ---------- */
+    /* ---------- Mariposa monarca ----------
+       Recorrido: descansa en la pared junto al título de la carta, revolotea a 2 o 3
+       botones que se vean, y baja a posarse en el cempasúchil del restaurante.
+       Vuelo como el de una monarca: rumbo que titubea, el cuerpo sube con cada
+       aleteo, ritmo de aleteo que cambia, planeos cortos, gira el cuerpo hacia donde
+       va, frena y revolotea antes de posarse. Posada mueve las alas despacio. */
     (function () {
-      const m = $('monarca'), sec = $('menu');
-      if (!m || !sec) return;
+      const m = $('monarca');
+      const sec = $('menu'), flor = document.querySelector('.flor-asoma');
+      if (!m || !sec || !flor) return;
+      const alaI = m.querySelector('.ala-izq'), alaD = m.querySelector('.ala-der');
       const quieto = window.matchMedia('(prefers-reduced-motion: reduce)');
-      let pos = { x: 0, y: 0 }, timer = null, anim = null, visible = false, posadaEn = null, saltos = 0;
-      const ancho = () => m.offsetWidth, alto = () => m.offsetHeight;
-      const colocar = (p, giro) => { m.style.transform = `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px) rotate(${giro.toFixed(1)}deg)`; };
+      const azar = (a, b) => a + Math.random() * (b - a);
+      const fase = [azar(0, 9), azar(0, 9), azar(0, 9), azar(0, 9)];
+      const ruido = (t, k) => Math.sin(t * 1.1 + fase[k]) * 0.55 + Math.sin(t * 2.3 + fase[k + 1]) * 0.3 + Math.sin(t * 4.7 + fase[k] * 2) * 0.15;
+      const doc = r => ({ x: r.left + scrollX, y: r.top + scrollY });
 
-      // En la pared, junto al título de la carta
-      function casa() {
-        const r = sec.getBoundingClientRect(), h = sec.querySelector('h2').getBoundingClientRect();
-        return { x: Math.min(r.width - ancho() - 2, h.right - r.left + 22), y: h.top - r.top - alto() * 0.55, giro: 14 };
+      // estado
+      let p = { x: 0, y: 0 }, v = { x: 0, y: 0 }, rumbo = 10, estado = 'posada';
+      let ancla = null;           // { el, fx, fy } punto relativo a un elemento (sigue al elemento si la página se mueve)
+      let meta = null, alLlegar = null, posadaEn = null;
+      let alaAng = 32, alaMeta = 32, fasAleteo = 0, frec = 7, planeo = 0, despegue = 0, proxAlas = 0, proxFrec = 0;
+      let t = 0, ultimo = 0, corriendo = false, visibles = 0, timer = null, saltos = 0;
+
+      const puntoDe = a => { const r = a.el.getBoundingClientRect(), d = doc(r); return { x: d.x + r.width * a.fx, y: d.y + r.height * a.fy }; };
+      function anclaCasa() { return { el: sec.querySelector('h2'), fx: 1.12, fy: -0.15, giro: 14 }; }
+      function anclaBoton(b) { return { el: b, fx: azar(0.35, 0.65), fy: -0.05, giro: azar(-18, 18) }; }
+      function anclaFlor() { return { el: flor, fx: azar(0.42, 0.55), fy: azar(0.2, 0.3), giro: azar(-30, -8) }; }
+
+      function dibujar() {
+        const w = m.offsetWidth, h = m.offsetHeight;
+        // el cuerpo sube un poco con cada bajada de alas
+        const bote = estado === 'volando' && planeo <= 0 ? -Math.sin(fasAleteo) * 3 : 0;
+        m.style.transform = `translate(${(p.x - w / 2).toFixed(1)}px, ${(p.y - h / 2 + bote).toFixed(1)}px) rotate(${rumbo.toFixed(1)}deg)`;
+        alaI.style.transform = `rotateY(${alaAng.toFixed(1)}deg)`;
+        alaD.style.transform = `rotateY(${(-alaAng).toFixed(1)}deg)`;
       }
-      // Botones de la carta que se ven en pantalla (sin taparlos con la barra del pedido)
-      function botones() {
-        const tope = 90, fondo = window.innerHeight - 110;
-        return [...sec.querySelectorAll('.tab-chip, .btn-add, .qty button')].filter(b => {
-          const r = b.getBoundingClientRect();
-          return r.width > 0 && r.top > tope && r.bottom < fondo && r.left > 0 && r.right < window.innerWidth;
-        });
+
+      function posar(a) {
+        ancla = a; estado = 'posada'; v = { x: 0, y: 0 };
+        p = puntoDe(a); alaMeta = azar(28, 45); proxAlas = t + azar(0.8, 2);
       }
-      function sobre(b) {
-        const r = b.getBoundingClientRect(), s = sec.getBoundingClientRect();
-        return { x: r.left - s.left + r.width * (0.3 + Math.random() * 0.4) - ancho() / 2, y: r.top - s.top - alto() * 0.62, giro: Math.random() * 28 - 14 };
+
+      function volarA(a, fin) {
+        ancla = null; meta = a; alLlegar = fin; estado = 'volando';
+        despegue = 0.45; frec = azar(8, 10);
+        v = { x: v.x + azar(-30, 30), y: v.y - azar(50, 90) };   // impulso hacia arriba al despegar
+        arrancar();
       }
-      function volarA(dest, alLlegar) {
-        cancelAnimationFrame(anim);
-        m.classList.remove('posada'); m.classList.add('volando');
-        const ini = { ...pos }, dx = dest.x - ini.x, dy = dest.y - ini.y, dist = Math.hypot(dx, dy);
-        const dur = Math.min(2800, 800 + dist * 3.4);
-        const c = { x: ini.x + dx / 2 + (Math.random() - 0.5) * Math.min(dist, 260) * 0.8, y: Math.min(ini.y, dest.y) - 30 - Math.random() * 70 };
-        const t0 = performance.now();
-        (function paso(t) {
-          const k = Math.min(1, (t - t0) / dur), e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2, u = 1 - e;
-          const vx = 2 * u * (c.x - ini.x) + 2 * e * (dest.x - c.x);
-          pos = {
-            x: u * u * ini.x + 2 * u * e * c.x + e * e * dest.x,
-            y: u * u * ini.y + 2 * u * e * c.y + e * e * dest.y + Math.sin(k * Math.PI * 7) * 5 * (1 - k)
-          };
-          colocar(pos, Math.max(-30, Math.min(30, vx * 0.07)) * (1 - k) + dest.giro * k);
-          if (k < 1) { anim = requestAnimationFrame(paso); return; }
-          m.classList.remove('volando'); m.classList.add('posada');
-          if (alLlegar) alLlegar();
-        })(t0);
-      }
-      function siguiente() {
-        clearTimeout(timer);
-        if (!visible || document.hidden || quieto.matches) return;
-        const opciones = botones().filter(b => b !== posadaEn);
-        if (saltos >= 3 || !opciones.length) {
-          saltos = 0; posadaEn = null;
-          volarA(casa(), () => { timer = setTimeout(siguiente, 7000 + Math.random() * 7000); });
+
+      function cuadro(dt) {
+        t += dt;
+        if (estado === 'posada') {
+          if (ancla && ancla.el.isConnected) p = puntoDe(ancla);
+          rumbo += (ancla ? ancla.giro : 0) * 0 + ((ancla ? ancla.giro : rumbo) - rumbo) * Math.min(1, dt * 3);
+          // alas: abre y cierra despacio, con pausas que no se repiten igual
+          if (t > proxAlas) { alaMeta = Math.random() < 0.35 ? azar(10, 22) : azar(30, 58); proxAlas = t + azar(1.2, 4.5); }
+          alaAng += (alaMeta - alaAng) * Math.min(1, dt * azar(1.6, 2.6)) + Math.sin(t * 13) * 0.25;
           return;
         }
-        saltos++;
-        posadaEn = opciones[Math.floor(Math.random() * opciones.length)];
-        volarA(sobre(posadaEn), () => { timer = setTimeout(siguiente, 2500 + Math.random() * 3500); });
+        // --- en vuelo ---
+        const dest = puntoDe(meta);
+        const dx = dest.x - p.x, dy = dest.y - p.y, d = Math.hypot(dx, dy) || 1;
+        const cerca = Math.min(1, d / 140);
+        let vel = 120 + ruido(t * 0.7, 0) * 40;                       // velocidad que cambia
+        if (d < 90) vel *= Math.max(0.18, d / 90);                    // frena al llegar
+        // titubeo del rumbo (más fuerte lejos de la meta)
+        const tit = ruido(t * 1.6, 1) * 1.1 * cerca + ruido(t * 4, 2) * 0.25 * cerca;
+        const ang = Math.atan2(dy, dx) + tit;
+        const des = { x: Math.cos(ang) * vel, y: Math.sin(ang) * vel };
+        const agil = d < 60 ? 5 : 2.4;
+        v.x += (des.x - v.x) * Math.min(1, dt * agil);
+        v.y += (des.y - v.y) * Math.min(1, dt * agil);
+        // cada aleteo empuja un poco hacia arriba; en el planeo cae suave
+        if (planeo > 0) v.y += 18 * dt; else v.y -= Math.max(0, Math.sin(fasAleteo)) * 30 * dt;
+        p.x += v.x * dt; p.y += v.y * dt;
+        // gira el cuerpo hacia donde va (la cabeza apunta arriba en la imagen)
+        const rumboMeta = Math.atan2(v.y, v.x) * 180 / Math.PI + 90;
+        let dif = ((rumboMeta - rumbo + 540) % 360) - 180;
+        if (d < 25) dif = ((meta.giro - rumbo + 540) % 360) - 180;
+        rumbo += dif * Math.min(1, dt * 4);
+        // aleteo: ritmo que cambia, planeos cortos, revoloteo rápido al despegar y al llegar
+        despegue -= dt;
+        if (t > proxFrec) { frec = azar(5.5, 8.5); proxFrec = t + azar(0.4, 1.2); }
+        if (planeo <= 0 && despegue <= 0 && d > 120 && Math.random() < dt * 0.9) planeo = azar(0.25, 0.6);
+        if (planeo > 0) {
+          planeo -= dt;
+          alaAng += (6 - alaAng) * Math.min(1, dt * 10);            // alas abiertas, planeando
+        } else {
+          const f = despegue > 0 || d < 50 ? frec * 1.35 : frec;
+          fasAleteo += Math.PI * 2 * f * dt;
+          alaAng = 8 + 70 * (0.5 - 0.5 * Math.cos(fasAleteo));
+        }
+        if (d < 3.5 && Math.hypot(v.x, v.y) < 45) {
+          const fin = alLlegar; posar(meta); meta = null;
+          if (fin) fin();
+        }
       }
-      // Si tocan el botón donde está posada, o ese botón se vuelve a pintar, se va volando
-      sec.addEventListener('pointerdown', e => { if (posadaEn && posadaEn.contains(e.target)) { posadaEn = null; siguiente(); } });
-      new MutationObserver(() => { if (posadaEn && !posadaEn.isConnected) { posadaEn = null; siguiente(); } })
-        .observe(sec, { childList: true, subtree: true });
-      new IntersectionObserver(es => {
-        visible = es[0].isIntersecting;
-        clearTimeout(timer);
-        if (visible) timer = setTimeout(siguiente, 1800);
-      }).observe(sec);
-      document.addEventListener('visibilitychange', () => { if (!document.hidden && visible) siguiente(); });
-      function aCasa() { cancelAnimationFrame(anim); const c = casa(); pos = { x: c.x, y: c.y }; colocar(pos, c.giro); posadaEn = null; m.classList.remove('volando'); m.classList.add('posada'); }
-      aCasa();
-      window.addEventListener('resize', () => { aCasa(); siguiente(); });
+
+      function bucle(ahora) {
+        const dt = Math.min(0.05, (ahora - (ultimo || ahora)) / 1000); ultimo = ahora;
+        cuadro(dt); dibujar();
+        if (estado === 'volando' || (visibles > 0 && !document.hidden)) requestAnimationFrame(bucle);
+        else { corriendo = false; ultimo = 0; }
+      }
+      function arrancar() { if (!corriendo && !quieto.matches) { corriendo = true; ultimo = 0; requestAnimationFrame(bucle); } }
+
+      // ---------- recorrido ----------
+      function botonesVisibles() {
+        const tope = 90, fondo = innerHeight - 110;
+        return [...sec.querySelectorAll('.tab-chip, .btn-add, .qty button')].filter(b => {
+          const r = b.getBoundingClientRect();
+          return r.width > 0 && r.top > tope && r.bottom < fondo && r.left > 0 && r.right < innerWidth && b !== posadaEn;
+        });
+      }
+      function enPantalla(el) { const r = el.getBoundingClientRect(); return r.bottom > 60 && r.top < innerHeight; }
+      function esperar(seg) { clearTimeout(timer); timer = setTimeout(paso, seg * 1000); }
+      function paso() {
+        if (document.hidden || quieto.matches || visibles === 0) return;
+        const opciones = botonesVisibles();
+        if (saltos < 3 && opciones.length && enPantalla(sec)) {
+          saltos++;
+          posadaEn = opciones[Math.floor(Math.random() * opciones.length)];
+          volarA(anclaBoton(posadaEn), () => esperar(azar(2.5, 5.5)));
+        } else if (enPantalla(flor) || enPantalla(sec)) {
+          saltos = 0; posadaEn = null;
+          volarA(anclaFlor(), () => esperar(azar(30, 50)));    // descansa un buen rato en la flor
+        } else esperar(4);
+      }
+      // si tocan el botón donde está, o el botón se vuelve a pintar, se va
+      sec.addEventListener('pointerdown', e => { if (estado === 'posada' && posadaEn && posadaEn.contains(e.target)) { posadaEn = null; paso(); } });
+      new MutationObserver(() => {
+        if (estado === 'posada' && ancla && !ancla.el.isConnected) { posadaEn = null; paso(); }
+      }).observe(sec, { childList: true, subtree: true });
+
+      const io = new IntersectionObserver(es => {
+        es.forEach(e => { e.target._visible = e.isIntersecting; });
+        visibles = [sec, flor].filter(el => el._visible).length;
+        if (visibles) { arrancar(); if (estado === 'posada' && !timer) esperar(1.8); }
+      });
+      io.observe(sec); io.observe(flor);
+      const reanudar = () => { clearTimeout(timer); timer = null; if (!document.hidden && visibles) { arrancar(); esperar(1.5); } };
+      document.addEventListener('visibilitychange', reanudar);
+
+      // inicio: posada en la pared, junto al título
+      posar(anclaCasa()); rumbo = 14; alaAng = 32;
+      dibujar(); m.classList.add('lista');
+      addEventListener('resize', () => { if (estado === 'posada' && ancla) { p = puntoDe(ancla); dibujar(); } });
+      // la página puede moverse mientras cargan imágenes: la mariposa sigue a su ancla
+      addEventListener('load', () => { if (estado === 'posada' && ancla) { p = puntoDe(ancla); dibujar(); } });
     })();
 
     /* ---------- Inicio ---------- */

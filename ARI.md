@@ -73,18 +73,20 @@ de artista profesional.
      cara blanca se mantiene sólida con un contorno trazado a mano).
 - El mural sigue por la pared, con pocas piezas y siempre detrás del contenido
   (Javi: cuidar limpieza y amplitud, no saturar): monarca junto al título de la
-  carta, cempasúchil asomando detrás de la tarjeta del restaurante y un botón de
-  cempasúchil junto al logo del pie. Clase `.pintura`; imágenes en `arte/`
+  carta, cempasúchil grande asomando arriba de la tarjeta del restaurante;
+  ya no hay flor en el pie (Javi). Clase `.pintura`; imágenes en `arte/`
   (`flor-tallo.webp`, `flor-boton.webp`, `monarca-izq.webp`, `monarca-der.webp`),
   recortadas de una segunda imagen de Weave (mismo modelo, la catrina como
   referencia).
-- La monarca de la carta vuela de verdad (`#monarca`, JS "Mariposa monarca"):
-  cada ala es una imagen que gira en 3D (aleteo), vuela en curva y se posa en
-  una pestaña o un botón + que se vea en pantalla; posada abre y cierra las alas
-  despacio; si tocan ese botón se espanta; tras unos saltos vuelve a la pared
-  junto al título. Solo se mueve con la carta en pantalla y la pestaña visible;
-  con "reducir movimiento" se queda quieta. No bloquea los toques
-  (`pointer-events: none`).
+- La monarca vuela de verdad (`#monarca`, JS "Mariposa monarca", a nivel de
+  página): empieza en la pared junto al título de la carta, revolotea a 2-3
+  botones que se vean y baja a posarse en el cempasúchil del restaurante, donde
+  descansa 30-50 s y vuelve a empezar. Vuelo calculado cuadro por cuadro para que
+  no sea robótico: rumbo que titubea, el cuerpo sube con cada aleteo, ritmo de
+  aleteo variable, planeos cortos, gira hacia donde va, frena y revolotea antes
+  de posarse; posada abre y cierra las alas despacio y sin ritmo fijo. Si tocan
+  el botón donde está, se espanta. Solo se mueve con la carta o la flor en
+  pantalla; con "reducir movimiento" se queda quieta.
 - Talavera en línea, tono sobre tono, muy tenue en el fondo de toda la página.
 - Los puntitos que rodean los ojos de la catrina, en el filo del encabezado.
 - NO hacer catrinas dibujadas con código (SVG, Blender por script): se probaron
