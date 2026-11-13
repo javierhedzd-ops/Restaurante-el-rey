@@ -628,10 +628,9 @@
           <p class="ubicacion-estado" id="envio-ubicacion" role="status"></p>
         </div>
         <div>
-          <strong>Precios por distancia</strong>
-          <p class="aviso">De la más cerca a la más lejos. Más allá de la última, la página dice que no llegan.</p>
+          <strong>Precio del envío</strong>
+          <p class="aviso">Lo que cobra hasta cierta distancia, y cuánto más por cada kilómetro de más.</p>
           <div id="envio-tarifas"></div>
-          <button type="button" class="btn" onclick="agregarTarifa()">+ Agregar distancia</button>
         </div>
         <div class="error" id="envio-error" role="alert"></div>
         <button type="button" class="btn btn-primary btn-block" id="envio-guardar" onclick="guardarEnvio()">Guardar</button>
@@ -653,6 +652,9 @@
       <form class="form" id="pedido-form" onsubmit="enviarWhatsApp(event)" novalidate>
         <label><span data-en="Your name">Tu nombre</span>
           <input type="text" id="f-nombre" autocomplete="name" required>
+        </label>
+        <label><span data-en="Phone (WhatsApp)">Tu teléfono</span>
+          <input type="tel" id="f-telefono" autocomplete="tel" inputmode="tel" placeholder="10 dígitos" data-en-placeholder="10 digits" required>
         </label>
         <div>
           <div style="font-size: 13px; color: var(--text-sec); font-weight: 500; margin-bottom: 4px;" data-en="How would you like it?">¿Cómo lo quieres?</div>
@@ -694,11 +696,14 @@
     // restaurante: ubicación exacta del local { lat, lng }. Mientras esté en null, el pedido
     //   lleva la ubicación del cliente pero el costo de envío lo confirma el restaurante.
     // tarifas: de menor a mayor. Más allá de la última, la página avisa que no llegan.
-    // PENDIENTE: ubicación y tarifas reales de Kevin (los costos de abajo son de ejemplo).
+    // Forma real de Kevin (13/11/2026): $40 hasta 4 km a la redonda y $7 por cada km adicional,
+    // servicio de Fast Delivery, llega en unos 45 minutos. maxKm: más allá, la página avisa que no llegan
+    // (0 = sin límite). PENDIENTE: la ubicación del restaurante (Kevin la pone desde su panel).
     const ENVIO = {
       restaurante: null,
       factorCalle: 1.3,
-      tarifas: [ { hastaKm: 2, costo: 20 }, { hastaKm: 4, costo: 35 }, { hastaKm: 6, costo: 50 } ]
+      base: 40, baseKm: 4, porKm: 7, maxKm: 0,
+      repartidor: 'Fast Delivery', minutos: 45
     };
 
     // Horario en hora de Mérida. Días: 0 = domingo, 1 = lunes, 2 = martes...
@@ -846,8 +851,8 @@
         vacio: 'Tu pedido está vacío.',
         avisoPendiente: 'Algunos productos tienen precio por confirmar; el restaurante te dirá el total final.',
         avisoNormal: 'Desechable +$10. El restaurante te confirma el total final y el costo de envío.',
-        errVacio: 'Agrega al menos un producto.', errNombre: 'Escribe tu nombre.', errDireccion: 'Escribe la dirección de entrega o usa tu ubicación.',
-        ubicando: 'Buscando tu ubicación…', ubicacionLista: 'Ubicación lista', envio: 'Envío', aprox: 'aprox.',
+        errVacio: 'Agrega al menos un producto.', errNombre: 'Escribe tu nombre.', errDireccion: 'Escribe la dirección de entrega: calle, número, cruzamientos y colonia.', errUbicacion: 'Toca "Usar mi ubicación" para que el repartidor llegue directo.', errTelefono: 'Escribe tu teléfono a 10 dígitos.',
+        ubicando: 'Buscando tu ubicación…', ubicacionLista: 'Ubicación lista', envio: 'Envío', aprox: 'aprox.', llega: 'llega en unos',
         ubicacionSinCosto: 'Ubicación lista. El restaurante te confirma el costo de envío.',
         ubicacionLejos: 'Estás a unos {km} km: por ahora no llegamos tan lejos. Puedes pasar a recoger.',
         ubicacionError: 'No pudimos ver tu ubicación. Escribe tu dirección.', ubicacionNo: 'Tu teléfono no comparte ubicación. Escribe tu dirección.',
@@ -864,8 +869,8 @@
         vacio: 'Your order is empty.',
         avisoPendiente: 'Some items have a price to be confirmed; the restaurant will tell you the final total.',
         avisoNormal: 'To-go container +$10. The restaurant will confirm the final total and delivery fee.',
-        errVacio: 'Add at least one item.', errNombre: 'Please enter your name.', errDireccion: 'Please enter the delivery address or use your location.',
-        ubicando: 'Finding your location…', ubicacionLista: 'Location ready', envio: 'Delivery', aprox: 'approx.',
+        errVacio: 'Add at least one item.', errNombre: 'Please enter your name.', errDireccion: 'Please enter the delivery address: street, number, cross streets and neighborhood.', errUbicacion: 'Tap "Use my location" so the driver gets there directly.', errTelefono: 'Please enter your 10-digit phone number.',
+        ubicando: 'Finding your location…', ubicacionLista: 'Location ready', envio: 'Delivery', aprox: 'approx.', llega: 'arrives in about',
         ubicacionSinCosto: 'Location ready. The restaurant will confirm the delivery fee.',
         ubicacionLejos: 'You are about {km} km away: we don\'t deliver that far yet. You can pick up.',
         ubicacionError: 'We couldn\'t get your location. Please type your address.', ubicacionNo: 'Your phone doesn\'t share location. Please type your address.',
@@ -1213,8 +1218,9 @@
       return 2 * R * Math.asin(Math.sqrt(h));
     }
     function costoEnvio(km) {
-      const t = ENVIO.tarifas.find(x => km <= x.hastaKm);
-      return t ? t.costo : null;
+      if (ENVIO.maxKm > 0 && km > ENVIO.maxKm) return null;
+      const extra = Math.max(0, Math.ceil(km - ENVIO.baseKm));
+      return ENVIO.base + extra * ENVIO.porKm;
     }
     function domicilio() { return document.querySelector('input[name="entrega"]:checked').value === 'domicilio'; }
     function envioActual() { return domicilio() && ubicacion && ubicacion.costo != null && !ubicacion.lejos ? ubicacion.costo : 0; }
@@ -1224,7 +1230,7 @@
       if (ubicacion.lejos) { e.textContent = t('ubicacionLejos').replace('{km}', ubicacion.km.toFixed(1)); e.className = 'ubicacion-estado mal'; return; }
       e.className = 'ubicacion-estado ok';
       e.textContent = ubicacion.km == null ? t('ubicacionSinCosto')
-        : `${t('ubicacionLista')} · ${ubicacion.km.toFixed(1)} km ${t('aprox')} · ${t('envio')} ${dinero(ubicacion.costo)}`;
+        : `${t('ubicacionLista')} · ${ubicacion.km.toFixed(1)} km ${t('aprox')} · ${t('envio')} ${dinero(ubicacion.costo)} · ${t('llega')} ${ENVIO.minutos} min`;
     }
     function pedirUbicacion() {
       const e = $('f-ubicacion-estado');
@@ -1248,11 +1254,14 @@
       const nombre = $('f-nombre').value.trim();
       const entrega = document.querySelector('input[name="entrega"]:checked').value;
       const direccion = $('f-direccion').value.trim();
+      const telefono = $('f-telefono').value.replace(/\D/g, '').slice(-10);
       const notas = $('f-notas').value.trim();
 
       if (!Object.keys(pedido).length) { $('f-error').textContent = t('errVacio'); return; }
       if (!nombre) { $('f-error').textContent = t('errNombre'); $('f-nombre').focus(); return; }
-      if (entrega === 'domicilio' && !direccion && !ubicacion) { $('f-error').textContent = t('errDireccion'); $('f-direccion').focus(); return; }
+      if (telefono.length < 10) { $('f-error').textContent = t('errTelefono'); $('f-telefono').focus(); return; }
+      if (entrega === 'domicilio' && !direccion) { $('f-error').textContent = t('errDireccion'); $('f-direccion').focus(); return; }
+      if (entrega === 'domicilio' && !ubicacion) { $('f-error').textContent = t('errUbicacion'); $('f-ubicacion').focus(); return; }
       if (entrega === 'domicilio' && ubicacion && ubicacion.lejos) { $('f-error').textContent = t('ubicacionLejos').replace('{km}', ubicacion.km.toFixed(1)); return; }
       $('f-error').textContent = '';
 
@@ -1267,16 +1276,17 @@
         '',
         ...lineas,
         '',
-        ...(envioActual() ? [`*Envío:* ${dinero(envioActual())} (${ubicacion.km.toFixed(1)} km aprox.)`] : []),
+        ...(envioActual() ? [`*Envío (${ENVIO.repartidor}):* ${dinero(envioActual())} (${ubicacion.km.toFixed(1)} km aprox.)`] : []),
         `*Total estimado:* ${dinero(total + envioActual())} MXN${pendientes ? ' + productos por confirmar' : ''}`,
         '',
         `*Nombre:* ${nombre}`,
+        `*Teléfono:* ${telefono}`,
         entrega === 'domicilio' ? `*Entrega a domicilio:* ${direccion || 'ver ubicación'}` : '*Paso a recoger*',
         entrega === 'domicilio' && ubicacion ? `*Ubicación:* https://maps.google.com/?q=${ubicacion.lat.toFixed(6)},${ubicacion.lng.toFixed(6)}` : '',
         notas ? `*Notas:* ${notas}` : '',
         enIngles() ? '*Idioma:* el cliente pidió en inglés' : '',
         '',
-        '¿Me confirman el tiempo de entrega? Gracias.'
+        entrega === 'domicilio' ? `Tiempo aproximado de entrega: ${ENVIO.minutos} min. ¿Me confirman? Gracias.` : '¿Me avisan cuando esté listo? Gracias.'
       ].filter((l, i, a) => !(l === '' && a[i - 1] === '')).join('\n');
 
       window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
@@ -1472,26 +1482,28 @@
     /* ---------- Modo dueño: envío a domicilio (ubicación y precios por distancia) ---------- */
     function aplicarEnvio(v) {
       if (v.restaurante && Number.isFinite(v.restaurante.lat) && Number.isFinite(v.restaurante.lng)) ENVIO.restaurante = { lat: v.restaurante.lat, lng: v.restaurante.lng };
-      if (Array.isArray(v.tarifas)) ENVIO.tarifas = v.tarifas.filter(t => t && t.hastaKm > 0 && t.costo >= 0).sort((a, b) => a.hastaKm - b.hastaKm);
+      ['base', 'baseKm', 'porKm', 'maxKm', 'minutos'].forEach(k => { if (Number.isFinite(v[k]) && v[k] >= 0) ENVIO[k] = v[k]; });
     }
     let envioBorrador = null;
     function pintarEnvio() {
       const r = envioBorrador.restaurante;
       $('envio-ubicacion').textContent = r ? `Ubicación guardada (${r.lat.toFixed(5)}, ${r.lng.toFixed(5)}).` : 'Todavía no hay ubicación: el costo de envío no se calcula.';
       $('envio-ubicacion').className = 'ubicacion-estado ' + (r ? 'ok' : 'mal');
-      $('envio-tarifas').innerHTML = envioBorrador.tarifas.map((t, i) => `<div class="tarifa">
-        <label>Hasta <input type="number" inputmode="decimal" min="0.5" step="0.5" value="${t.hastaKm}" onchange="envioBorrador.tarifas[${i}].hastaKm = Number(this.value)" aria-label="Kilómetros"> km</label>
-        <label>$<input type="number" inputmode="numeric" min="0" step="5" value="${t.costo}" onchange="envioBorrador.tarifas[${i}].costo = Number(this.value)" aria-label="Costo"></label>
-        <button type="button" class="btn" onclick="envioBorrador.tarifas.splice(${i}, 1); pintarEnvio()" aria-label="Quitar">✕</button>
-      </div>`).join('') || '<p class="aviso">Sin precios: agrega al menos uno.</p>';
+      const campo = (k, pre, post, step) => `<label>${pre}<input type="number" inputmode="decimal" min="0" step="${step}" value="${envioBorrador[k]}" onchange="envioBorrador.${k} = Number(this.value); pintarEjemplo()" aria-label="${pre} ${post}">${post}</label>`;
+      $('envio-tarifas').innerHTML = `<div class="tarifa">${campo('base', '$', '', 1)}${campo('baseKm', 'hasta ', ' km', 0.5)}</div>
+        <div class="tarifa">${campo('porKm', '+ $', ' por km extra', 1)}</div>
+        <div class="tarifa">${campo('maxKm', 'Máximo ', ' km (0 = sin límite)', 1)}</div>
+        <div class="tarifa">${campo('minutos', 'Llega en unos ', ' min', 5)}</div>
+        <p class="aviso" id="envio-ejemplo"></p>`;
+      pintarEjemplo();
+    }
+    function pintarEjemplo() {
+      const e = envioBorrador, c = km => e.base + Math.max(0, Math.ceil(km - e.baseKm)) * e.porKm;
+      const x = $('envio-ejemplo'); if (x) x.textContent = `Ejemplos: a 3 km cobra $${c(3)} · a 6 km cobra $${c(6)} · a 8 km cobra $${c(8)}.`;
     }
     function abrirEnvio() {
-      envioBorrador = { restaurante: ENVIO.restaurante ? { ...ENVIO.restaurante } : null, tarifas: ENVIO.tarifas.map(t => ({ ...t })) };
+      envioBorrador = { restaurante: ENVIO.restaurante ? { ...ENVIO.restaurante } : null, base: ENVIO.base, baseKm: ENVIO.baseKm, porKm: ENVIO.porKm, maxKm: ENVIO.maxKm, minutos: ENVIO.minutos };
       $('envio-error').textContent = ''; pintarEnvio(); abrirCapa('envio');
-    }
-    function agregarTarifa() {
-      const u = envioBorrador.tarifas[envioBorrador.tarifas.length - 1];
-      envioBorrador.tarifas.push({ hastaKm: u ? u.hastaKm + 2 : 2, costo: u ? u.costo + 15 : 20 }); pintarEnvio();
     }
     function guardarUbicacionRestaurante() {
       if (!navigator.geolocation) { $('envio-ubicacion').textContent = 'Este teléfono no comparte ubicación.'; return; }
@@ -1501,10 +1513,9 @@
         { enableHighAccuracy: true, timeout: 15000 });
     }
     async function guardarEnvio() {
-      const t = envioBorrador.tarifas.map(x => ({ hastaKm: Math.round(Number(x.hastaKm) * 10) / 10, costo: Math.round(Number(x.costo)) }))
-        .filter(x => x.hastaKm > 0 && x.costo >= 0).sort((a, b) => a.hastaKm - b.hastaKm);
-      if (!t.length) { $('envio-error').textContent = 'Pon al menos un precio de envío.'; return; }
-      const valor = { restaurante: envioBorrador.restaurante, tarifas: t };
+      const n = (x, d) => Number.isFinite(Number(x)) && Number(x) >= 0 ? Math.round(Number(x) * d) / d : null;
+      const valor = { restaurante: envioBorrador.restaurante, base: n(envioBorrador.base, 1), baseKm: n(envioBorrador.baseKm, 10), porKm: n(envioBorrador.porKm, 1), maxKm: n(envioBorrador.maxKm, 10), minutos: n(envioBorrador.minutos, 1) };
+      if ([valor.base, valor.baseKm, valor.porKm, valor.maxKm, valor.minutos].some(v => v == null)) { $('envio-error').textContent = 'Revisa los números del envío.'; return; }
       const b = $('envio-guardar'); b.disabled = true; b.textContent = 'Guardando…';
       try {
         await nube('/rest/v1/ajustes', { method: 'POST', headers: { 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates' },

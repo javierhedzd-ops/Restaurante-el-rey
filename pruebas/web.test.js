@@ -80,13 +80,16 @@ test('los textos de la página en español e inglés tienen las mismas claves', 
   assert.deepEqual(Object.keys(TXT.en).sort(), Object.keys(TXT.es).sort());
 });
 
-test('envío por distancia: tarifas ordenadas y costos válidos', () => {
+test('envío por distancia: cuota base y precio por km adicional', () => {
   const inicio = script.indexOf('const ENVIO'); const fin = script.indexOf('};', inicio) + 2;
   const ENVIO = vm.runInNewContext(script.slice(inicio, fin) + '\nENVIO');
   assert.ok(ENVIO.restaurante === null || (Math.abs(ENVIO.restaurante.lat - 20.97) < 0.3 && Math.abs(ENVIO.restaurante.lng + 89.62) < 0.3), 'la ubicación del restaurante debe estar en Mérida');
   assert.ok(ENVIO.factorCalle >= 1 && ENVIO.factorCalle <= 2);
-  ENVIO.tarifas.forEach((t, i) => {
-    assert.ok(t.hastaKm > 0 && Number.isFinite(t.costo) && t.costo >= 0, `tarifa ${i} no válida`);
-    if (i) assert.ok(t.hastaKm > ENVIO.tarifas[i - 1].hastaKm, 'las tarifas deben ir de menor a mayor distancia');
-  });
+  for (const k of ['base', 'baseKm', 'porKm', 'maxKm', 'minutos']) assert.ok(Number.isFinite(ENVIO[k]) && ENVIO[k] >= 0, k + ' no válido');
+  const i2 = script.indexOf('function costoEnvio'); const f2 = script.indexOf('\n    }', i2) + 6;
+  const costo = vm.runInNewContext(script.slice(i2, f2) + '\ncostoEnvio', { ENVIO, Math });
+  assert.equal(costo(3), ENVIO.base, 'dentro de la distancia base cobra la cuota base');
+  assert.equal(costo(ENVIO.baseKm), ENVIO.base);
+  assert.equal(costo(ENVIO.baseKm + 0.4), ENVIO.base + ENVIO.porKm, 'cada km empezado de más suma porKm');
+  assert.equal(costo(ENVIO.baseKm + 2), ENVIO.base + 2 * ENVIO.porKm);
 });
