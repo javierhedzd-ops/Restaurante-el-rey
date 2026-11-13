@@ -450,6 +450,11 @@
     .pedido-bloqueo { margin: 0 0 14px; padding: 12px 14px; border-radius: 14px; background: #FDECEA; color: #8A1C12; font-weight: 600; line-height: 1.4; }
     #pedido-enviar:disabled { opacity: .45; cursor: not-allowed; }
     #btn-pausa.pausa-activa { background: #C62828; color: #fff; border-color: #C62828; }
+
+    .recordar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 14px; font-size: 14px; color: var(--text-sec); }
+    .recordar label { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+    .recordar input { width: 20px; height: 20px; accent-color: var(--mustard); }
+    .btn-link { background: none; border: 0; padding: 10px 0; color: var(--text-sec); text-decoration: underline; font: inherit; cursor: pointer; min-height: 44px; }
 </style>
 </head>
 <body>
@@ -712,6 +717,10 @@
         <label><span data-en="Notes (optional)">Notas (opcional)</span>
           <textarea id="f-notas" placeholder="Ej. sin cebolla, salsa aparte…" data-en-placeholder="E.g. no onion, salsa on the side…"></textarea>
         </label>
+        <div class="recordar">
+          <label><input type="checkbox" id="f-recordar" checked> <span data-en="Remember my details on this phone">Recordar mis datos en este teléfono</span></label>
+          <button type="button" class="btn-link" id="f-olvidar" onclick="olvidarDatos()" hidden data-en="Forget my details">Olvidar mis datos</button>
+        </div>
         <div class="error" id="f-error" role="alert"></div>
         <button type="submit" class="btn btn-primary btn-block" id="pedido-enviar">
           <span data-en="Send order via WhatsApp">Enviar pedido por WhatsApp</span>
@@ -890,7 +899,7 @@
         vacio: 'Tu pedido está vacío.',
         avisoPendiente: 'Algunos productos tienen precio por confirmar; el restaurante te dirá el total final.',
         avisoNormal: 'Desechable +$10. El restaurante te confirma el total final y el costo de envío.',
-        errVacio: 'Agrega al menos un producto.', errNombre: 'Escribe tu nombre.', errDireccion: 'Escribe la dirección de entrega: calle, número, cruzamientos y colonia.', errUbicacion: 'Toca "Usar mi ubicación" para que el repartidor llegue directo.', errTelefono: 'Escribe tu teléfono a 10 dígitos.', pausado: 'Por ahora tenemos muchos pedidos. Vuelve a intentarlo en un rato, por favor.', cerradoPedido: 'Ahorita estamos cerrados. Recibimos pedidos de {abre} a {cierra} (martes descansamos). Puedes armar tu pedido y enviarlo cuando abramos.', elegirCarne: '¿De qué carne?', elegirCarnes: '¿De qué carnes? Puedes combinar', picante: '¿Con picante?', conPicante: 'Con picante', sinPicante: 'Sin picante', errCarne: 'Elige al menos una carne.',
+        errVacio: 'Agrega al menos un producto.', errNombre: 'Escribe tu nombre.', errDireccion: 'Escribe la dirección de entrega: calle, número, cruzamientos y colonia.', errUbicacion: 'Toca "Usar mi ubicación" para que el repartidor llegue directo.', errTelefono: 'Escribe tu teléfono a 10 dígitos.', datosOlvidados: 'Listo, borramos tus datos de este teléfono.', pausado: 'Por ahora tenemos muchos pedidos. Vuelve a intentarlo en un rato, por favor.', cerradoPedido: 'Ahorita estamos cerrados. Recibimos pedidos de {abre} a {cierra} (martes descansamos). Puedes armar tu pedido y enviarlo cuando abramos.', elegirCarne: '¿De qué carne?', elegirCarnes: '¿De qué carnes? Puedes combinar', picante: '¿Con picante?', conPicante: 'Con picante', sinPicante: 'Sin picante', errCarne: 'Elige al menos una carne.',
         ubicando: 'Buscando tu ubicación…', ubicacionLista: 'Ubicación lista', envio: 'Envío', aprox: 'aprox.', porCalle: 'por calle', calculandoRuta: 'Calculando la ruta…', llega: 'llega en unos',
         ubicacionSinCosto: 'Ubicación lista. El restaurante te confirma el costo de envío.',
         ubicacionLejos: 'Estás a unos {km} km: por ahora no llegamos tan lejos. Puedes pasar a recoger.',
@@ -908,7 +917,7 @@
         vacio: 'Your order is empty.',
         avisoPendiente: 'Some items have a price to be confirmed; the restaurant will tell you the final total.',
         avisoNormal: 'To-go container +$10. The restaurant will confirm the final total and delivery fee.',
-        errVacio: 'Add at least one item.', errNombre: 'Please enter your name.', errDireccion: 'Please enter the delivery address: street, number, cross streets and neighborhood.', errUbicacion: 'Tap "Use my location" so the driver gets there directly.', errTelefono: 'Please enter your 10-digit phone number.', pausado: 'We have a lot of orders right now. Please try again in a little while.', cerradoPedido: 'We are closed right now. We take orders from {abre} to {cierra} (closed on Tuesdays). You can build your order and send it when we open.', elegirCarne: 'Which meat?', elegirCarnes: 'Which meats? You can mix', picante: 'Spicy?', conPicante: 'Spicy', sinPicante: 'Not spicy', errCarne: 'Choose at least one meat.',
+        errVacio: 'Add at least one item.', errNombre: 'Please enter your name.', errDireccion: 'Please enter the delivery address: street, number, cross streets and neighborhood.', errUbicacion: 'Tap "Use my location" so the driver gets there directly.', errTelefono: 'Please enter your 10-digit phone number.', datosOlvidados: 'Done, your details were removed from this phone.', pausado: 'We have a lot of orders right now. Please try again in a little while.', cerradoPedido: 'We are closed right now. We take orders from {abre} to {cierra} (closed on Tuesdays). You can build your order and send it when we open.', elegirCarne: 'Which meat?', elegirCarnes: 'Which meats? You can mix', picante: 'Spicy?', conPicante: 'Spicy', sinPicante: 'Not spicy', errCarne: 'Choose at least one meat.',
         ubicando: 'Finding your location…', ubicacionLista: 'Location ready', envio: 'Delivery', aprox: 'approx.', porCalle: 'by road', calculandoRuta: 'Calculating the route…', llega: 'arrives in about',
         ubicacionSinCosto: 'Location ready. The restaurant will confirm the delivery fee.',
         ubicacionLejos: 'You are about {km} km away: we don\'t deliver that far yet. You can pick up.',
@@ -1296,7 +1305,28 @@
     function cerrarGaleria() { cerrarCapa('galeria'); iniciarVitrina(); }
 
     /* ---------- Hoja del pedido y WhatsApp ---------- */
-    function abrirPedido() { renderPedido(); $('f-error').textContent = ''; abrirCapa('pedido'); anotarUnaVez('carrito'); revisarPausa(); }
+    function abrirPedido() { renderPedido(); $('f-error').textContent = ''; llenarDatos(); abrirCapa('pedido'); anotarUnaVez('carrito'); revisarPausa(); }
+
+    /* Datos del cliente para su próximo pedido: se guardan solo en SU teléfono (no en el servidor). */
+    const DATOS_LS = 'rey_mis_datos';
+    function llenarDatos() {
+      const d = leerLS(DATOS_LS);
+      $('f-olvidar').hidden = !d.telefono;
+      if (!d.telefono) return;
+      if (!$('f-nombre').value) $('f-nombre').value = d.nombre || '';
+      if (!$('f-telefono').value) $('f-telefono').value = d.telefono || '';
+      if (!$('f-direccion').value) $('f-direccion').value = d.direccion || '';
+      if (d.entrega === 'domicilio' && !domicilio()) { document.querySelector('input[name="entrega"][value="domicilio"]').checked = true; toggleDireccion(); }
+    }
+    function recordarDatos(d) {
+      if ($('f-recordar').checked) { guardarLS(DATOS_LS, d); $('f-olvidar').hidden = false; }
+      else { try { localStorage.removeItem(DATOS_LS); } catch (e) {} }
+    }
+    function olvidarDatos() {
+      try { localStorage.removeItem(DATOS_LS); } catch (e) {}
+      ['f-nombre', 'f-telefono', 'f-direccion'].forEach(id => { $(id).value = ''; });
+      $('f-olvidar').hidden = true; mostrarToast(t('datosOlvidados'));
+    }
 
     /* La pausa se vuelve a revisar al abrir el pedido y cada 20 s mientras está abierto, para que
        quien ya tenía la página abierta también se entere al momento cuando Kevin pausa. */
@@ -1425,6 +1455,7 @@
         entrega === 'domicilio' ? `Tiempo aproximado de entrega: ${ENVIO.minutos} min. ¿Me confirman? Gracias.` : '¿Me avisan cuando esté listo? Gracias.'
       ].filter((l, i, a) => !(l === '' && a[i - 1] === '')).join('\n');
 
+      recordarDatos({ nombre, telefono, direccion, entrega });
       anotar('pedido', { total: total + envioActual(), piezas: Object.values(pedido).reduce((a, b) => a + b, 0), domicilio: entrega === 'domicilio', km: ubicacion && ubicacion.km != null ? Math.round(ubicacion.km * 10) / 10 : null, ingles: enIngles() });
       window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
     }
