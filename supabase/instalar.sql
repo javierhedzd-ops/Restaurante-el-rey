@@ -65,3 +65,16 @@ create policy "dueño cambia fotos" on storage.objects for update to authenticat
   using (bucket_id = 'fotos' and public.es_dueno()) with check (bucket_id = 'fotos' and public.es_dueno());
 create policy "dueño borra fotos" on storage.objects for delete to authenticated
   using (bucket_id = 'fotos' and public.es_dueno());
+
+-- Ajustes del negocio que edita el dueño (por ahora: 'envio' = ubicación del restaurante y tarifas).
+create table if not exists public.ajustes (
+  clave text primary key check (clave ~ '^[a-z0-9-]+$'),
+  valor jsonb not null,
+  actualizado timestamptz not null default now()
+);
+alter table public.ajustes enable row level security;
+drop policy if exists "todos leen ajustes" on public.ajustes;
+drop policy if exists "dueño escribe ajustes" on public.ajustes;
+create policy "todos leen ajustes" on public.ajustes for select using (true);
+create policy "dueño escribe ajustes" on public.ajustes for all to authenticated
+  using (public.es_dueno()) with check (public.es_dueno());

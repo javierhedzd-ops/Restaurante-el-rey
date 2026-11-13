@@ -405,6 +405,10 @@
     .btn-ubicacion{justify-content:center;gap:8px;min-height:46px;border:1.5px dashed currentColor;background:transparent;color:inherit;width:100%}
     .ubicacion-estado{font-size:13px;color:var(--text-sec);min-height:18px;margin:0}
     .ubicacion-estado.ok{color:#1F8A4C;font-weight:600}.ubicacion-estado.mal{color:#B3261E;font-weight:600}
+    .envio-form strong{display:block;margin-bottom:2px}.envio-form .aviso{margin:0 0 8px}
+    .tarifa{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;margin-bottom:8px}
+    .tarifa label{display:flex;align-items:center;gap:6px;font-size:14px}.tarifa input{width:100%;min-height:44px}
+    .tarifa .btn{min-height:44px;padding:0 14px}
 </style>
 </head>
 <body>
@@ -418,6 +422,7 @@
       </div>
       <div class="owner-actions">
         <button type="button" class="btn btn-ghost-dark" id="btn-restablecer" onclick="restablecerDemo()">Restablecer</button>
+        <button type="button" class="btn btn-ghost-dark" id="btn-envio" onclick="abrirEnvio()" hidden>Envío a domicilio</button>
         <button type="button" class="btn btn-ghost-dark" id="btn-cerrar-sesion" onclick="cerrarSesion()" hidden>Cerrar sesión</button>
         <button type="button" class="btn btn-primary" onclick="salirDueno()">Salir</button>
       </div>
@@ -595,6 +600,31 @@
   </div>
 
   <!-- Hoja del pedido -->
+  <div class="overlay" id="envio" role="dialog" aria-modal="true" aria-labelledby="envio-titulo" onclick="if (event.target === this) cerrarCapa('envio')">
+    <div class="sheet">
+      <div class="panel-header">
+        <div class="brand-title" id="envio-titulo">Envío a domicilio</div>
+        <button type="button" class="btn" style="min-height: 36px; padding: 0 12px;" onclick="cerrarCapa('envio')">Cerrar ✕</button>
+      </div>
+      <div class="form envio-form">
+        <div>
+          <strong>Ubicación del restaurante</strong>
+          <p class="aviso">Párate en el restaurante y toca el botón. Desde ahí se mide la distancia a cada cliente.</p>
+          <button type="button" class="btn btn-ubicacion" onclick="guardarUbicacionRestaurante()">Estoy en el restaurante: usar esta ubicación</button>
+          <p class="ubicacion-estado" id="envio-ubicacion" role="status"></p>
+        </div>
+        <div>
+          <strong>Precios por distancia</strong>
+          <p class="aviso">De la más cerca a la más lejos. Más allá de la última, la página dice que no llegan.</p>
+          <div id="envio-tarifas"></div>
+          <button type="button" class="btn" onclick="agregarTarifa()">+ Agregar distancia</button>
+        </div>
+        <div class="error" id="envio-error" role="alert"></div>
+        <button type="button" class="btn btn-primary btn-block" id="envio-guardar" onclick="guardarEnvio()">Guardar</button>
+      </div>
+    </div>
+  </div>
+
   <div class="overlay" id="pedido" role="dialog" aria-modal="true" aria-labelledby="pedido-titulo" onclick="if (event.target === this) cerrarPedido()">
     <div class="sheet">
       <div class="panel-header">
@@ -1338,6 +1368,7 @@
         $('dueno-texto').textContent = 'Toca un precio o "Cambiar foto". Lo que cambies lo ven todos al momento.';
         $('btn-restablecer').hidden = true;
         $('btn-cerrar-sesion').hidden = false;
+        $('btn-envio').hidden = false;
       }
       document.body.classList.add('modo-dueno');
       detenerVitrina();
@@ -1349,6 +1380,7 @@
     function salirDueno() {
       modoDueno = false;
       document.body.classList.remove('modo-dueno', 'panel-dueno');
+      $('btn-envio').hidden = true; cerrarCapa('envio');
       if (location.hash === '#dueno') history.replaceState(null, '', location.pathname + location.search);
       renderSeccion(seccionActual);
       if ($('galeria').classList.contains('active')) renderGaleria();
@@ -1408,9 +1440,12 @@
     // Lo que publicó el dueño: precios y fotos. Si falla, se queda lo de la configuración.
     async function cargarNube() {
       try {
-        const [precios, fotos] = await Promise.all([
-          nube('/rest/v1/precios?select=id,precio'), nube('/rest/v1/fotos?select=clave,url')
+        const [precios, fotos, ajustes] = await Promise.all([
+          nube('/rest/v1/precios?select=id,precio'), nube('/rest/v1/fotos?select=clave,url'),
+          nube('/rest/v1/ajustes?select=clave,valor').catch(() => [])
         ]);
+        const envio = (ajustes || []).find(r => r.clave === 'envio');
+        if (envio && envio.valor) aplicarEnvio(envio.valor);
         (precios || []).forEach(r => { if (PRODUCTOS[r.id]) PRODUCTOS[r.id].p = r.precio; });
         fotosNube = Object.fromEntries((fotos || []).map(r => [r.clave, r.url]));
         renderSeccion(seccionActual);
@@ -1418,6 +1453,51 @@
         actualizarBarra();
         if ($('pedido').classList.contains('active')) renderPedido();
       } catch (e) { /* sin internet o sin configurar: se ve lo de la configuración */ }
+    }
+
+    /* ---------- Modo dueño: envío a domicilio (ubicación y precios por distancia) ---------- */
+    function aplicarEnvio(v) {
+      if (v.restaurante && Number.isFinite(v.restaurante.lat) && Number.isFinite(v.restaurante.lng)) ENVIO.restaurante = { lat: v.restaurante.lat, lng: v.restaurante.lng };
+      if (Array.isArray(v.tarifas)) ENVIO.tarifas = v.tarifas.filter(t => t && t.hastaKm > 0 && t.costo >= 0).sort((a, b) => a.hastaKm - b.hastaKm);
+    }
+    let envioBorrador = null;
+    function pintarEnvio() {
+      const r = envioBorrador.restaurante;
+      $('envio-ubicacion').textContent = r ? `Ubicación guardada (${r.lat.toFixed(5)}, ${r.lng.toFixed(5)}).` : 'Todavía no hay ubicación: el costo de envío no se calcula.';
+      $('envio-ubicacion').className = 'ubicacion-estado ' + (r ? 'ok' : 'mal');
+      $('envio-tarifas').innerHTML = envioBorrador.tarifas.map((t, i) => `<div class="tarifa">
+        <label>Hasta <input type="number" inputmode="decimal" min="0.5" step="0.5" value="${t.hastaKm}" onchange="envioBorrador.tarifas[${i}].hastaKm = Number(this.value)" aria-label="Kilómetros"> km</label>
+        <label>$<input type="number" inputmode="numeric" min="0" step="5" value="${t.costo}" onchange="envioBorrador.tarifas[${i}].costo = Number(this.value)" aria-label="Costo"></label>
+        <button type="button" class="btn" onclick="envioBorrador.tarifas.splice(${i}, 1); pintarEnvio()" aria-label="Quitar">✕</button>
+      </div>`).join('') || '<p class="aviso">Sin precios: agrega al menos uno.</p>';
+    }
+    function abrirEnvio() {
+      envioBorrador = { restaurante: ENVIO.restaurante ? { ...ENVIO.restaurante } : null, tarifas: ENVIO.tarifas.map(t => ({ ...t })) };
+      $('envio-error').textContent = ''; pintarEnvio(); abrirCapa('envio');
+    }
+    function agregarTarifa() {
+      const u = envioBorrador.tarifas[envioBorrador.tarifas.length - 1];
+      envioBorrador.tarifas.push({ hastaKm: u ? u.hastaKm + 2 : 2, costo: u ? u.costo + 15 : 20 }); pintarEnvio();
+    }
+    function guardarUbicacionRestaurante() {
+      if (!navigator.geolocation) { $('envio-ubicacion').textContent = 'Este teléfono no comparte ubicación.'; return; }
+      $('envio-ubicacion').textContent = 'Buscando la ubicación…'; $('envio-ubicacion').className = 'ubicacion-estado';
+      navigator.geolocation.getCurrentPosition(p => { envioBorrador.restaurante = { lat: p.coords.latitude, lng: p.coords.longitude }; pintarEnvio(); },
+        () => { $('envio-ubicacion').textContent = 'No se pudo ver la ubicación. Revisa que el teléfono tenga activada la ubicación.'; $('envio-ubicacion').className = 'ubicacion-estado mal'; },
+        { enableHighAccuracy: true, timeout: 15000 });
+    }
+    async function guardarEnvio() {
+      const t = envioBorrador.tarifas.map(x => ({ hastaKm: Math.round(Number(x.hastaKm) * 10) / 10, costo: Math.round(Number(x.costo)) }))
+        .filter(x => x.hastaKm > 0 && x.costo >= 0).sort((a, b) => a.hastaKm - b.hastaKm);
+      if (!t.length) { $('envio-error').textContent = 'Pon al menos un precio de envío.'; return; }
+      const valor = { restaurante: envioBorrador.restaurante, tarifas: t };
+      const b = $('envio-guardar'); b.disabled = true; b.textContent = 'Guardando…';
+      try {
+        await nube('/rest/v1/ajustes', { method: 'POST', headers: { 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates' },
+          body: JSON.stringify({ clave: 'envio', valor, actualizado: new Date().toISOString() }) }, true);
+        aplicarEnvio(valor); cerrarCapa('envio'); mostrarToast('Envío guardado');
+      } catch (e) { $('envio-error').textContent = e.sesion ? 'Tu sesión se cerró. Vuelve a entrar.' : 'No se pudo guardar. Revisa el internet.'; }
+      b.disabled = false; b.textContent = 'Guardar';
     }
 
     function pedirLogin() {
