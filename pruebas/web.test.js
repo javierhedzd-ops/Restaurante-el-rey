@@ -79,3 +79,14 @@ test('los textos de la página en español e inglés tienen las mismas claves', 
   const TXT = vm.runInNewContext('(' + bloque.replace('const TXT =', '').trim().replace(/;$/, '') + ')');
   assert.deepEqual(Object.keys(TXT.en).sort(), Object.keys(TXT.es).sort());
 });
+
+test('envío por distancia: tarifas ordenadas y costos válidos', () => {
+  const inicio = script.indexOf('const ENVIO'); const fin = script.indexOf('};', inicio) + 2;
+  const ENVIO = vm.runInNewContext(script.slice(inicio, fin) + '\nENVIO');
+  assert.ok(ENVIO.restaurante === null || (Math.abs(ENVIO.restaurante.lat - 20.97) < 0.3 && Math.abs(ENVIO.restaurante.lng + 89.62) < 0.3), 'la ubicación del restaurante debe estar en Mérida');
+  assert.ok(ENVIO.factorCalle >= 1 && ENVIO.factorCalle <= 2);
+  ENVIO.tarifas.forEach((t, i) => {
+    assert.ok(t.hastaKm > 0 && Number.isFinite(t.costo) && t.costo >= 0, `tarifa ${i} no válida`);
+    if (i) assert.ok(t.hastaKm > ENVIO.tarifas[i - 1].hastaKm, 'las tarifas deben ir de menor a mayor distancia');
+  });
+});
