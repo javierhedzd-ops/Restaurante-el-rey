@@ -431,6 +431,18 @@
     .fire-label, .section-label { letter-spacing: .12em; }
     .muro { position: relative; }
     #menu { scroll-margin-top: 96px; }
+
+    /* Opciones del platillo: carne y picante */
+    .opciones-capa { z-index: 210; }
+    .opciones-grupo { border: 0; padding: 0; margin: 0 0 18px; }
+    .opciones-grupo legend { font-weight: 700; margin-bottom: 10px; }
+    .opciones-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip-op { position: relative; }
+    .chip-op input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+    .chip-op span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--border); background: var(--card, #fff); font-weight: 600; }
+    .chip-op input:checked + span { background: var(--mustard); border-color: var(--mustard); color: #2a1a10; }
+    .chip-op input:focus-visible + span { outline: 2px solid var(--mustard); outline-offset: 2px; }
+    .elecciones { font-style: italic; }
 </style>
 </head>
 <body>
@@ -638,6 +650,20 @@
     </div>
   </div>
 
+  <div class="overlay opciones-capa" id="opciones" role="dialog" aria-modal="true" aria-labelledby="opciones-titulo" onclick="if (event.target === this) cerrarCapa('opciones')">
+    <div class="sheet">
+      <div class="panel-header">
+        <div class="brand-title" id="opciones-titulo"></div>
+        <button type="button" class="btn" style="min-height: 36px; padding: 0 12px;" onclick="cerrarCapa('opciones')" data-en="Close ✕">Cerrar ✕</button>
+      </div>
+      <div class="form">
+        <div id="opciones-campos"></div>
+        <div class="error" id="opciones-error" role="alert"></div>
+        <button type="button" class="btn btn-primary btn-block" onclick="confirmarOpciones()" data-en="Add to order">Agregar al pedido</button>
+      </div>
+    </div>
+  </div>
+
   <div class="overlay" id="pedido" role="dialog" aria-modal="true" aria-labelledby="pedido-titulo" onclick="if (event.target === this) cerrarPedido()">
     <div class="sheet">
       <div class="panel-header">
@@ -716,6 +742,9 @@
     // foto: nombre de la foto en la carpeta "fotos", sin ".jpg".
     //   Ej. foto: 'taco-lengua'  →  fotos/taco-lengua.jpg
     //   Si la foto todavía no está subida, se ve el espacio vacío.
+    // Carnes que el cliente puede elegir en los platillos con op.carne ('una' o 'varias').
+    const CARNES = ['Maciza', 'Costilla', 'Buche', 'Oreja', 'Nana', 'Cuero', 'Chamorro', 'Lengua', 'Trompa', 'Hígado', 'Corazón', 'Surtida'];
+
     const MENU = [
       { cat: 'entradas', titulo: 'Entradas', titulo_en: 'Starters', items: [
         { id: 'e_guac',  n: 'Guacamole',  d: 'Con aguacate fresco y totopos', p: 95, foto: 'guacamole',
@@ -739,9 +768,9 @@
           n_en: 'Maciza (lean) · ½ kg', d_en: 'Just the lean white meat' },
         { id: 'k_mac_kilo',    n: 'Maciza · 1 kg',   d: 'La pura carnita blanca', p: 460, foto: 'maciza',
           n_en: 'Maciza (lean) · 1 kg', d_en: 'Just the lean white meat' },
-        { id: 'k_gusto_medio', n: 'Al gusto · ½ kg', d: 'Solas o combinadas: costilla, buche, oreja, nana, cuero, chamorro, lengua, trompa, hígado y corazón', p: 240, foto: 'al-gusto',
+        { id: 'k_gusto_medio', n: 'Al gusto · ½ kg', d: 'Solas o combinadas: costilla, buche, oreja, nana, cuero, chamorro, lengua, trompa, hígado y corazón', p: 240, foto: 'al-gusto', op: { carne: 'varias' },
           n_en: 'Your choice · ½ kg', d_en: 'On their own or combined: rib, buche (stomach), ear, nana, skin, shank, tongue, snout, liver and heart' },
-        { id: 'k_gusto_kilo',  n: 'Al gusto · 1 kg', d: 'Solas o combinadas: costilla, buche, oreja, nana, cuero, chamorro, lengua, trompa, hígado y corazón', p: 460, foto: 'al-gusto',
+        { id: 'k_gusto_kilo',  n: 'Al gusto · 1 kg', d: 'Solas o combinadas: costilla, buche, oreja, nana, cuero, chamorro, lengua, trompa, hígado y corazón', p: 460, foto: 'al-gusto', op: { carne: 'varias' },
           n_en: 'Your choice · 1 kg', d_en: 'On their own or combined: rib, buche (stomach), ear, nana, skin, shank, tongue, snout, liver and heart' }
       ]},
       { cat: 'tacos', titulo: 'Tacos', nota: 'Tacos de $35 c/u. Surtidos a $28.', titulo_en: 'Tacos', nota_en: 'Tacos $35 each. Mixed tacos $28.', items: [
@@ -770,13 +799,13 @@
       ]},
       { cat: 'especiales', titulo: 'Especialidades', nota: 'Pueden llevar verdura no mencionada. Cualquier extra o cambio $20.',
         titulo_en: 'Specialties', nota_en: 'May include vegetables not listed. Any extra or change $20.', items: [
-        { id: 'esp_chil',  n: 'Chilaquiles', d: 'Totopos bañados en salsa de chipotle, carnita a tu elección, crema y queso artesanal', p: 145, foto: 'chilaquiles',
+        { id: 'esp_chil',  n: 'Chilaquiles', d: 'Totopos bañados en salsa de chipotle, carnita a tu elección, crema y queso artesanal', p: 145, foto: 'chilaquiles', op: { carne: 'una', picante: true },
           n_en: 'Chilaquiles', d_en: 'Tortilla chips in chipotle salsa with carnitas of your choice, cream and artisan cheese' },
-        { id: 'esp_reyn',  n: 'Reyna (1 pza)',       d: '3/4 de barra de pan de horno de leña rellena de carnita a tu elección', p: 75, foto: 'reyna',
+        { id: 'esp_reyn',  n: 'Reyna (1 pza)',       d: '3/4 de barra de pan de horno de leña rellena de carnita a tu elección', p: 75, foto: 'reyna', op: { carne: 'una' },
           n_en: 'Reyna (1 pc)', d_en: '3/4 of a wood-fired bread loaf filled with carnitas of your choice' },
         { id: 'esp_reyn_surt', n: 'Reyna surtida (1 pza)', d: 'Pan de horno de leña relleno de carnita surtida', p: 65, foto: 'reyna-surtida',
           n_en: 'Mixed Reyna (1 pc)', d_en: 'Wood-fired bread filled with mixed carnitas' },
-        { id: 'esp_quek',  n: 'Quekarnita (1 pza)',  d: 'Tortilla artesanal, queso Oaxaca original y carnita a elegir', p: 55, foto: 'quekarnita',
+        { id: 'esp_quek',  n: 'Quekarnita (1 pza)',  d: 'Tortilla artesanal, queso Oaxaca original y carnita a elegir', p: 55, foto: 'quekarnita', op: { carne: 'una' },
           n_en: 'Quekarnita (1 pc)', d_en: 'Artisan tortilla, real Oaxaca cheese and carnitas of your choice' },
         { id: 'esp_sopes', n: 'Sope (1 pza)',        d: 'Tortilla hecha a mano, carnita, crema y queso artesanal', p: 55, foto: 'sope',
           n_en: 'Sope (1 pc)', d_en: 'Handmade tortilla with carnitas, cream and artisan cheese' },
@@ -851,7 +880,7 @@
         vacio: 'Tu pedido está vacío.',
         avisoPendiente: 'Algunos productos tienen precio por confirmar; el restaurante te dirá el total final.',
         avisoNormal: 'Desechable +$10. El restaurante te confirma el total final y el costo de envío.',
-        errVacio: 'Agrega al menos un producto.', errNombre: 'Escribe tu nombre.', errDireccion: 'Escribe la dirección de entrega: calle, número, cruzamientos y colonia.', errUbicacion: 'Toca "Usar mi ubicación" para que el repartidor llegue directo.', errTelefono: 'Escribe tu teléfono a 10 dígitos.',
+        errVacio: 'Agrega al menos un producto.', errNombre: 'Escribe tu nombre.', errDireccion: 'Escribe la dirección de entrega: calle, número, cruzamientos y colonia.', errUbicacion: 'Toca "Usar mi ubicación" para que el repartidor llegue directo.', errTelefono: 'Escribe tu teléfono a 10 dígitos.', elegirCarne: '¿De qué carne?', elegirCarnes: '¿De qué carnes? Puedes combinar', picante: '¿Con picante?', conPicante: 'Con picante', sinPicante: 'Sin picante', errCarne: 'Elige al menos una carne.',
         ubicando: 'Buscando tu ubicación…', ubicacionLista: 'Ubicación lista', envio: 'Envío', aprox: 'aprox.', llega: 'llega en unos',
         ubicacionSinCosto: 'Ubicación lista. El restaurante te confirma el costo de envío.',
         ubicacionLejos: 'Estás a unos {km} km: por ahora no llegamos tan lejos. Puedes pasar a recoger.',
@@ -869,7 +898,7 @@
         vacio: 'Your order is empty.',
         avisoPendiente: 'Some items have a price to be confirmed; the restaurant will tell you the final total.',
         avisoNormal: 'To-go container +$10. The restaurant will confirm the final total and delivery fee.',
-        errVacio: 'Add at least one item.', errNombre: 'Please enter your name.', errDireccion: 'Please enter the delivery address: street, number, cross streets and neighborhood.', errUbicacion: 'Tap "Use my location" so the driver gets there directly.', errTelefono: 'Please enter your 10-digit phone number.',
+        errVacio: 'Add at least one item.', errNombre: 'Please enter your name.', errDireccion: 'Please enter the delivery address: street, number, cross streets and neighborhood.', errUbicacion: 'Tap "Use my location" so the driver gets there directly.', errTelefono: 'Please enter your 10-digit phone number.', elegirCarne: 'Which meat?', elegirCarnes: 'Which meats? You can mix', picante: 'Spicy?', conPicante: 'Spicy', sinPicante: 'Not spicy', errCarne: 'Choose at least one meat.',
         ubicando: 'Finding your location…', ubicacionLista: 'Location ready', envio: 'Delivery', aprox: 'approx.', llega: 'arrives in about',
         ubicacionSinCosto: 'Location ready. The restaurant will confirm the delivery fee.',
         ubicacionLejos: 'You are about {km} km away: we don\'t deliver that far yet. You can pick up.',
@@ -946,13 +975,56 @@
     }
 
     /* ---------- Pedido ---------- */
-    const pedido = {}; // { id: cantidad }
+    const pedido = {};     // { id: cantidad }
+    const elecciones = {}; // { id: ['Costilla · con picante', ...] }, una por pieza, solo en platillos con opciones
 
     function cambiar(id, delta) {
+      if (delta > 0 && PRODUCTOS[id].op) { abrirOpciones(id); return; }
       pedido[id] = (pedido[id] || 0) + delta;
-      if (pedido[id] <= 0) delete pedido[id];
+      if (elecciones[id] && delta < 0) elecciones[id].pop();
+      if (pedido[id] <= 0) { delete pedido[id]; delete elecciones[id]; }
       if (delta > 0) mostrarToast(`${t('agregado')}: ${nom(PRODUCTOS[id])}`);
       actualizarTodo();
+    }
+
+    /* ---------- Opciones de un platillo: carne a elegir y picante ---------- */
+    let opcionesId = null;
+    function abrirOpciones(id) {
+      opcionesId = id;
+      const it = PRODUCTOS[id], op = it.op, varias = op.carne === 'varias';
+      $('opciones-titulo').textContent = nom(it);
+      let h = '';
+      if (op.carne) {
+        h += `<fieldset class="opciones-grupo"><legend>${t(varias ? 'elegirCarnes' : 'elegirCarne')}</legend><div class="opciones-chips">`
+          + CARNES.map((c, i) => `<label class="chip-op"><input type="${varias ? 'checkbox' : 'radio'}" name="op-carne" value="${esc(c)}"${!varias && i === 0 ? ' checked' : ''}><span>${esc(c)}</span></label>`).join('')
+          + '</div></fieldset>';
+      }
+      if (op.picante) {
+        h += `<fieldset class="opciones-grupo"><legend>${t('picante')}</legend><div class="opciones-chips">
+          <label class="chip-op"><input type="radio" name="op-picante" value="con" checked><span>${t('conPicante')}</span></label>
+          <label class="chip-op"><input type="radio" name="op-picante" value="sin"><span>${t('sinPicante')}</span></label></div></fieldset>`;
+      }
+      $('opciones-campos').innerHTML = h;
+      $('opciones-error').textContent = '';
+      abrirCapa('opciones');
+    }
+    function confirmarOpciones() {
+      const id = opcionesId, op = PRODUCTOS[id].op, partes = [];
+      if (op.carne) {
+        const carnes = [...document.querySelectorAll('input[name="op-carne"]:checked')].map(x => x.value);
+        if (!carnes.length) { $('opciones-error').textContent = t('errCarne'); return; }
+        partes.push(carnes.join(' y '));
+      }
+      if (op.picante) partes.push(document.querySelector('input[name="op-picante"]:checked').value === 'con' ? 'con picante' : 'sin picante');
+      (elecciones[id] = elecciones[id] || []).push(partes.join(', '));
+      pedido[id] = (pedido[id] || 0) + 1;
+      cerrarCapa('opciones');
+      mostrarToast(`${t('agregado')}: ${nom(PRODUCTOS[id])}`);
+      actualizarTodo();
+    }
+    function detalleElecciones(id) {
+      const e = elecciones[id]; if (!e || !e.length) return '';
+      return e.length === 1 ? e[0] : e.map((x, i) => `${i + 1}) ${x}`).join(' · ');
     }
 
     function controlCantidad(id) {
@@ -992,6 +1064,7 @@
           <div style="min-width:0">
             <div class="menu-title">${esc(nom(it))}</div>
             <div class="menu-desc">${it.p == null ? t('precioPorConfirmar') : `${c} × ${dinero(it.p)} = ${dinero(it.p * c)}`}</div>
+            ${elecciones[id] ? `<div class="menu-desc elecciones">${esc(detalleElecciones(id))}</div>` : ''}
           </div>
           ${controlCantidad(id)}
         </div>`;
@@ -1268,7 +1341,8 @@
       const { total, pendientes } = resumen();
       const lineas = Object.entries(pedido).map(([id, c]) => {
         const it = PRODUCTOS[id];
-        return `• ${c} × ${it.n} — ${it.p == null ? 'precio por confirmar' : dinero(it.p * c)}`;
+        const d = detalleElecciones(id);
+        return `• ${c} × ${it.n} — ${it.p == null ? 'precio por confirmar' : dinero(it.p * c)}${d ? `\n   ${d}` : ''}`;
       });
 
       const msg = [
