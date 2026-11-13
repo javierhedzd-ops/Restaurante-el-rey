@@ -1303,8 +1303,8 @@
     async function revisarPausa() {
       if (!enNube()) return;
       try {
-        const f = await nube('/rest/v1/ajustes?clave=eq.pedidos&select=valor');
-        const v = f && f[0] && f[0].valor;
+        const f = await nube('/rest/v1/ajustes?clave=eq.pedidos&select=clave,valor');
+        const fila = (f || []).find(r => r.clave === 'pedidos'); const v = fila && fila.valor;
         pausa = v ? { activa: !!v.activa, mensaje: String(v.mensaje || '').slice(0, 200) } : { activa: false, mensaje: '' };
         if ($('pedido').classList.contains('active')) renderPedido();
       } catch (e) { /* sin internet: se queda como estaba */ }
