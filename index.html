@@ -724,9 +724,9 @@
     // tarifas: de menor a mayor. Más allá de la última, la página avisa que no llegan.
     // Forma real de Kevin (13/11/2026): $40 hasta 4 km a la redonda y $7 por cada km adicional,
     // servicio de Fast Delivery, llega en unos 45 minutos. maxKm: más allá, la página avisa que no llegan
-    // (0 = sin límite). PENDIENTE: la ubicación del restaurante (Kevin la pone desde su panel).
+    // (0 = sin límite). Ubicación del restaurante: pin de Google Maps sobre el local (13/11/2026).
     const ENVIO = {
-      restaurante: null,
+      restaurante: { lat: 20.976046, lng: -89.599178 },
       factorCalle: 1.3,
       base: 40, baseKm: 4, porKm: 7, maxKm: 0,
       repartidor: 'Fast Delivery', minutos: 45
