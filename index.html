@@ -260,7 +260,7 @@
 
     .form { margin-top: 16px; display: grid; gap: 12px; }
     .form label { display: grid; gap: 4px; font-size: 13px; color: var(--text-sec); font-weight: 500; }
-    .form input[type="text"], .form textarea {
+    .form input[type="text"], .form input[type="tel"], .form textarea {
       font: inherit; color: var(--text); background: var(--card); border: 1px solid var(--border-subtle);
       border-radius: 12px; padding: 10px 12px; min-height: 44px; width: 100%;
     }
@@ -409,6 +409,9 @@
     .tarifa{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;margin-bottom:8px}
     .tarifa label{display:flex;align-items:center;gap:6px;font-size:14px}.tarifa input{width:100%;min-height:44px}
     .tarifa .btn{min-height:44px;padding:0 14px}
+    #envio-tarifas .tarifa{grid-template-columns:1fr;gap:8px}
+    #envio-tarifas .tarifa label{display:grid;grid-template-columns:1fr 92px 34px;gap:8px;font-size:15px}
+    #envio-tarifas .tarifa input{width:92px;text-align:center;font-size:17px;font-weight:600;border:1px solid var(--border);border-radius:12px;background:#fff}
 
     /* ===== Minimalista (pedido de Kevin, 13/11/2026) =====
        Tarjetas sin contorno grueso ni sombra desplazada y encabezado sin puntitos. Se quedan la
@@ -1612,10 +1615,10 @@
       $('envio-ubicacion').textContent = r ? `Ubicación guardada (${r.lat.toFixed(5)}, ${r.lng.toFixed(5)}).` : 'Todavía no hay ubicación: el costo de envío no se calcula.';
       $('envio-ubicacion').className = 'ubicacion-estado ' + (r ? 'ok' : 'mal');
       const campo = (k, pre, post, step) => `<label>${pre}<input type="number" inputmode="decimal" min="0" step="${step}" value="${envioBorrador[k]}" onchange="envioBorrador.${k} = Number(this.value); pintarEjemplo()" aria-label="${pre} ${post}">${post}</label>`;
-      $('envio-tarifas').innerHTML = `<div class="tarifa">${campo('base', '$', '', 1)}${campo('baseKm', 'hasta ', ' km', 0.5)}</div>
-        <div class="tarifa">${campo('porKm', '+ $', ' por km extra', 1)}</div>
-        <div class="tarifa">${campo('maxKm', 'Máximo ', ' km (0 = sin límite)', 1)}</div>
-        <div class="tarifa">${campo('minutos', 'Llega en unos ', ' min', 5)}</div>
+      $('envio-tarifas').innerHTML = `<div class="tarifa">${campo('base', 'Cuota base $', '', 1)}${campo('baseKm', 'Cubre hasta', 'km', 0.5)}</div>
+        <div class="tarifa">${campo('porKm', 'Cada km extra $', '', 1)}</div>
+        <div class="tarifa">${campo('maxKm', 'No llegan más allá de (0 = sin límite)', 'km', 1)}</div>
+        <div class="tarifa">${campo('minutos', 'Tiempo de entrega', 'min', 5)}</div>
         <p class="aviso" id="envio-ejemplo"></p>`;
       pintarEjemplo();
     }
