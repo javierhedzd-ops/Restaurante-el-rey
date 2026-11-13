@@ -411,10 +411,8 @@
     .tarifa .btn{min-height:44px;padding:0 14px}
 
     /* ===== Minimalista (pedido de Kevin, 13/11/2026) =====
-       Fondo liso, tarjetas sin contorno grueso ni sombra desplazada, sin talavera ni puntitos,
-       y sin huecos de foto vacíos (si una foto no existe, el espacio no se muestra; el dueño sí
-       lo ve en su modo para poder subirla). Colores, logo y letras se quedan. */
-    body { background: var(--bg) !important; }
+       Tarjetas sin contorno grueso ni sombra desplazada y encabezado sin puntitos. Se quedan la
+       talavera del fondo (Javi, 13/11) y los espacios de foto con sus flechas. Colores, logo y letras igual. */
     header { box-shadow: none !important; border-bottom: 1px solid rgba(255,255,255,.08) !important; padding-bottom: 12px; }
     header::after { display: none !important; }
     footer { border-top: 1px solid var(--border) !important; }
@@ -424,9 +422,6 @@
     }
     .showcase-header { border-bottom: 1px solid var(--border) !important; background: transparent !important; }
     .showcase-tap-badge { background: transparent !important; border-color: var(--border) !important; }
-    .img-slot { background: var(--card-alt) !important; }
-    .img-slot:not(.has-image) { display: none !important; }
-    body.modo-dueno .img-slot:not(.has-image) { display: flex !important; }
     .muro { border: 0 !important; padding: 0 !important; background: none !important; box-shadow: none !important; }
     .muro-pintura { border: 0 !important; box-shadow: none !important; border-radius: 48% 48% 24px 24px / 40% 40% 24px 24px !important; }
     .muro-mariposa { display: none !important; }
