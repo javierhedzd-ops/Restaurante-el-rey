@@ -429,14 +429,19 @@
     .btn-primary { border-color: transparent !important; }
     .fire-label, .section-label { letter-spacing: .12em; }
     .muro { position: relative; }
-    .muro-menu { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 2;
-      display: inline-flex; align-items: center; gap: 6px; min-height: 48px; padding: 0 22px; border-radius: 999px;
-      background: var(--fire); color: #fff; font-weight: 600; font-size: 15px; text-decoration: none; white-space: nowrap;
-      box-shadow: 0 6px 18px rgba(34, 21, 14, .28); }
-    .muro-menu .icon { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
-    .muro-menu:hover { background: #E8372E; }
-    .muro-menu:focus-visible { outline: 3px solid var(--mustard); outline-offset: 3px; }
     #menu { scroll-margin-top: 96px; }
+    /* La catrina saluda: globo de diálogo que aparece solo; al tocarlo, lo dice en voz alta */
+    .muro-globo { position: absolute; z-index: 2; right: 4%; top: 30%; max-width: 46%;
+      background: #fff; color: var(--ink); border: 1px solid var(--border); border-radius: 22px 22px 22px 6px;
+      padding: 10px 16px; min-height: 44px; font-family: var(--font-body); font-size: clamp(17px, 4.6vw, 22px); font-weight: 700;
+      box-shadow: 0 8px 22px rgba(34, 21, 14, .22); cursor: pointer; transform-origin: 0% 100%;
+      opacity: 0; transform: scale(.6) translateY(8px); animation: globo-sale .45s cubic-bezier(.2,.9,.3,1.3) 1.6s forwards; }
+    .muro-globo::after { content: ''; position: absolute; left: -9px; bottom: 8px; width: 16px; height: 16px; background: #fff;
+      border-left: 1px solid var(--border); border-bottom: 1px solid var(--border); transform: rotate(45deg); border-radius: 0 0 0 4px; }
+    .muro-globo.habla { animation: globo-habla .6s ease-in-out 2; opacity: 1; transform: none; }
+    @keyframes globo-sale { to { opacity: 1; transform: none; } }
+    @keyframes globo-habla { 50% { transform: scale(1.08); } }
+    @media (prefers-reduced-motion: reduce) { .muro-globo { animation: none; opacity: 1; transform: none; } }
 </style>
 </head>
 <body>
@@ -482,18 +487,10 @@
   <main class="container">
 
     <!-- El mural de la catrina, pintado en la pared -->
-    <div class="muro"><div class="muro-pintura" aria-hidden="true"></div><a class="muro-menu" href="#menu"><span data-en="See the menu">Ver el menú</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></a><span class="muro-mariposa"><img src="arte/mariposa.webp" alt="" width="372" height="485"></span></div>
+    <div class="muro"><div class="muro-pintura" aria-hidden="true"></div><button type="button" class="muro-globo" id="catrina-globo" onclick="catrinaHabla()" aria-label="La catrina dice: ¡Bienvenidos!" data-en-aria-label="The catrina says: Welcome!"><span data-en="Welcome!">¡Bienvenidos!</span></button><span class="muro-mariposa"><img src="arte/mariposa.webp" alt="" width="372" height="485"></span></div>
 
     <section class="s-portada">
       <div class="photo-hero">
-        <div class="img-slot has-image" id="slot-portada">
-          <img id="img-portada" src="fotos/portada.jpg" alt="Carnitas recién salidas del cazo" data-en-alt="Carnitas fresh from the copper pot" onerror="this.parentNode.classList.remove('has-image')">
-          <button type="button" class="btn-foto" onclick="event.stopPropagation(); elegirFoto('portada')"><svg class="icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Cambiar foto</button>
-          <div class="placeholder-view" aria-hidden="true">
-            <svg class="placeholder-icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-            <span data-en="Copper-pot carnitas">Carnitas de cazo</span>
-          </div>
-        </div>
         <div class="photo-content">
           <div class="fire-label" data-en="&quot;PURE MEXICAN FLAVOR&quot;">"PURO SABOR MEXICANO"</div>
           <h1 style="margin-top: 4px;">Carnitas Michoacán El Rey</h1>
@@ -1218,6 +1215,19 @@
       renderPedido();
     }
 
+    /* ---------- La catrina dice bienvenidos (en voz alta solo si la tocan) ---------- */
+    function catrinaHabla() {
+      const g = $('catrina-globo'); g.classList.remove('habla'); void g.offsetWidth; g.classList.add('habla');
+      try {
+        if (!('speechSynthesis' in window)) return;
+        const texto = idioma === 'en' ? 'Welcome to Carnitas El Rey!' : '¡Bienvenidos a Carnitas El Rey!';
+        const u = new SpeechSynthesisUtterance(texto); u.lang = idioma === 'en' ? 'en-US' : 'es-MX'; u.rate = 1; u.pitch = 1.15;
+        const voces = speechSynthesis.getVoices(), v = voces.find(x => x.lang.startsWith(u.lang.slice(0, 2)) && /female|mujer|paulina|sabina|helena|monica|lupe/i.test(x.name)) || voces.find(x => x.lang.startsWith(u.lang.slice(0, 2)));
+        if (v) u.voice = v;
+        speechSynthesis.cancel(); speechSynthesis.speak(u);
+      } catch (e) {}
+    }
+
     /* ---------- Envío a domicilio según distancia ---------- */
     let ubicacion = null;   // { lat, lng, km, costo, lejos }
     function distanciaKm(a, b) {
@@ -1377,7 +1387,7 @@
     });
 
     function aplicarFotos() {
-      [['portada', 'fotos/portada.jpg'], ['restaurante', 'fotos/restaurante.jpg']].forEach(([clave, original]) => {
+      [['restaurante', 'fotos/restaurante.jpg']].forEach(([clave, original]) => {
         $('slot-' + clave).classList.add('has-image');
         $('img-' + clave).src = fotosNube[clave] || fotosDemo[clave] || original;
       });
