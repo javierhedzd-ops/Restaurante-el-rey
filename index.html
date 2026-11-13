@@ -433,6 +433,15 @@
     .tab-chip[aria-selected="true"] { border-color: var(--mustard) !important; }
     .btn-primary { border-color: transparent !important; }
     .fire-label, .section-label { letter-spacing: .12em; }
+    .muro { position: relative; }
+    .muro-menu { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 2;
+      display: inline-flex; align-items: center; gap: 6px; min-height: 48px; padding: 0 22px; border-radius: 999px;
+      background: var(--fire); color: #fff; font-weight: 600; font-size: 15px; text-decoration: none; white-space: nowrap;
+      box-shadow: 0 6px 18px rgba(34, 21, 14, .28); }
+    .muro-menu .icon { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .muro-menu:hover { background: #E8372E; }
+    .muro-menu:focus-visible { outline: 3px solid var(--mustard); outline-offset: 3px; }
+    #menu { scroll-margin-top: 96px; }
 </style>
 </head>
 <body>
@@ -478,7 +487,7 @@
   <main class="container">
 
     <!-- El mural de la catrina, pintado en la pared -->
-    <div class="muro" aria-hidden="true"><div class="muro-pintura"></div><span class="muro-mariposa"><img src="arte/mariposa.webp" alt="" width="372" height="485"></span></div>
+    <div class="muro"><div class="muro-pintura" aria-hidden="true"></div><a class="muro-menu" href="#menu"><span data-en="See the menu">Ver el menú</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></a><span class="muro-mariposa"><img src="arte/mariposa.webp" alt="" width="372" height="485"></span></div>
 
     <section class="s-portada">
       <div class="photo-hero">
@@ -501,7 +510,7 @@
               <span data-en="See full menu">Ver menú completo</span>
               <svg class="icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
             </a>
-            <a href="https://maps.google.com/?q=Carnitas+Michoacan+El+Rey+Chuminopolis+Merida" target="_blank" rel="noopener" class="btn">
+            <a href="https://maps.app.goo.gl/vtA6z2QrUvPs9663A" target="_blank" rel="noopener" class="btn">
               <span data-en="Location">Ubicación</span>
             </a>
           </div>

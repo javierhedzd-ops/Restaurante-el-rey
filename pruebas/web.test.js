@@ -30,7 +30,7 @@ test('existe cada archivo local que pide la página (menos las fotos opcionales)
 
 test('no carga nada de otros servidores (ni CDN ni Google Fonts)', () => {
   const externos = [...html.matchAll(/(?:src|href)="(https?:\/\/[^"]+)"/g)].map(m => m[1])
-    .filter(u => !/^https:\/\/(maps\.google\.com|wa\.me)\//.test(u));
+    .filter(u => !/^https:\/\/(maps\.google\.com|maps\.app\.goo\.gl|wa\.me)\//.test(u));
   assert.deepEqual(externos, []);
   assert.ok(!/fonts\.(googleapis|gstatic)\.com/.test(html));
 });
