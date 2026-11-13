@@ -78,3 +78,20 @@ drop policy if exists "dueño escribe ajustes" on public.ajustes;
 create policy "todos leen ajustes" on public.ajustes for select using (true);
 create policy "dueño escribe ajustes" on public.ajustes for all to authenticated
   using (public.es_dueno()) with check (public.es_dueno());
+
+-- Contador anónimo de visitas, carritos, pedidos y errores (13/11/2026).
+-- Cualquiera puede anotar; solo el dueño puede leer. No guarda datos personales.
+create table if not exists public.eventos (
+  id bigint generated always as identity primary key,
+  tipo text not null check (tipo in ('visita','carrito','pedido','error','cerrado','pausado')),
+  detalle jsonb not null default '{}'::jsonb check (pg_column_size(detalle) < 2000),
+  creado timestamptz not null default now()
+);
+create index if not exists eventos_creado on public.eventos (creado desc);
+alter table public.eventos enable row level security;
+drop policy if exists "cualquiera anota" on public.eventos;
+create policy "cualquiera anota" on public.eventos for insert to anon, authenticated with check (true);
+drop policy if exists "dueno lee" on public.eventos;
+create policy "dueno lee" on public.eventos for select to authenticated using (public.es_dueno());
+grant insert on public.eventos to anon, authenticated;
+grant select on public.eventos to authenticated;
