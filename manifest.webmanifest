@@ -1,0 +1,16 @@
+{
+  "name": "Carnitas Michoacán El Rey",
+  "short_name": "El Rey",
+  "description": "Carnitas de cazo en Chuminópolis, Mérida. Pide a domicilio o para recoger.",
+  "lang": "es-MX",
+  "start_url": "/?de=app",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F7F4EE",
+  "theme_color": "#F7F4EE",
+  "icons": [
+    { "src": "iconos/icono-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "iconos/icono-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "iconos/icono-mascara-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

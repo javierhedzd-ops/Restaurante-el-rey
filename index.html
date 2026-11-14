@@ -17,6 +17,10 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://elrey.arilabs.mx/">
   <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="iconos/icono-180.png">
+  <meta name="apple-mobile-web-app-title" content="El Rey">
+  <meta name="mobile-web-app-capable" content="yes">
   <link rel="apple-touch-icon" href="logo-escudo.png">
 
 
@@ -462,6 +466,13 @@
     .recordar label { display: flex; align-items: center; gap: 8px; min-height: 44px; }
     .recordar input { width: 20px; height: 20px; accent-color: var(--mustard); }
     .btn-link { background: none; border: 0; padding: 10px 0; color: var(--text-sec); text-decoration: underline; font: inherit; cursor: pointer; min-height: 44px; }
+
+    .instalar-cuerpo { display: flex; gap: 16px; align-items: center; margin: 4px 0 18px; }
+    .instalar-cuerpo p { margin: 0; color: var(--text-sec); line-height: 1.45; }
+    .instalar-icono { width: 72px; height: 72px; border-radius: 18px; flex: none; box-shadow: 0 6px 18px rgba(0,0,0,.18); }
+    .instalar-pasos { margin: 0 0 16px; padding-left: 22px; line-height: 1.5; }
+    .instalar-pasos li { margin: 0 0 8px; }
+    .instalar-luego { margin-top: 10px; background: transparent; box-shadow: none; }
 </style>
 </head>
 <body>
@@ -668,6 +679,28 @@
         <div class="error" id="envio-error" role="alert"></div>
         <button type="button" class="btn btn-primary btn-block" id="envio-guardar" onclick="guardarEnvio()">Guardar</button>
       </div>
+    </div>
+  </div>
+
+  <div class="overlay instalar-capa" id="instalar" role="dialog" aria-modal="true" aria-labelledby="instalar-titulo" onclick="if (event.target === this) despuesInstalar()">
+    <div class="sheet">
+      <div class="panel-header">
+        <div class="brand-title" id="instalar-titulo" data-en="Order faster next time">Para tu próximo antojo</div>
+        <button type="button" class="btn" style="min-height: 36px; padding: 0 12px;" onclick="despuesInstalar()" data-en="Close ✕">Cerrar ✕</button>
+      </div>
+      <div class="instalar-cuerpo">
+        <img src="iconos/icono-192.png" width="72" height="72" alt="" class="instalar-icono">
+        <p data-en="Save El Rey on your phone, next to your apps. Next time you order in 2 taps, with your details ready.">Guarda El Rey en tu teléfono, junto a tus apps. La próxima vez pides en 2 toques, con tus datos ya puestos.</p>
+      </div>
+      <div id="instalar-android">
+        <button type="button" class="btn btn-primary btn-block" onclick="instalarApp()" data-en="Save to my phone">Guardar en mi teléfono</button>
+      </div>
+      <ol class="instalar-pasos" id="instalar-ios" hidden>
+        <li data-en="Tap Share (the square with an arrow) at the bottom of Safari.">Toca <b>Compartir</b> (el cuadrito con la flecha) abajo en Safari.</li>
+        <li data-en="Choose &quot;Add to Home Screen&quot;.">Elige <b>“Agregar a inicio”</b>.</li>
+        <li data-en="Tap Add. Done!">Toca <b>Agregar</b>. ¡Listo!</li>
+      </ol>
+      <button type="button" class="btn btn-block instalar-luego" onclick="despuesInstalar()" data-en="Maybe later">Ahora no</button>
     </div>
   </div>
 
@@ -1465,6 +1498,58 @@
       recordarDatos({ nombre, telefono, direccion, entrega });
       anotar('pedido', { total: total + envioActual(), piezas: Object.values(pedido).reduce((a, b) => a + b, 0), domicilio: entrega === 'domicilio', km: ubicacion && ubicacion.km != null ? Math.round(ubicacion.km * 10) / 10 : null, ingles: enIngles() });
       window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+      ofrecerInstalar();
+    }
+
+    /* ---------- Guardar El Rey en el teléfono (después del primer pedido) ----------
+       No sale al abrir la página: solo cuando el cliente regresa de mandar su pedido por WhatsApp.
+       Si dice "Ahora no", no vuelve a salir en 7 días. Android: botón de instalar. iPhone: los pasos de Safari. */
+    let avisoInstalar = null;
+    const INSTALAR_LS = 'rey_instalar';
+    const yaEsApp = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+    const esIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    addEventListener('beforeinstallprompt', e => { e.preventDefault(); avisoInstalar = e; });
+    addEventListener('appinstalled', () => { guardarLS(INSTALAR_LS, { instalada: true }); cerrarCapa('instalar'); });
+    if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+    function puedeOfrecerInstalar() {
+      if (yaEsApp()) return false;
+      const d = leerLS(INSTALAR_LS);
+      if (d.instalada || (d.hasta && Date.now() < d.hasta)) return false;
+      return !!avisoInstalar || esIOS;
+    }
+    function ofrecerInstalar() {
+      if (!puedeOfrecerInstalar()) return;
+      let listo = false;
+      const mostrar = () => {
+        if (listo) return; listo = true;
+        document.removeEventListener('visibilitychange', alVolver);
+        if (puedeOfrecerInstalar()) abrirInstalar();
+      };
+      const alVolver = () => { if (document.visibilityState === 'visible') setTimeout(mostrar, 700); };
+      document.addEventListener('visibilitychange', alVolver);
+      setTimeout(() => { if (document.visibilityState === 'visible') mostrar(); }, 8000);
+    }
+    function abrirInstalar() {
+      const android = !!avisoInstalar;
+      $('instalar-android').hidden = !android;
+      $('instalar-ios').hidden = android;
+      if ($('pedido').classList.contains('active')) cerrarPedido();
+      abrirCapa('instalar');
+    }
+    async function instalarApp() {
+      if (!avisoInstalar) return;
+      const e = avisoInstalar; avisoInstalar = null;
+      e.prompt();
+      try {
+        const r = await e.userChoice;
+        if (r && r.outcome === 'accepted') guardarLS(INSTALAR_LS, { instalada: true });
+        else guardarLS(INSTALAR_LS, { hasta: Date.now() + 7 * 864e5 });
+      } catch (err) {}
+      cerrarCapa('instalar');
+    }
+    function despuesInstalar() {
+      guardarLS(INSTALAR_LS, { hasta: Date.now() + 7 * 864e5 });
+      cerrarCapa('instalar');
     }
 
     document.addEventListener('keydown', e => {
