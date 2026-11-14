@@ -515,11 +515,15 @@
 
     /* Retoques de Javi (14/11/2026): las figuritas se ven, pero se desvanecen justo detrás de las letras que van sobre el
        fondo (un halo del mismo naranja que se apaga hacia afuera), y la fila de categorías se desvanece al borde. */
-    section > .mono-label, section > h2, footer p {
-      --velo: #EF7A3A; --halo: 0 0 6px var(--velo), 0 0 12px var(--velo), 0 0 18px var(--velo), 0 0 24px var(--velo);
+    /* Detrás de cada texto que va directo sobre el fondo, las figuritas se desvanecen: un velo del mismo naranja del fondo
+       (el de body), opaco en el centro y transparente hacia afuera. */
+    section > .mono-label, section > h2, footer p { position: relative; width: fit-content; max-width: 100%; }
+    footer p { margin-left: auto; margin-right: auto; }
+    section > .mono-label::before, section > h2::before, footer p::before {
+      content: ''; position: absolute; z-index: -1; pointer-events: none; inset: -14px -38px;
+      background: radial-gradient(closest-side, rgba(237, 110, 46, 1) 0%, rgba(237, 110, 46, 1) 60%, rgba(237, 110, 46, .65) 82%, rgba(237, 110, 46, 0) 100%);
     }
-    section > .mono-label, footer p { text-shadow: var(--halo); }
-    section > h2 { text-shadow: 2px 2px 0 rgba(248, 240, 112, .55), var(--halo); }
+    section > h2 { text-shadow: 2px 2px 0 rgba(248, 240, 112, .55); }
     .tabs-bar { --izq: 0px; --der: 36px; margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; scroll-padding-inline: 16px;
       -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--izq), #000 calc(100% - var(--der)), transparent 100%);
               mask-image: linear-gradient(to right, transparent 0, #000 var(--izq), #000 calc(100% - var(--der)), transparent 100%); }
