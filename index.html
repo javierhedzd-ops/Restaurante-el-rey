@@ -8,7 +8,14 @@
   <meta name="theme-color" content="#F7F4EE">
   <meta property="og:title" content="Carnitas Michoacán El Rey · Mérida">
   <meta property="og:description" content="Carnitas de cazo en Chuminópolis, Mérida. Mira la carta con precios y pide a domicilio por WhatsApp.">
-  <meta property="og:image" content="fotos/portada.jpg">
+  <meta property="og:image" content="https://elrey.arilabs.mx/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Carnitas Michoacán El Rey: carnitas de cazo a domicilio en Chuminópolis, Mérida">
+  <meta property="og:url" content="https://elrey.arilabs.mx/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://elrey.arilabs.mx/">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="apple-touch-icon" href="logo-escudo.png">
 
@@ -1632,12 +1639,17 @@
 
     /* ---------- Contador anónimo: visitas, carritos, pedidos y errores ----------
        No guarda nombre, teléfono, dirección ni ubicación del cliente. Si falla, no pasa nada. */
+    const ORIGEN = (() => {
+      let o = (new URLSearchParams(location.search).get('de') || '').toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 30);
+      try { if (o) sessionStorage.setItem('rey_de', o); else o = sessionStorage.getItem('rey_de') || ''; } catch (e) {}
+      return o || 'directo';
+    })();
     function anotar(tipo, detalle) {
       if (!enNube() || modoDueno || document.body.classList.contains('panel-dueno')) return;
       try {
         fetch(baseNube() + '/rest/v1/eventos', { method: 'POST', keepalive: true,
           headers: { apikey: NUBE.llave, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
-          body: JSON.stringify({ tipo, detalle: { ...detalle, ancho: innerWidth, idioma: idioma } }) }).catch(() => {});
+          body: JSON.stringify({ tipo, detalle: { ...detalle, ancho: innerWidth, idioma: idioma, de: ORIGEN } }) }).catch(() => {});
       } catch (e) {}
     }
     function anotarUnaVez(tipo, detalle = {}) {
