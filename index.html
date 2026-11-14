@@ -31,6 +31,9 @@
       src: url('fuentes/inter-tight.woff2') format('woff2');
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
     }
+    @font-face { font-family: 'Pinyon Script'; font-style: normal; font-weight: 400; font-display: swap; src: url('fuentes/pinyon-script.woff2') format('woff2'); }
+    @font-face { font-family: 'Alfa Slab One'; font-style: normal; font-weight: 400; font-display: swap; src: url('fuentes/alfa-slab-one.woff2') format('woff2'); }
+    @font-face { font-family: 'Arimo'; font-style: normal; font-weight: 400 700; font-display: swap; src: url('fuentes/arimo.woff2') format('woff2'); }
     @font-face {
       font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400 700; font-display: swap;
       src: url('fuentes/jetbrains-mono.woff2') format('woff2');
@@ -348,7 +351,7 @@
       opacity: 0.55; pointer-events: none;
     }
     header { padding-bottom: 14px; }
-    body { background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cg fill='none' stroke='%23F1E6CF' stroke-width='1.2'%3E%3Cpath d='M22 6c5 6 5 10 0 16-5-6-5-10 0-16zM22 38c5-6 5-10 0-16-5 6-5 10 0 16zM6 22c6-5 10-5 16 0-6 5-10 5-16 0zM38 22c-6-5-10-5-16 0 6 5 10 5 16 0z'/%3E%3Ccircle cx='22' cy='22' r='2.5'/%3E%3Cpath d='M0 8a8 8 0 0 0 8-8M36 0a8 8 0 0 0 8 8M44 36a8 8 0 0 0-8 8M8 44a8 8 0 0 0-8-8'/%3E%3C/g%3E%3C/svg%3E") center top / 44px 44px; }
+    body { background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cg fill='none' stroke='%23F07B3D' stroke-width='1.2'%3E%3Cpath d='M22 6c5 6 5 10 0 16-5-6-5-10 0-16zM22 38c5-6 5-10 0-16-5 6-5 10 0 16zM6 22c6-5 10-5 16 0-6 5-10 5-16 0zM38 22c-6-5-10-5-16 0 6 5 10 5 16 0z'/%3E%3Ccircle cx='22' cy='22' r='2.5'/%3E%3Cpath d='M0 8a8 8 0 0 0 8-8M36 0a8 8 0 0 0 8 8M44 36a8 8 0 0 0-8 8M8 44a8 8 0 0 0-8-8'/%3E%3C/g%3E%3C/svg%3E") center top / 44px 44px; }
     footer {
       border-top: 2px solid var(--ink); position: relative; isolation: isolate;
     }
@@ -473,6 +476,29 @@
     .instalar-pasos { margin: 0 0 16px; padding-left: 22px; line-height: 1.5; }
     .instalar-pasos li { margin: 0 0 8px; }
     .instalar-luego { margin-top: 10px; background: transparent; box-shadow: none; }
+
+    /* ===== Paleta y letras del menú impreso (Javi, 14/11/2026) =====
+       Naranja, ámbar, azul marino, amarillo y rojo del menú. Letras parecidas a las del menú: script (Pinyon Script) en
+       los títulos, titular grueso con sombra roja (Alfa Slab One) en el nombre, y Arimo (la de Arial del menú) en el resto. */
+    :root {
+      --bg: #ED6E2E; --card: #F1A43A; --card-alt: #F8F070; --btn: #F8F070; --btn-hover: #FFF9A8;
+      --border: #0B1A3A; --border-subtle: #0B1A3A; --text: #0B1A3A; --text-sec: #16264F; --text-muted: #26356A;
+      --ink: #0B1A3A; --mustard: #F8F070; --mustard-hover: #FFF9A8; --accent: #0B1A3A; --accent-bright: #F8F070; --on-accent: #0B1A3A; --fire: #C02824;
+      --font-body: 'Arimo', Arial, Helvetica, sans-serif;
+      --font-titulo: 'Alfa Slab One', Georgia, serif;
+      --font-script: 'Pinyon Script', 'Snell Roundhand', cursive;
+    }
+    h1 { font-family: var(--font-titulo); font-weight: 400; font-size: 30px; line-height: 1.12; letter-spacing: .01em;
+         color: #F8F070; -webkit-text-stroke: 1px #7A1512; paint-order: stroke fill; text-shadow: 2px 3px 0 #C02824; }
+    h2 { font-family: var(--font-script); font-weight: 400; font-size: 36px; line-height: 1.05; color: var(--ink);
+         -webkit-text-stroke: .5px var(--ink); text-shadow: 2px 2px 0 rgba(248, 240, 112, .55); }
+    .mono-label, .fire-label { font-family: var(--font-body); font-weight: 700; font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; }
+    .menu-title { font-weight: 700; }
+    .price, .price.pendiente { font-family: var(--font-body); font-weight: 700; }
+    .price { font-size: 15px; }
+    .tab-chip { font-weight: 700; letter-spacing: .03em; }
+    .img-slot { background-color: #F1A43A; background-image: none; }
+    .img-slot, .img-slot * { font-family: var(--font-body); font-weight: 700; letter-spacing: .04em; }
 </style>
 </head>
 <body>
@@ -618,7 +644,7 @@
 
   <footer>
     <div class="container">
-      <img class="logo-footer" src="logo-completo.png" alt="El Rey Carnitas · Puro sabor mexicano" data-en-alt="El Rey Carnitas · Pure Mexican flavor" width="200" height="88">
+      <img class="logo-footer" src="logo-completo-limpio.png" alt="El Rey Carnitas · Puro sabor mexicano" data-en-alt="El Rey Carnitas · Pure Mexican flavor" width="200" height="88">
       <p class="mono-label" style="color: var(--text-muted);">CARNITAS MICHOACÁN EL REY · MÉRIDA · 2026</p>
       <p style="font-size: 13px; color: var(--text-sec); margin-top: 4px;">
         <span data-en="Delivery:">Servicio a domicilio:</span> <a href="tel:+529991190662">999 119 0662</a>
