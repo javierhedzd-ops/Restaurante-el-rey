@@ -476,6 +476,7 @@
 
     .pedido-bloqueo { margin: 0 0 14px; padding: 12px 14px; border-radius: 14px; background: #FDECEA; color: #8A1C12; font-weight: 600; line-height: 1.4; }
     #pedido-enviar:disabled { opacity: .45; cursor: not-allowed; }
+    #pedido-bloqueo-boton { margin: 4px 0 12px; }
     #btn-pausa.pausa-activa { background: #C62828; color: #fff; border-color: #C62828; }
 
     .recordar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 14px; font-size: 14px; color: var(--text-sec); }
@@ -827,6 +828,7 @@
           <button type="button" class="btn-link" id="f-olvidar" onclick="olvidarDatos()" hidden data-en="Forget my details">Olvidar mis datos</button>
         </div>
         <div class="error" id="f-error" role="alert"></div>
+        <p class="pedido-bloqueo" id="pedido-bloqueo-boton" role="status" hidden></p>
         <button type="submit" class="btn btn-primary btn-block" id="pedido-enviar">
           <span data-en="Send order via WhatsApp">Enviar pedido por WhatsApp</span>
           <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -1208,6 +1210,8 @@
       $('pedido-total').textContent = dinero(total + envioActual());
       const bloqueo = bloqueoPedidos();
       $('pedido-bloqueo').hidden = !bloqueo; $('pedido-bloqueo').textContent = bloqueo || '';
+      // El mismo aviso junto al botón: si no se puede enviar, ahí mismo se ve por qué (no solo arriba de la lista).
+      $('pedido-bloqueo-boton').hidden = !bloqueo; $('pedido-bloqueo-boton').textContent = bloqueo || '';
       $('pedido-enviar').disabled = !!bloqueo;
       $('pedido-aviso').textContent = pendientes ? t('avisoPendiente') : envioActual() ? t('conEnvio').replace('{costo}', dinero(envioActual())) : t('avisoNormal');
       if (!ids.length) cerrarPedido();
