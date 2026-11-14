@@ -18,6 +18,19 @@
   <link rel="canonical" href="https://elrey.arilabs.mx/">
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preload" as="image" href="catrina-nicho.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="arte/mariposa.webp">
+  <script type="text/javascript">
+    /* Al entrar, la catrina ya tiene que estar: la página espera a que llegue su imagen (como mucho 0.9 s) en vez de dejarla aparecer. */
+    (function () {
+      var d = document.documentElement, listo = false;
+      function fin() { if (listo) return; listo = true; d.classList.remove('espera-catrina'); }
+      d.classList.add('espera-catrina');
+      var i = new Image(); i.onload = i.onerror = fin; i.src = 'catrina-nicho.webp';
+      if (i.complete) fin(); else setTimeout(fin, 900);
+    })();
+  </script>
+  <style>html.espera-catrina body { visibility: hidden; }</style>
   <link rel="apple-touch-icon" href="iconos/icono-180.png">
   <meta name="apple-mobile-web-app-title" content="El Rey">
   <meta name="mobile-web-app-capable" content="yes">
@@ -370,7 +383,6 @@
       border: 2px solid var(--ink); border-radius: 50% 50% 20px 20px / 44% 44% 20px 20px;
       background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' fill='%23F8E9C9'/%3E%3Cg fill='none' stroke='%23C98A26' stroke-width='2.4'%3E%3Cpath d='M22 6c5 6 5 10 0 16-5-6-5-10 0-16zM22 38c5-6 5-10 0-16-5 6-5 10 0 16zM6 22c6-5 10-5 16 0-6 5-10 5-16 0zM38 22c-6-5-10-5-16 0 6 5 10 5 16 0z'/%3E%3Ccircle cx='22' cy='22' r='2.5' fill='%23D7261E' stroke='none'/%3E%3Cpath d='M0 8a8 8 0 0 0 8-8M36 0a8 8 0 0 0 8 8M44 36a8 8 0 0 0-8 8M8 44a8 8 0 0 0-8-8'/%3E%3C/g%3E%3C/svg%3E") center / 22px 22px;
       box-shadow: 5px 5px 0 var(--mustard), inset 0 2px 0 rgba(255, 250, 238, 0.7), inset 0 -3px 5px rgba(34, 21, 14, 0.18);
-      opacity: 0; animation: muro-aparece 1.8s ease-out 0.15s forwards;
     }
     .muro-pintura {
       width: 100%; height: 100%;
