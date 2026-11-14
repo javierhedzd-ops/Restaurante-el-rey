@@ -499,6 +499,17 @@
     .tab-chip { font-weight: 700; letter-spacing: .03em; }
     .img-slot { background-color: #F1A43A; background-image: none; }
     .img-slot, .img-slot * { font-family: var(--font-body); font-weight: 700; letter-spacing: .04em; }
+
+    /* Retoques de Javi (14/11/2026): las figuritas se ven, pero se desvanecen justo detrás de las letras que van sobre el
+       fondo (un halo del mismo naranja que se apaga hacia afuera), y la fila de categorías se desvanece al borde. */
+    section > .mono-label, section > h2, footer p {
+      --velo: #EF7A3A; --halo: 0 0 6px var(--velo), 0 0 12px var(--velo), 0 0 18px var(--velo), 0 0 24px var(--velo);
+    }
+    section > .mono-label, footer p { text-shadow: var(--halo); }
+    section > h2 { text-shadow: 2px 2px 0 rgba(248, 240, 112, .55), var(--halo); }
+    .tabs-bar { --izq: 0px; --der: 36px; margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; scroll-padding-inline: 16px;
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--izq), #000 calc(100% - var(--der)), transparent 100%);
+              mask-image: linear-gradient(to right, transparent 0, #000 var(--izq), #000 calc(100% - var(--der)), transparent 100%); }
 </style>
 </head>
 <body>
@@ -1928,5 +1939,18 @@
     if (enNube()) cargarNube();
     if (location.hash !== '#dueno') anotarUnaVez('visita');
   </script>
+<script>
+  /* La fila de categorías se desvanece solo del lado donde todavía hay más (no corta a la mitad la última). */
+  (function () {
+    var t = document.getElementById('tabs'); if (!t) return;
+    function ajusta() {
+      var max = t.scrollWidth - t.clientWidth;
+      t.style.setProperty('--izq', t.scrollLeft > 4 ? '28px' : '0px');
+      t.style.setProperty('--der', t.scrollLeft < max - 4 ? '36px' : '0px');
+    }
+    t.addEventListener('scroll', ajusta, { passive: true }); addEventListener('resize', ajusta);
+    new MutationObserver(ajusta).observe(t, { childList: true }); ajusta();
+  })();
+</script>
 </body>
 </html>
